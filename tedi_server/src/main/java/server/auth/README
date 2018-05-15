@@ -1,0 +1,6 @@
+Website used:
+https://hellokoding.com/registration-and-login-example-with-spring-security-spring-boot-spring-data-jpa-hsql-jsp/
+TODO:
+-Insert the email validation in the validator class provided?
+-For the endpoints, replace the forms and the models with my iomodels
+-Validator, controllers, properties and app config left to be done
