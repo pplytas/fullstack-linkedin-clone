@@ -17,7 +17,6 @@ import server.auth.handlers.CustomLogoutHandler;
 import server.auth.handlers.LoginFailureHandler;
 import server.auth.handlers.LoginSuccessHandler;
 import server.entities.UserEntity;
-import server.entities.UserEntity.UserBuilder;
 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
@@ -55,7 +54,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						 "/register",
 						 "/hello").permitAll()
 			.antMatchers("/secret").hasAnyAuthority("USER", "ADMIN")
-			.antMatchers("/admin").hasAuthority("ADMIN")
+			.antMatchers("/admin",
+						 "/admin/*").hasAuthority("ADMIN")
 			.anyRequest().authenticated()
 			.and()
 			.formLogin()
