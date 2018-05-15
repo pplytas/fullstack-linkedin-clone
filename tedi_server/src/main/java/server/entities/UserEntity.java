@@ -2,6 +2,7 @@ package server.entities;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -48,6 +49,10 @@ public class UserEntity {
 	@Column
 	private String picture;
 	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+				mappedBy = "user")
+	private List<ArticleEntity> articles;
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "id"),
 				inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -93,6 +98,10 @@ public class UserEntity {
 		return picture;
 	}
 	
+	public List<ArticleEntity> getArticles() {
+		return articles;
+	}
+	
 	public Set<RoleEntity> getRoles() {
 		return roles;
 	}
@@ -123,6 +132,14 @@ public class UserEntity {
 
 	public void setPicture(String picture) {
 		this.picture = picture;
+	}
+	
+	public void setArticles(List<ArticleEntity> articles) {
+		this.articles = articles;
+	}
+	
+	public void addArticle(ArticleEntity article) {
+		this.articles.add(article);
 	}
 	
 	public void setRoles(Set<RoleEntity> roles) {
