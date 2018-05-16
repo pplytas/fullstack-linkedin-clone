@@ -2,6 +2,7 @@ package server.endpoints;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,11 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import server.auth.SecurityService;
 import server.endpoints.inputmodels.ArticleInputModel;
+import server.endpoints.inputmodels.CommentInputModel;
 import server.endpoints.outputmodels.ArticleListOutputModel;
 import server.endpoints.outputmodels.ArticleOutputModel;
+import server.endpoints.outputmodels.CommentOutputModel;
 import server.entities.ArticleEntity;
+import server.entities.CommentEntity;
 import server.entities.UserEntity;
 import server.repositories.ArticleRepository;
+import server.repositories.CommentRepository;
 import server.repositories.UserRepository;
 import server.utilities.StorageManager;
 
@@ -39,6 +44,10 @@ public class UserController {
 	@Autowired
 	private ArticleRepository articleRepo;
 	
+	@Autowired
+	private CommentRepository commentRepo;
+	
+	//add a new article for the current user
 	@PostMapping("/article")
 	public ResponseEntity<Object> addArticle(@RequestBody ArticleInputModel input) {
 		
@@ -59,7 +68,6 @@ public class UserController {
 		
 	}
 	
-	//todo get articles for user
 	//gets a list of articles for a given user
 	//or for the active user, if no parameter is specified
 	@GetMapping("/articles")
@@ -78,16 +86,48 @@ public class UserController {
 			ArticleListOutputModel output = new ArticleListOutputModel();
 			for (ArticleEntity a : articles) {
 				ArticleOutputModel outA = new ArticleOutputModel();
+				outA.setId(a.getId());
 				outA.setAuthor(refUser.getEmail());
 				outA.setTitle(a.getTitle());
 				outA.setText(a.getText());
 				outA.setFile(sm.getFile(a.getMediafile()));
+				List<CommentEntity> comments = commentRepo.findByArticleOrderByDateTimeDesc(a);
+				for (CommentEntity c : comments) {
+					CommentOutputModel cOut = new CommentOutputModel();
+					cOut.setText(c.getText());
+					cOut.setCommentator(c.getUser().getEmail());
+					cOut.setDateTime(c.getDateTime());
+					outA.addComment(cOut);
+				}
 				output.addArticle(outA);
 			}
 			return new ResponseEntity<>(output, HttpStatus.OK);
 		} catch (IOException e) {
 			return new ResponseEntity<>("Could not load media file", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+	
+	//add a new comment to the article specified by articleId, with commentator the current user
+	@PostMapping("/comment")
+	public ResponseEntity<Object> addComment(@RequestBody CommentInputModel input) {
+		
+		UserEntity currUser = secService.currentUser();
+		Optional<ArticleEntity> optArticle = articleRepo.findById(input.getArticleId());
+		if (optArticle.isPresent()) {
+			ArticleEntity refArticle = optArticle.get();
+			CommentEntity comment = new CommentEntity();
+			comment.setText(input.getText());
+			comment.setArticle(refArticle);
+			comment.setUser(currUser);
+			comment.setDateTime();
+			commentRepo.save(comment);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		else {
+			return new ResponseEntity<>("Could not find specified article", HttpStatus.NOT_FOUND);
+		}
+		
+		
 	}
 
 }

@@ -8,7 +8,7 @@ import server.entities.ArticleEntity;
 import server.entities.UserEntity;
 
 public interface ArticleRepository extends JpaRepository<ArticleEntity, Long> {
-
+	
 	List<ArticleEntity> findByUser(UserEntity user);
 	
 }

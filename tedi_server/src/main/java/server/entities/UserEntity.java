@@ -1,6 +1,7 @@
 package server.entities;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,7 +52,11 @@ public class UserEntity {
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
 				mappedBy = "user")
-	private List<ArticleEntity> articles;
+	private List<ArticleEntity> articles = new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+			mappedBy = "user")
+	private List<CommentEntity> comments = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "id"),
@@ -102,6 +107,10 @@ public class UserEntity {
 		return articles;
 	}
 	
+	public List<CommentEntity> getComments() {
+		return comments;
+	}
+	
 	public Set<RoleEntity> getRoles() {
 		return roles;
 	}
@@ -140,6 +149,14 @@ public class UserEntity {
 	
 	public void addArticle(ArticleEntity article) {
 		this.articles.add(article);
+	}
+	
+	public void setComments(List<CommentEntity> comments) {
+		this.comments = comments;
+	}
+	
+	public void addComment(CommentEntity comment) {
+		this.comments.add(comment);
 	}
 	
 	public void setRoles(Set<RoleEntity> roles) {
