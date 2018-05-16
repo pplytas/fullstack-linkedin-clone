@@ -1,6 +1,5 @@
 package server.entities;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,12 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import server.endpoints.inputmodels.RegisterInputModel;
-import server.utilities.StorageManager;
 
 @Entity
 @Table(name = "user")
@@ -57,6 +50,10 @@ public class UserEntity {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
 			mappedBy = "user")
 	private List<CommentEntity> comments = new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+				mappedBy = "user")
+	private List<UpvoteEntity> upvotes = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "id"),
@@ -111,6 +108,10 @@ public class UserEntity {
 		return comments;
 	}
 	
+	public List<UpvoteEntity> getUpvotes() {
+		return upvotes;
+	}
+	
 	public Set<RoleEntity> getRoles() {
 		return roles;
 	}
@@ -157,6 +158,14 @@ public class UserEntity {
 	
 	public void addComment(CommentEntity comment) {
 		this.comments.add(comment);
+	}
+	
+	public void setUpvotes(List<UpvoteEntity> upvotes) {
+		this.upvotes = upvotes;
+	}
+	
+	public void addUpvote(UpvoteEntity upvote) {
+		this.upvotes.add(upvote);
 	}
 	
 	public void setRoles(Set<RoleEntity> roles) {

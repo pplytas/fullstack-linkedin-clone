@@ -13,10 +13,12 @@ public class ArticleOutputModel {
 	private String file;
 	private String author; //this is email, perhaps change to name later
 	private List<CommentOutputModel> comments;
+	private List<UpvoteOutputModel> upvotes;
 	private String dateTime;
 	
 	public ArticleOutputModel() {
 		comments = new ArrayList<>();
+		upvotes = new ArrayList<>();
 	}
 
 	public Long getId() {
@@ -41,6 +43,10 @@ public class ArticleOutputModel {
 	
 	public List<CommentOutputModel> getComments() {
 		return comments;
+	}
+	
+	public List<UpvoteOutputModel> getUpvotes() {
+		return upvotes;
 	}
 	
 	public String getDateTime() {
@@ -73,6 +79,14 @@ public class ArticleOutputModel {
 	
 	public void addComment(CommentOutputModel comment) {
 		this.comments.add(comment);
+	}
+	
+	public void setUpvotes(List<UpvoteOutputModel> upvotes) {
+		this.upvotes = upvotes;
+	}
+	
+	public void addUpvote(UpvoteOutputModel upvote) {
+		this.upvotes.add(upvote);
 	}
 	
 	public void setDateTime(Date dateTime) {

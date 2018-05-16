@@ -46,6 +46,10 @@ public class ArticleEntity {
 				mappedBy = "article")
 	private List<CommentEntity> comments = new ArrayList<>();
 	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+				mappedBy = "article")
+	private List<UpvoteEntity> upvotes = new ArrayList<>();
+	
 	public ArticleEntity() {}
 
 	public Long getId() {
@@ -64,6 +68,10 @@ public class ArticleEntity {
 		return mediafile;
 	}
 	
+	public Date getDateTime() {
+		return this.dateTime;
+	}
+	
 	public UserEntity getUser() {
 		return user;
 	}
@@ -71,9 +79,9 @@ public class ArticleEntity {
 	public List<CommentEntity> getComments() {
 		return comments;
 	}
-
-	public Date getDateTime() {
-		return this.dateTime;
+	
+	public List<UpvoteEntity> getUpvotes() {
+		return upvotes;
 	}
 	
 	public void setId(Long id) {
@@ -92,6 +100,14 @@ public class ArticleEntity {
 		this.mediafile = mediafile;
 	}
 	
+	public void setDateTime() {
+		this.dateTime = new Date();
+	}
+	
+	public void setDateTime(Date dateTime) {
+		this.dateTime = dateTime;
+	}
+	
 	public void setUser(UserEntity user) {
 		this.user = user;
 	}
@@ -104,12 +120,12 @@ public class ArticleEntity {
 		this.comments.add(comment);
 	}
 	
-	public void setDateTime() {
-		this.dateTime = new Date();
+	public void setUpvotes(List<UpvoteEntity> upvotes) {
+		this.upvotes = upvotes;
 	}
 	
-	public void setDateTime(Date dateTime) {
-		this.dateTime = dateTime;
+	public void addUpvote(UpvoteEntity upvote) {
+		this.upvotes.add(upvote);
 	}
 	
 }
