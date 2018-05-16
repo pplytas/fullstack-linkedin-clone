@@ -1,6 +1,7 @@
 package server.entities;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "article")
@@ -31,6 +34,9 @@ public class ArticleEntity {
 	
 	@Column
 	private String mediafile;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dateTime;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user")
@@ -66,6 +72,10 @@ public class ArticleEntity {
 		return comments;
 	}
 
+	public Date getDateTime() {
+		return this.dateTime;
+	}
+	
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -92,6 +102,14 @@ public class ArticleEntity {
 	
 	public void addComment(CommentEntity comment) {
 		this.comments.add(comment);
+	}
+	
+	public void setDateTime() {
+		this.dateTime = new Date();
+	}
+	
+	public void setDateTime(Date dateTime) {
+		this.dateTime = dateTime;
 	}
 	
 }

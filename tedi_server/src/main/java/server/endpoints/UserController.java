@@ -59,6 +59,7 @@ public class UserController {
 			article.setText(input.getText());
 			article.setMediafile(sm.storeFile(input.getFile()));
 			article.setUser(currentUser);
+			article.setDateTime();
 			articleRepo.save(article);
 			
 			return new ResponseEntity<>(HttpStatus.OK);
@@ -81,7 +82,7 @@ public class UserController {
 			refUser = userRepo.findByEmail(email);
 		}
 		
-		List<ArticleEntity> articles = articleRepo.findByUser(refUser);
+		List<ArticleEntity> articles = articleRepo.findByUserOrderByDateTimeDesc(refUser);
 		try {
 			ArticleListOutputModel output = new ArticleListOutputModel();
 			for (ArticleEntity a : articles) {
@@ -91,6 +92,7 @@ public class UserController {
 				outA.setTitle(a.getTitle());
 				outA.setText(a.getText());
 				outA.setFile(sm.getFile(a.getMediafile()));
+				outA.setDateTime(a.getDateTime());
 				List<CommentEntity> comments = commentRepo.findByArticleOrderByDateTimeDesc(a);
 				for (CommentEntity c : comments) {
 					CommentOutputModel cOut = new CommentOutputModel();

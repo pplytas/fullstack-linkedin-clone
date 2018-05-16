@@ -9,6 +9,6 @@ import server.entities.UserEntity;
 
 public interface ArticleRepository extends JpaRepository<ArticleEntity, Long> {
 	
-	List<ArticleEntity> findByUser(UserEntity user);
+	List<ArticleEntity> findByUserOrderByDateTimeDesc(UserEntity user);
 	
 }

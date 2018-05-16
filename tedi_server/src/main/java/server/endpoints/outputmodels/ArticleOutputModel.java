@@ -1,6 +1,8 @@
 package server.endpoints.outputmodels;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ArticleOutputModel {
@@ -11,6 +13,7 @@ public class ArticleOutputModel {
 	private String file;
 	private String author; //this is email, perhaps change to name later
 	private List<CommentOutputModel> comments;
+	private String dateTime;
 	
 	public ArticleOutputModel() {
 		comments = new ArrayList<>();
@@ -40,6 +43,10 @@ public class ArticleOutputModel {
 		return comments;
 	}
 	
+	public String getDateTime() {
+		return dateTime;
+	}
+	
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -66,6 +73,16 @@ public class ArticleOutputModel {
 	
 	public void addComment(CommentOutputModel comment) {
 		this.comments.add(comment);
+	}
+	
+	public void setDateTime(Date dateTime) {
+		if (dateTime == null) {
+			this.dateTime = null;
+			return;
+		}
+			
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		this.dateTime = sdf.format(dateTime);
 	}
 	
 }
