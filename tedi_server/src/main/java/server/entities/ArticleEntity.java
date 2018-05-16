@@ -1,5 +1,10 @@
 package server.entities;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,7 +13,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "article")
@@ -27,9 +35,20 @@ public class ArticleEntity {
 	@Column
 	private String mediafile;
 	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dateTime;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user")
 	private UserEntity user;
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+				mappedBy = "article")
+	private List<CommentEntity> comments = new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+				mappedBy = "article")
+	private List<UpvoteEntity> upvotes = new ArrayList<>();
 	
 	public ArticleEntity() {}
 
@@ -49,10 +68,22 @@ public class ArticleEntity {
 		return mediafile;
 	}
 	
+	public Date getDateTime() {
+		return this.dateTime;
+	}
+	
 	public UserEntity getUser() {
 		return user;
 	}
-
+	
+	public List<CommentEntity> getComments() {
+		return comments;
+	}
+	
+	public List<UpvoteEntity> getUpvotes() {
+		return upvotes;
+	}
+	
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -69,8 +100,32 @@ public class ArticleEntity {
 		this.mediafile = mediafile;
 	}
 	
+	public void setDateTime() {
+		this.dateTime = new Date();
+	}
+	
+	public void setDateTime(Date dateTime) {
+		this.dateTime = dateTime;
+	}
+	
 	public void setUser(UserEntity user) {
 		this.user = user;
+	}
+	
+	public void setComments(List<CommentEntity> comments) {
+		this.comments = comments;
+	}
+	
+	public void addComment(CommentEntity comment) {
+		this.comments.add(comment);
+	}
+	
+	public void setUpvotes(List<UpvoteEntity> upvotes) {
+		this.upvotes = upvotes;
+	}
+	
+	public void addUpvote(UpvoteEntity upvote) {
+		this.upvotes.add(upvote);
 	}
 	
 }
