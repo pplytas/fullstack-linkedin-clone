@@ -1,5 +1,8 @@
 package server.auth;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -20,7 +23,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void save(UserEntity user) {
 		user.setPassword(bCryptEncoder.encode(user.getPassword()));
-		user.addRole(new RoleEntity("USER")); //only users are created after the first configuration
+		Set<RoleEntity> roleSet = new HashSet<>();
+		roleSet.add(new RoleEntity("USER")); //only users are created after the first configuration
+		user.setRoles(roleSet);
 		userRepo.save(user);
 	}
 	

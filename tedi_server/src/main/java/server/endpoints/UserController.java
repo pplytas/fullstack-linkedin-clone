@@ -10,12 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import server.auth.SecurityService;
+import server.auth.UserService;
 import server.endpoints.inputmodels.ArticleInputModel;
 import server.endpoints.inputmodels.CommentInputModel;
 import server.endpoints.outputmodels.ArticleListOutputModel;
@@ -31,6 +33,7 @@ import server.repositories.CommentRepository;
 import server.repositories.UpvoteRepository;
 import server.repositories.UserRepository;
 import server.utilities.StorageManager;
+import server.utilities.Validator;
 
 @RestController
 @RequestMapping("/user")
@@ -38,6 +41,9 @@ public class UserController {
 	
 	@Autowired
 	private StorageManager sm;
+	
+	@Autowired
+	private UserService userService;
 	
 	@Autowired 
 	private SecurityService secService;
@@ -53,6 +59,19 @@ public class UserController {
 	
 	@Autowired
 	private UpvoteRepository upvoteRepo;
+	
+	@PutMapping("/update")
+	public ResponseEntity<Object> updateUser(@RequestParam(defaultValue = "") String password) {
+		
+		UserEntity currUser = secService.currentUser();
+		if (!password.equals("")) {
+			currUser.setPassword(password);
+		}
+		userService.save(currUser);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+		
+	}
 	
 	//add a new article for the current user
 	@PostMapping("/article")
