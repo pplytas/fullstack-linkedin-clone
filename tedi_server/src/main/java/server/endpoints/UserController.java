@@ -61,13 +61,17 @@ public class UserController {
 	private UpvoteRepository upvoteRepo;
 	
 	@PutMapping("/update")
-	public ResponseEntity<Object> updateUser(@RequestParam(defaultValue = "") String password) {
+	public ResponseEntity<Object> updateUser(@RequestParam(defaultValue = "") String email,
+											 @RequestParam(defaultValue = "") String password) {
 		
-		UserEntity currUser = secService.currentUser();
-		if (!password.equals("")) {
-			currUser.setPassword(password);
+		if (!email.equals("")) {
+			if (userRepo.findByEmail(email) != null) {
+				String msg = "A user with this email is already registered";
+				return new ResponseEntity<>(msg, HttpStatus.CONFLICT);
+			}
 		}
-		userService.save(currUser);
+		System.out.println("PWB4 " + password);
+		userService.updateCredentials(email, password);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 		
