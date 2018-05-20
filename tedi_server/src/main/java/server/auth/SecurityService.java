@@ -6,6 +6,4 @@ public interface SecurityService {
 
 	UserEntity currentUser();
 	
-	void autologin(String username, String password);
-	
 }

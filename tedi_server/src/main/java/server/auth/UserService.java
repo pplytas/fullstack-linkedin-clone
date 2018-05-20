@@ -8,6 +8,8 @@ public interface UserService {
 	
 	void saveAdmin(UserEntity user);
 	
+	void updateCredentials(String email, String password);
+	
 	UserEntity findByEmail(String email);
 	
 }

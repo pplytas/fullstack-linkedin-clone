@@ -10,12 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import server.auth.SecurityService;
+import server.auth.UserService;
 import server.endpoints.inputmodels.ArticleInputModel;
 import server.endpoints.inputmodels.CommentInputModel;
 import server.endpoints.outputmodels.ArticleListOutputModel;
@@ -31,6 +33,7 @@ import server.repositories.CommentRepository;
 import server.repositories.UpvoteRepository;
 import server.repositories.UserRepository;
 import server.utilities.StorageManager;
+import server.utilities.Validator;
 
 @RestController
 @RequestMapping("/user")
@@ -38,6 +41,9 @@ public class UserController {
 	
 	@Autowired
 	private StorageManager sm;
+	
+	@Autowired
+	private UserService userService;
 	
 	@Autowired 
 	private SecurityService secService;
@@ -53,6 +59,23 @@ public class UserController {
 	
 	@Autowired
 	private UpvoteRepository upvoteRepo;
+	
+	//update current user credentials (only for users, not admins)
+	@PutMapping("/update")
+	public ResponseEntity<Object> updateUser(@RequestParam(defaultValue = "") String email,
+											 @RequestParam(defaultValue = "") String password) {
+		
+		if (!email.equals("")) {
+			if (userRepo.findByEmail(email) != null) {
+				String msg = "A user with this email is already registered";
+				return new ResponseEntity<>(msg, HttpStatus.CONFLICT);
+			}
+		}
+		userService.updateCredentials(email, password);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+		
+	}
 	
 	//add a new article for the current user
 	@PostMapping("/article")

@@ -16,7 +16,6 @@ import org.springframework.security.web.authentication.Http403ForbiddenEntryPoin
 import server.auth.handlers.CustomLogoutHandler;
 import server.auth.handlers.LoginFailureHandler;
 import server.auth.handlers.LoginSuccessHandler;
-import server.entities.UserEntity;
 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
@@ -34,10 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private CustomLogoutHandler customLogout;
-	
-	@Autowired
-	private UserService userService;
-	
+
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -55,7 +51,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						 "/hello").permitAll()
 			.antMatchers("/user/article",
 						 "/user/comment",
-						 "/user/upvote").hasAuthority("USER")
+						 "/user/upvote",
+						 "/user/update").hasAuthority("USER")
 			.antMatchers("/secret",
 						 "/user/articles").hasAnyAuthority("USER", "ADMIN")
 			.antMatchers("/admin",
@@ -82,21 +79,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
-		initializeAdmins();
-	}
-	
-	//todo properly initialize db through hibernate instead
-	private void initializeAdmins() {
-		if (userService.findByEmail("d@root.com") == null) {
-			UserEntity admin1 = new UserEntity.UserBuilder("d@root.com", "toor")
-												.name("Dimitris").surname("Gounaris").build();
-			userService.saveAdmin(admin1);
-		}
-		if (userService.findByEmail("p@root.com") == null) {
-			UserEntity admin2 = new UserEntity.UserBuilder("p@root.com", "toor")
-												.name("Panos").surname("Plytas").build();
-			userService.saveAdmin(admin2);
-		}
 	}
 	
 }
