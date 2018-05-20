@@ -55,7 +55,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						 "/hello").permitAll()
 			.antMatchers("/user/article",
 						 "/user/comment",
-						 "/user/upvote").hasAuthority("USER")
+						 "/user/upvote",
+						 "/user/update").hasAuthority("USER")
 			.antMatchers("/secret",
 						 "/user/articles").hasAnyAuthority("USER", "ADMIN")
 			.antMatchers("/admin",

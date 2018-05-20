@@ -60,6 +60,7 @@ public class UserController {
 	@Autowired
 	private UpvoteRepository upvoteRepo;
 	
+	//update current user credentials (only for users, not admins)
 	@PutMapping("/update")
 	public ResponseEntity<Object> updateUser(@RequestParam(defaultValue = "") String email,
 											 @RequestParam(defaultValue = "") String password) {
@@ -70,7 +71,6 @@ public class UserController {
 				return new ResponseEntity<>(msg, HttpStatus.CONFLICT);
 			}
 		}
-		System.out.println("PWB4 " + password);
 		userService.updateCredentials(email, password);
 		
 		return new ResponseEntity<>(HttpStatus.OK);

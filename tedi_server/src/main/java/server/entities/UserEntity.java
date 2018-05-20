@@ -45,6 +45,10 @@ public class UserEntity {
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
 				mappedBy = "user")
+	private List<EducationEntity> education = new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+				mappedBy = "user")
 	private List<ArticleEntity> articles = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
@@ -100,6 +104,10 @@ public class UserEntity {
 		return picture;
 	}
 	
+	public List<EducationEntity> getEducation() {
+		return education;
+	}
+	
 	public List<ArticleEntity> getArticles() {
 		return articles;
 	}
@@ -142,6 +150,14 @@ public class UserEntity {
 
 	public void setPicture(String picture) {
 		this.picture = picture;
+	}
+	
+	public void setEducation(List<EducationEntity> education) {
+		this.education = education;
+	}
+	
+	public void addEducation(EducationEntity education) {
+		this.education.add(education);
 	}
 	
 	public void setArticles(List<ArticleEntity> articles) {
