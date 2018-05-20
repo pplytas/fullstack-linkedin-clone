@@ -3,6 +3,8 @@ package server.auth;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,19 +26,34 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private BCryptPasswordEncoder bCryptEncoder;
 	
-	@Override
-	public void save(UserEntity user) {
-		user.setPassword(bCryptEncoder.encode(user.getPassword()));
-		Set<RoleEntity> roleSet = new HashSet<>();
-		roleSet.add(new RoleEntity("USER")); //only users are created after the first configuration
-		user.setRoles(roleSet);
-		userRepo.save(user);
+	//todo properly initialize db through hibernate instead
+	@PostConstruct
+	private void initializeAdmins() {
+		if (findByEmail("d@root.com") == null) {
+			UserEntity admin1 = new UserEntity.UserBuilder("d@root.com", "toor")
+												.name("Dimitris").surname("Gounaris").build();
+			saveAdmin(admin1);
+		}
+		if (findByEmail("p@root.com") == null) {
+			UserEntity admin2 = new UserEntity.UserBuilder("p@root.com", "toor")
+												.name("Panos").surname("Plytas").build();
+			saveAdmin(admin2);
+		}
 	}
 	
 	@Override
 	public void saveAdmin(UserEntity user) {
 		user.setPassword(bCryptEncoder.encode(user.getPassword()));
 		user.addRole(new RoleEntity("ADMIN"));
+		userRepo.save(user);
+	}
+	
+	@Override
+	public void save(UserEntity user) {
+		user.setPassword(bCryptEncoder.encode(user.getPassword()));
+		Set<RoleEntity> roleSet = new HashSet<>();
+		roleSet.add(new RoleEntity("USER")); //only users are created after the first configuration
+		user.setRoles(roleSet);
 		userRepo.save(user);
 	}
 	

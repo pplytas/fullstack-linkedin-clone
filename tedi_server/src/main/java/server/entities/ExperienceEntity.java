@@ -15,15 +15,18 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "education")
-public class EducationEntity {
-	
+@Table(name = "experience")
+public class ExperienceEntity {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
 	@Column
-	private String organization;
+	private String company;
+	
+	@Column
+	private String position;
 	
 	@Temporal(value = TemporalType.DATE)
 	private Date start;
@@ -35,14 +38,18 @@ public class EducationEntity {
 	@JoinColumn(name = "user")
 	private UserEntity user;
 	
-	public EducationEntity() {}
+	public ExperienceEntity() {}
 
 	public Long getId() {
 		return id;
 	}
 
-	public String getOrganization() {
-		return organization;
+	public String getCompany() {
+		return company;
+	}
+
+	public String getPosition() {
+		return position;
 	}
 
 	public Date getStart() {
@@ -61,8 +68,12 @@ public class EducationEntity {
 		this.id = id;
 	}
 
-	public void setOrganization(String organization) {
-		this.organization = organization;
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
 	}
 
 	public void setStart(Date start) {
@@ -76,5 +87,5 @@ public class EducationEntity {
 	public void setUser(UserEntity user) {
 		this.user = user;
 	}
-
+	
 }

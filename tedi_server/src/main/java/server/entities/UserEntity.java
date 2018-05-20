@@ -48,6 +48,10 @@ public class UserEntity {
 	private List<EducationEntity> education = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+			mappedBy = "user")
+	private List<ExperienceEntity> experience = new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
 				mappedBy = "user")
 	private List<ArticleEntity> articles = new ArrayList<>();
 	
@@ -108,6 +112,10 @@ public class UserEntity {
 		return education;
 	}
 	
+	public List<ExperienceEntity> getExperience() {
+		return experience;
+	}
+	
 	public List<ArticleEntity> getArticles() {
 		return articles;
 	}
@@ -158,6 +166,14 @@ public class UserEntity {
 	
 	public void addEducation(EducationEntity education) {
 		this.education.add(education);
+	}
+	
+	public void setExperience(List<ExperienceEntity> experience) {
+		this.experience = experience;
+	}
+	
+	public void addExperience(ExperienceEntity experience) {
+		this.experience.add(experience);
 	}
 	
 	public void setArticles(List<ArticleEntity> articles) {
