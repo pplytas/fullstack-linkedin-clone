@@ -37,7 +37,7 @@ public class AuthController {
 	@PostMapping("/register")
 	public ResponseEntity<Object> register(@RequestBody RegisterInputModel input, HttpServletRequest request) {
 		if (!Validator.validateEmail(input.getEmail())) {
-			return new ResponseEntity<>("Invalid email", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Invalid email format", HttpStatus.BAD_REQUEST);
 		}
 		if (userService.findByEmail(input.getEmail()) != null) {
 			String msg = "A user with this email is already registered";
