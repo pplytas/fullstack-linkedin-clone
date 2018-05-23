@@ -37,6 +37,7 @@ import server.utilities.Validator;
 
 @RestController
 @RequestMapping("/user")
+//includes endpoints to edit/insert new data for active user
 public class UserController {
 	
 	@Autowired
@@ -103,52 +104,6 @@ public class UserController {
 		
 	}
 	
-	//gets a list of articles for a given user
-	//or for the active user, if no parameter is specified
-	@GetMapping("/articles")
-	public ResponseEntity<Object> getArticles(@RequestParam(defaultValue = "") String email) {
-		
-		UserEntity refUser;
-		if (email.equals("")) {
-			refUser = secService.currentUser();
-		}
-		else {
-			refUser = userRepo.findByEmail(email);
-		}
-		
-		List<ArticleEntity> articles = articleRepo.findByUserOrderByDateTimeDesc(refUser);
-		try {
-			ArticleListOutputModel output = new ArticleListOutputModel();
-			for (ArticleEntity a : articles) {
-				ArticleOutputModel outA = new ArticleOutputModel();
-				outA.setId(a.getId());
-				outA.setAuthor(refUser.getEmail());
-				outA.setTitle(a.getTitle());
-				outA.setText(a.getText());
-				outA.setFile(sm.getFile(a.getMediafile()));
-				outA.setDateTime(a.getDateTime());
-				List<CommentEntity> comments = commentRepo.findByArticleOrderByDateTimeDesc(a);
-				for (CommentEntity c : comments) {
-					CommentOutputModel cOut = new CommentOutputModel();
-					cOut.setText(c.getText());
-					cOut.setCommentator(c.getUser().getEmail());
-					cOut.setDateTime(c.getDateTime());
-					outA.addComment(cOut);
-				}
-				List<UpvoteEntity> upvotes = upvoteRepo.findByArticle(a);
-				for (UpvoteEntity u : upvotes) {
-					UpvoteOutputModel uOut = new UpvoteOutputModel();
-					uOut.setUpvoter(u.getUser().getEmail());
-					outA.addUpvote(uOut);
-				}
-				output.addArticle(outA);
-			}
-			return new ResponseEntity<>(output, HttpStatus.OK);
-		} catch (IOException e) {
-			return new ResponseEntity<>("Could not load media file", HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-	
 	//add a new comment to the article specified by articleId, with commentator the current user
 	@PostMapping("/comment")
 	public ResponseEntity<Object> addComment(@RequestBody CommentInputModel input) {
@@ -186,58 +141,6 @@ public class UserController {
 		}
 		else {
 			return new ResponseEntity<>("Could not find specified article", HttpStatus.NOT_FOUND);
-		}
-		
-	}
-
-	//gets a list of upvoted articles for a given user
-	//or for the active user, if no parameter is specified
-	@GetMapping("/upvoted")
-	public ResponseEntity<Object> upvotes(@RequestParam(defaultValue = "") String email) {
-		
-		UserEntity refUser;
-		if (email.equals("")) {
-			refUser = secService.currentUser();
-		}
-		else {
-			refUser = userRepo.findByEmail(email);
-		}
-		
-		List<UpvoteEntity> upvoted = upvoteRepo.findByUser(refUser);
-		List<ArticleEntity> articles = new ArrayList<>();
-		for (UpvoteEntity u : upvoted) {
-			articles.add(u.getArticle());
-		}
-		
-		try {
-			ArticleListOutputModel output = new ArticleListOutputModel();
-			for (ArticleEntity a : articles) {
-				ArticleOutputModel outA = new ArticleOutputModel();
-				outA.setId(a.getId());
-				outA.setAuthor(refUser.getEmail());
-				outA.setTitle(a.getTitle());
-				outA.setText(a.getText());
-				outA.setFile(sm.getFile(a.getMediafile()));
-				outA.setDateTime(a.getDateTime());
-				List<CommentEntity> comments = commentRepo.findByArticleOrderByDateTimeDesc(a);
-				for (CommentEntity c : comments) {
-					CommentOutputModel cOut = new CommentOutputModel();
-					cOut.setText(c.getText());
-					cOut.setCommentator(c.getUser().getEmail());
-					cOut.setDateTime(c.getDateTime());
-					outA.addComment(cOut);
-				}
-				List<UpvoteEntity> upvotes = upvoteRepo.findByArticle(a);
-				for (UpvoteEntity u : upvotes) {
-					UpvoteOutputModel uOut = new UpvoteOutputModel();
-					uOut.setUpvoter(u.getUser().getEmail());
-					outA.addUpvote(uOut);
-				}
-				output.addArticle(outA);
-			}
-			return new ResponseEntity<>(output, HttpStatus.OK);
-		} catch (IOException e) {
-			return new ResponseEntity<>("Could not load media file", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 	}
