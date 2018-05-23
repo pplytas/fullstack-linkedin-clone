@@ -76,6 +76,14 @@ public class UserEntity {
 				mappedBy = "user")
 	private List<UpvoteEntity> upvotes = new ArrayList<>();
 	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+				mappedBy = "user", orphanRemoval = true)
+	private List<ConnectionEntity> connections = new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+			mappedBy = "connected", orphanRemoval = true)
+	private List<ConnectionEntity> connectedTo = new ArrayList<>();
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "id"),
 				inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -162,6 +170,14 @@ public class UserEntity {
 	
 	public List<UpvoteEntity> getUpvotes() {
 		return upvotes;
+	}
+	
+	public List<ConnectionEntity> getConnections() {
+		return connections;
+	}
+	
+	public List<ConnectionEntity> getConnectedTo() {
+		return connectedTo;
 	}
 	
 	public Set<RoleEntity> getRoles() {
@@ -254,6 +270,22 @@ public class UserEntity {
 	
 	public void addUpvote(UpvoteEntity upvote) {
 		this.upvotes.add(upvote);
+	}
+	
+	public void setConnections(List<ConnectionEntity> connections) {
+		this.connections = connections;
+	}
+	
+	public void addConnection(ConnectionEntity connection) {
+		this.connections.add(connection);
+	}
+	
+	public void setConnectedTo(List<ConnectionEntity> connectedTo) {
+		this.connectedTo = connectedTo;
+	}
+	
+	public void addConnectedTo(ConnectionEntity connectedTo) {
+		this.connectedTo.add(connectedTo);
 	}
 	
 	public void setRoles(Set<RoleEntity> roles) {
