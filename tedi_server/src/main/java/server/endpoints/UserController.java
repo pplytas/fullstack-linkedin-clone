@@ -1,6 +1,7 @@
 package server.endpoints;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,24 @@ import server.auth.SecurityService;
 import server.auth.UserService;
 import server.endpoints.inputmodels.ArticleInputModel;
 import server.endpoints.inputmodels.CommentInputModel;
+import server.endpoints.inputmodels.EducationInputModel;
+import server.endpoints.inputmodels.EducationWrappedInputModel;
+import server.endpoints.inputmodels.ExperienceInputModel;
+import server.endpoints.inputmodels.ExperienceWrappedInputModel;
+import server.endpoints.inputmodels.SkillInputModel;
+import server.endpoints.inputmodels.SkillWrappedInputModel;
 import server.entities.ArticleEntity;
 import server.entities.CommentEntity;
+import server.entities.EducationEntity;
+import server.entities.ExperienceEntity;
+import server.entities.SkillEntity;
 import server.entities.UpvoteEntity;
 import server.entities.UserEntity;
 import server.repositories.ArticleRepository;
 import server.repositories.CommentRepository;
+import server.repositories.EducationRepository;
+import server.repositories.ExperienceRepository;
+import server.repositories.SkillRepository;
 import server.repositories.UpvoteRepository;
 import server.repositories.UserRepository;
 import server.utilities.StorageManager;
@@ -44,6 +57,15 @@ public class UserController {
 	
 	@Autowired
 	private UserRepository userRepo;
+	
+	@Autowired
+	private EducationRepository eduRepo;
+	
+	@Autowired
+	private ExperienceRepository expRepo;
+	
+	@Autowired
+	private SkillRepository skillRepo;
 	
 	@Autowired
 	private ArticleRepository articleRepo;
@@ -71,6 +93,70 @@ public class UserController {
 		}
 		userService.updateCredentials(email, password);
 		
+		return new ResponseEntity<>(HttpStatus.OK);
+		
+	}
+	
+	@PostMapping("/education")
+	public ResponseEntity<Object> setEducation(@RequestBody EducationWrappedInputModel input) {
+		
+		UserEntity currUser = secService.currentUser();
+		currUser.setEducationPublic(input.isPublic());
+		try {
+			for (EducationInputModel e : input.getEducations()) {
+				EducationEntity entity = new EducationEntity();
+				entity.setOrganization(e.getOrganization());
+				entity.setStart(e.getStartDate());
+				entity.setFinish(e.getFinishDate());
+				entity.setUser(currUser);
+				eduRepo.save(entity);
+			}
+		} catch (ParseException e) {
+			return new ResponseEntity<>("Could not parse education data", HttpStatus.BAD_REQUEST);
+		}
+		
+		userRepo.save(currUser);
+		return new ResponseEntity<>(HttpStatus.OK);
+		
+	}
+	
+	@PostMapping("/experience")
+	public ResponseEntity<Object> setExperience(@RequestBody ExperienceWrappedInputModel input) {
+		
+		UserEntity currUser = secService.currentUser();
+		currUser.setExperiencePublic(input.isPublic());
+		try {
+			for (ExperienceInputModel e : input.getExperiences()) {
+				ExperienceEntity entity = new ExperienceEntity();
+				entity.setCompany(e.getCompany());
+				entity.setPosition(e.getPosition());
+				entity.setStart(e.getStartDate());
+				entity.setFinish(e.getFinishDate());
+				entity.setUser(currUser);
+				expRepo.save(entity);
+			}
+		} catch (ParseException e) {
+			return new ResponseEntity<>("Could not parse education data", HttpStatus.BAD_REQUEST);
+		}
+		
+		userRepo.save(currUser);
+		return new ResponseEntity<>(HttpStatus.OK);
+		
+	}
+	
+	@PostMapping("/skills")
+	public ResponseEntity<Object> setSkills(@RequestBody SkillWrappedInputModel input) {
+		
+		UserEntity currUser = secService.currentUser();
+		currUser.setSkillsPublic(input.isPublic());
+		for (SkillInputModel s : input.getSkills()) {
+			SkillEntity entity = new SkillEntity();
+			entity.setName(s.getName());
+			entity.setUser(currUser);
+			skillRepo.save(entity);
+		}
+		
+		userRepo.save(currUser);
 		return new ResponseEntity<>(HttpStatus.OK);
 		
 	}
