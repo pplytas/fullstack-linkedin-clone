@@ -44,21 +44,21 @@ public class UserEntity {
 	private String picture;
 	
 	@Column
-	private boolean educationPublic;
+	private Boolean educationPublic;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
 				mappedBy = "user")
 	private List<EducationEntity> education = new ArrayList<>();
 	
 	@Column
-	private boolean experiencePublic;
+	private Boolean experiencePublic;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
 				mappedBy = "user")
 	private List<ExperienceEntity> experience = new ArrayList<>();
 	
 	@Column
-	private boolean skillsPublic;
+	private Boolean skillsPublic;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
 				mappedBy = "user")
@@ -81,7 +81,11 @@ public class UserEntity {
 				inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<RoleEntity> roles = new HashSet<>();
 	
-	public UserEntity() {}
+	public UserEntity() {
+		this.educationPublic = false;
+		this.experiencePublic = false;
+		this.skillsPublic = false;
+	}
 	
 	public UserEntity(UserBuilder builder) {
 		this.email = builder.email;
@@ -91,6 +95,9 @@ public class UserEntity {
 		this.telNumber = builder.telNumber;
 		this.picture = builder.picture;
 		this.roles = builder.roles;
+		this.educationPublic = false;
+		this.experiencePublic = false;
+		this.skillsPublic = false;
 	}
 
 	public Long getId() {

@@ -74,27 +74,4 @@ public class AuthController {
 		// (the actual logout is handled by the Security framework)
 	}
 	
-	@GetMapping(value="/account")
-	public ResponseEntity<Object> getAccount() {
-		
-		try {
-			
-			UserEntity user = secService.currentUser();
-			
-			if (user == null)
-				return new ResponseEntity<>("No active user found", HttpStatus.NOT_FOUND);
-
-			return new ResponseEntity<>(
-					new UserOutputModel.UserOutputBuilder(user.getEmail())
-														.name(user.getName())
-														.surname(user.getSurname())
-														.telNumber(user.getTelNumber())
-														.picture(sm.getFile(user.getPicture())).build()
-					, HttpStatus.OK);
-		}
-		catch (IOException e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-	
 }
