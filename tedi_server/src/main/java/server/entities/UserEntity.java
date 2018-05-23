@@ -43,13 +43,22 @@ public class UserEntity {
 	@Column
 	private String picture;
 	
+	@Column
+	private boolean educationPublic;
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
 				mappedBy = "user")
 	private List<EducationEntity> education = new ArrayList<>();
 	
+	@Column
+	private boolean experiencePublic;
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
 				mappedBy = "user")
 	private List<ExperienceEntity> experience = new ArrayList<>();
+	
+	@Column
+	private boolean skillsPublic;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
 				mappedBy = "user")
@@ -112,12 +121,24 @@ public class UserEntity {
 		return picture;
 	}
 	
+	public boolean isEducationPublic() {
+		return educationPublic;
+	}
+
 	public List<EducationEntity> getEducation() {
 		return education;
 	}
 	
+	public boolean isExperiencePublic() {
+		return experiencePublic;
+	}
+	
 	public List<ExperienceEntity> getExperience() {
 		return experience;
+	}
+	
+	public boolean isSkillsPublic() {
+		return skillsPublic;
 	}
 	
 	public List<SkillEntity> getSkills() {
@@ -168,6 +189,10 @@ public class UserEntity {
 		this.picture = picture;
 	}
 	
+	public void setEducationPublic(boolean educationPublic) {
+		this.educationPublic = educationPublic;
+	}
+	
 	public void setEducation(List<EducationEntity> education) {
 		this.education = education;
 	}
@@ -176,12 +201,20 @@ public class UserEntity {
 		this.education.add(education);
 	}
 	
+	public void setExperiencePublic(boolean experiencePublic) {
+		this.experiencePublic = experiencePublic;
+	}
+	
 	public void setExperience(List<ExperienceEntity> experience) {
 		this.experience = experience;
 	}
 	
 	public void addExperience(ExperienceEntity experience) {
 		this.experience.add(experience);
+	}
+	
+	public void setSkillsPublic(boolean skillsPublic) {
+		this.skillsPublic = skillsPublic;
 	}
 	
 	public void setSkills(List<SkillEntity> skills) {
