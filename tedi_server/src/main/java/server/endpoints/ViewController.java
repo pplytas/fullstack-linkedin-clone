@@ -16,10 +16,17 @@ import server.auth.SecurityService;
 import server.endpoints.outputmodels.ArticleListOutputModel;
 import server.endpoints.outputmodels.ArticleOutputModel;
 import server.endpoints.outputmodels.CommentOutputModel;
+import server.endpoints.outputmodels.EducationOutputModel;
+import server.endpoints.outputmodels.ExperienceOutputModel;
+import server.endpoints.outputmodels.SkillOutputModel;
 import server.endpoints.outputmodels.UpvoteOutputModel;
+import server.endpoints.outputmodels.UserDetailedOutputModel;
 import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.ArticleEntity;
 import server.entities.CommentEntity;
+import server.entities.EducationEntity;
+import server.entities.ExperienceEntity;
+import server.entities.SkillEntity;
 import server.entities.UpvoteEntity;
 import server.entities.UserEntity;
 import server.repositories.ArticleRepository;
@@ -80,6 +87,67 @@ public class ViewController {
 		}
 	}
 	
+	//gets detailed info for a given user
+	//or for the active user, if no parameter is specified
+	//hiding in case of non public details is not yet implemented
+	//TODO after finishing with friends table
+	@GetMapping(value = "/account/details")
+	public ResponseEntity<Object> getAccountDetails(@RequestParam(defaultValue = "") String email) {
+		
+		try {
+			UserEntity user;
+			if (email.equals(""))
+				user = secService.currentUser();
+			else
+				user = userRepo.findByEmail(email);
+			
+			if (user == null)
+				return new ResponseEntity<>("No active user found", HttpStatus.NOT_FOUND);
+			
+			UserDetailedOutputModel output = new UserDetailedOutputModel();
+			output.setEmail(user.getEmail());
+			output.setName(user.getName());
+			output.setSurname(user.getSurname());
+			output.setTelNumber(user.getTelNumber());
+			output.setPicture(sm.getFile(user.getPicture()));
+			
+			List<EducationEntity> eduList = user.getEducation();
+			List<EducationOutputModel> eduOut = new ArrayList<>();
+			for (EducationEntity e : eduList) {
+				EducationOutputModel eOut = new EducationOutputModel();
+				eOut.setOrganization(e.getOrganization());
+				eOut.setStart(e.getStart());
+				eOut.setFinish(e.getFinish());
+				eduOut.add(eOut);
+			}
+			output.setEducation(eduOut);
+			List<ExperienceEntity> expList = user.getExperience();
+			List<ExperienceOutputModel> expOut = new ArrayList<>();
+			for (ExperienceEntity e : expList) {
+				ExperienceOutputModel xOut = new ExperienceOutputModel();
+				xOut.setCompany(e.getCompany());
+				xOut.setPosition(e.getPosition());
+				xOut.setStart(e.getStart());
+				xOut.setFinish(e.getFinish());
+				expOut.add(xOut);
+			}
+			output.setExperience(expOut);
+			List<SkillEntity> skillList = user.getSkills();
+			List<SkillOutputModel> skillOut = new ArrayList<>();
+			for (SkillEntity s : skillList) {
+				SkillOutputModel sOut = new SkillOutputModel();
+				sOut.setName(s.getName());
+				skillOut.add(sOut);
+			}
+			output.setSkills(skillOut);
+			
+			return new ResponseEntity<>(output, HttpStatus.OK);
+		} catch (IOException e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+	
 	//gets a list of articles for a given user
 	//or for the active user, if no parameter is specified
 	@GetMapping("/articles")
@@ -93,6 +161,11 @@ public class ViewController {
 			refUser = userRepo.findByEmail(email);
 		}
 		
+		if (refUser == null) {
+			return new ResponseEntity<>("No user with specified email found", HttpStatus.BAD_REQUEST);
+		}
+		
+		//this instead of refUser.getArticles() because we want to sort
 		List<ArticleEntity> articles = articleRepo.findByUserOrderByDateTimeDesc(refUser);
 		try {
 			ArticleListOutputModel output = new ArticleListOutputModel();
