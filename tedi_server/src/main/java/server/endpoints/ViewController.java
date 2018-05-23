@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import server.auth.SecurityService;
-import server.auth.UserService;
 import server.endpoints.outputmodels.ArticleListOutputModel;
 import server.endpoints.outputmodels.ArticleOutputModel;
 import server.endpoints.outputmodels.CommentOutputModel;
@@ -36,9 +35,6 @@ public class ViewController {
 	
 	@Autowired
 	private StorageManager sm;
-	
-	@Autowired
-	private UserService userService;
 	
 	@Autowired 
 	private SecurityService secService;

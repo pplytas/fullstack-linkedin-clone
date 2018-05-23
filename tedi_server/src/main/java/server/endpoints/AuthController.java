@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import server.auth.SecurityService;
 import server.auth.UserService;
 import server.endpoints.inputmodels.RegisterInputModel;
 import server.endpoints.outputmodels.UserOutputModel;
@@ -30,9 +29,6 @@ public class AuthController {
 	
 	@Autowired
 	private UserService userService;
-	
-	@Autowired 
-	private SecurityService secService;
 	
 	@PostMapping("/register")
 	public ResponseEntity<Object> register(@RequestBody RegisterInputModel input, HttpServletRequest request) {

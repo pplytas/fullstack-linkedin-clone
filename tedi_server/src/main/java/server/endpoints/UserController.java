@@ -1,14 +1,11 @@
 package server.endpoints;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,10 +17,6 @@ import server.auth.SecurityService;
 import server.auth.UserService;
 import server.endpoints.inputmodels.ArticleInputModel;
 import server.endpoints.inputmodels.CommentInputModel;
-import server.endpoints.outputmodels.ArticleListOutputModel;
-import server.endpoints.outputmodels.ArticleOutputModel;
-import server.endpoints.outputmodels.CommentOutputModel;
-import server.endpoints.outputmodels.UpvoteOutputModel;
 import server.entities.ArticleEntity;
 import server.entities.CommentEntity;
 import server.entities.UpvoteEntity;
