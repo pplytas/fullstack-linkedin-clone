@@ -70,6 +70,10 @@ public class UserController {
 				String msg = "A user with this email is already registered";
 				return new ResponseEntity<>(msg, HttpStatus.CONFLICT);
 			}
+			if (!Validator.validateEmail(email)) {
+				String msg = "Invalid email format";
+				return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
+			}
 		}
 		userService.updateCredentials(email, password);
 		
