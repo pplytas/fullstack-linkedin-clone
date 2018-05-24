@@ -113,7 +113,7 @@ public class ViewController {
 			output.setPicture(sm.getFile(user.getPicture()));
 			
 			List<EducationOutputModel> eduOut = new ArrayList<>();
-			if (user.isEducationPublic()) {
+			if (user.isEducationPublic() || user.equals(secService.currentUser())) {
 				List<EducationEntity> eduList = user.getEducation();
 				for (EducationEntity e : eduList) {
 					EducationOutputModel eOut = new EducationOutputModel();
@@ -126,7 +126,7 @@ public class ViewController {
 			output.setEducation(eduOut);
 			
 			List<ExperienceOutputModel> expOut = new ArrayList<>();
-			if (user.isExperiencePublic()) {
+			if (user.isExperiencePublic() || user.equals(secService.currentUser())) {
 				List<ExperienceEntity> expList = user.getExperience();
 				for (ExperienceEntity e : expList) {
 					ExperienceOutputModel xOut = new ExperienceOutputModel();
@@ -140,7 +140,7 @@ public class ViewController {
 			output.setExperience(expOut);
 			
 			List<SkillOutputModel> skillOut = new ArrayList<>();
-			if (user.isSkillsPublic()) {
+			if (user.isSkillsPublic() || user.equals(secService.currentUser())) {
 				List<SkillEntity> skillList = user.getSkills();
 				for (SkillEntity s : skillList) {
 					SkillOutputModel sOut = new SkillOutputModel();
