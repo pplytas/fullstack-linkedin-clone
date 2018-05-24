@@ -26,6 +26,7 @@ import server.endpoints.inputmodels.SkillInputModel;
 import server.endpoints.inputmodels.SkillWrappedInputModel;
 import server.entities.ArticleEntity;
 import server.entities.CommentEntity;
+import server.entities.ConnectionEntity;
 import server.entities.EducationEntity;
 import server.entities.ExperienceEntity;
 import server.entities.SkillEntity;
@@ -33,6 +34,7 @@ import server.entities.UpvoteEntity;
 import server.entities.UserEntity;
 import server.repositories.ArticleRepository;
 import server.repositories.CommentRepository;
+import server.repositories.ConnectionRepository;
 import server.repositories.EducationRepository;
 import server.repositories.ExperienceRepository;
 import server.repositories.SkillRepository;
@@ -75,6 +77,9 @@ public class UserController {
 	
 	@Autowired
 	private UpvoteRepository upvoteRepo;
+	
+	@Autowired
+	private ConnectionRepository connRepo;
 	
 	//update current user credentials (only for users, not admins)
 	@PutMapping("/update")
@@ -221,6 +226,23 @@ public class UserController {
 		else {
 			return new ResponseEntity<>("Could not find specified article", HttpStatus.NOT_FOUND);
 		}
+		
+	}
+	
+	//add a new connection between active user and the one specified by the parameter
+	//TODO verify that connected user is not admin
+	@PostMapping("/connect")
+	public ResponseEntity<Object> connect(@RequestParam String email) {
+		
+		UserEntity currUser = secService.currentUser();
+		UserEntity connUser = userRepo.findByEmail(email);
+		//cant make yourself a connected person to you
+		if (currUser.getId() == connUser.getId()) {
+			return new ResponseEntity<>("Can't connect to self", HttpStatus.BAD_REQUEST);
+		}
+		ConnectionEntity connection = new ConnectionEntity(currUser, connUser);
+		connRepo.save(connection);
+		return new ResponseEntity<>(HttpStatus.OK);
 		
 	}
 	

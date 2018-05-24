@@ -91,6 +91,7 @@ public class ViewController {
 	//or for the active user, if no parameter is specified
 	//hiding in case of non public details is not yet implemented
 	//TODO after finishing with friends table
+	//TODO verify that we try to get non admin details
 	@GetMapping(value = "/account/details")
 	public ResponseEntity<Object> getAccountDetails(@RequestParam(defaultValue = "") String email) {
 		
