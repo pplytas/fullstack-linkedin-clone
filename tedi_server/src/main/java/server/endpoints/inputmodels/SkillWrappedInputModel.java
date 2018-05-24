@@ -1,10 +1,11 @@
 package server.endpoints.inputmodels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SkillWrappedInputModel {
 	
-	private List<SkillInputModel> skills;
+	private List<SkillInputModel> skills = new ArrayList<>();
 	private boolean isPublic;
 	
 	public SkillWrappedInputModel() {}

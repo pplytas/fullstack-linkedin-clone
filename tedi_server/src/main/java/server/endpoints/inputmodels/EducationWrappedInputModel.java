@@ -1,10 +1,11 @@
 package server.endpoints.inputmodels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EducationWrappedInputModel {
 	
-	private List<EducationInputModel> educations;
+	private List<EducationInputModel> educations = new ArrayList<>();
 	private boolean isPublic;
 	
 	public EducationWrappedInputModel() {}

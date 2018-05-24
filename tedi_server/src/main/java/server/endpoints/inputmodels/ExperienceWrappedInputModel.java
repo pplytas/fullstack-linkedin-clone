@@ -1,10 +1,11 @@
 package server.endpoints.inputmodels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExperienceWrappedInputModel {
 
-	private List<ExperienceInputModel> experiences;
+	private List<ExperienceInputModel> experiences = new ArrayList<>();
 	private boolean isPublic;
 	
 	public ExperienceWrappedInputModel() {}
