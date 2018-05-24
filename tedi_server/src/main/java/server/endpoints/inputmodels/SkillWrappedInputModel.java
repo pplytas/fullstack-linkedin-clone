@@ -21,7 +21,7 @@ public class SkillWrappedInputModel {
 		this.skills = skills;
 	}
 
-	public void setPublic(boolean isPublic) {
+	public void setIsPublic(boolean isPublic) {
 		this.isPublic = isPublic;
 	}
 

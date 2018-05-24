@@ -214,6 +214,7 @@ public class UserEntity {
 	
 	public void setEducationPublic(boolean educationPublic) {
 		this.educationPublic = educationPublic;
+		System.out.println("TEST2 " + this.educationPublic);
 	}
 	
 	public void setEducation(List<EducationEntity> education) {

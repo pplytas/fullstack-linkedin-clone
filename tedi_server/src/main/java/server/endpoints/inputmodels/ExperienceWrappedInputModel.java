@@ -21,7 +21,7 @@ public class ExperienceWrappedInputModel {
 		this.experiences = experiences;
 	}
 
-	public void setPublic(boolean isPublic) {
+	public void setIsPublic(boolean isPublic) {
 		this.isPublic = isPublic;
 	}
 	
