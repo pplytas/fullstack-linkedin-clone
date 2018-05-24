@@ -2,6 +2,7 @@ package server.endpoints;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,6 +110,8 @@ public class UserController {
 		UserEntity currUser = secService.currentUser();
 		currUser.setEducationPublic(input.isPublic());
 		try {
+			List<EducationEntity> old = eduRepo.findByUser(currUser);
+			eduRepo.deleteAll(old);
 			for (EducationInputModel e : input.getEducations()) {
 				EducationEntity entity = new EducationEntity();
 				entity.setOrganization(e.getOrganization());
@@ -132,6 +135,8 @@ public class UserController {
 		UserEntity currUser = secService.currentUser();
 		currUser.setExperiencePublic(input.isPublic());
 		try {
+			List<ExperienceEntity> old = expRepo.findByUser(currUser);
+			expRepo.deleteAll(old);
 			for (ExperienceInputModel e : input.getExperiences()) {
 				ExperienceEntity entity = new ExperienceEntity();
 				entity.setCompany(e.getCompany());
@@ -155,6 +160,8 @@ public class UserController {
 		
 		UserEntity currUser = secService.currentUser();
 		currUser.setSkillsPublic(input.isPublic());
+		List<SkillEntity> old = skillRepo.findByUser(currUser);
+		skillRepo.deleteAll(old);
 		for (SkillInputModel s : input.getSkills()) {
 			SkillEntity entity = new SkillEntity();
 			entity.setName(s.getName());
