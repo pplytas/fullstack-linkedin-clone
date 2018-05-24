@@ -21,9 +21,11 @@ import server.endpoints.outputmodels.ExperienceOutputModel;
 import server.endpoints.outputmodels.SkillOutputModel;
 import server.endpoints.outputmodels.UpvoteOutputModel;
 import server.endpoints.outputmodels.UserDetailedOutputModel;
+import server.endpoints.outputmodels.UserListOutputModel;
 import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.ArticleEntity;
 import server.entities.CommentEntity;
+import server.entities.ConnectionEntity;
 import server.entities.EducationEntity;
 import server.entities.ExperienceEntity;
 import server.entities.SkillEntity;
@@ -89,8 +91,7 @@ public class ViewController {
 	
 	//gets detailed info for a given user
 	//or for the active user, if no parameter is specified
-	//hiding in case of non public details is not yet implemented
-	//TODO after finishing with friends table
+	//TODO verify that we try to get non admin details
 	@GetMapping(value = "/account/details")
 	public ResponseEntity<Object> getAccountDetails(@RequestParam(defaultValue = "") String email) {
 		
@@ -111,33 +112,41 @@ public class ViewController {
 			output.setTelNumber(user.getTelNumber());
 			output.setPicture(sm.getFile(user.getPicture()));
 			
-			List<EducationEntity> eduList = user.getEducation();
 			List<EducationOutputModel> eduOut = new ArrayList<>();
-			for (EducationEntity e : eduList) {
-				EducationOutputModel eOut = new EducationOutputModel();
-				eOut.setOrganization(e.getOrganization());
-				eOut.setStart(e.getStart());
-				eOut.setFinish(e.getFinish());
-				eduOut.add(eOut);
+			if (user.isEducationPublic()) {
+				List<EducationEntity> eduList = user.getEducation();
+				for (EducationEntity e : eduList) {
+					EducationOutputModel eOut = new EducationOutputModel();
+					eOut.setOrganization(e.getOrganization());
+					eOut.setStart(e.getStart());
+					eOut.setFinish(e.getFinish());
+					eduOut.add(eOut);
+				}
 			}
 			output.setEducation(eduOut);
-			List<ExperienceEntity> expList = user.getExperience();
+			
 			List<ExperienceOutputModel> expOut = new ArrayList<>();
-			for (ExperienceEntity e : expList) {
-				ExperienceOutputModel xOut = new ExperienceOutputModel();
-				xOut.setCompany(e.getCompany());
-				xOut.setPosition(e.getPosition());
-				xOut.setStart(e.getStart());
-				xOut.setFinish(e.getFinish());
-				expOut.add(xOut);
+			if (user.isExperiencePublic()) {
+				List<ExperienceEntity> expList = user.getExperience();
+				for (ExperienceEntity e : expList) {
+					ExperienceOutputModel xOut = new ExperienceOutputModel();
+					xOut.setCompany(e.getCompany());
+					xOut.setPosition(e.getPosition());
+					xOut.setStart(e.getStart());
+					xOut.setFinish(e.getFinish());
+					expOut.add(xOut);
+				}
 			}
 			output.setExperience(expOut);
-			List<SkillEntity> skillList = user.getSkills();
+			
 			List<SkillOutputModel> skillOut = new ArrayList<>();
-			for (SkillEntity s : skillList) {
-				SkillOutputModel sOut = new SkillOutputModel();
-				sOut.setName(s.getName());
-				skillOut.add(sOut);
+			if (user.isSkillsPublic()) {
+				List<SkillEntity> skillList = user.getSkills();
+				for (SkillEntity s : skillList) {
+					SkillOutputModel sOut = new SkillOutputModel();
+					sOut.setName(s.getName());
+					skillOut.add(sOut);
+				}
 			}
 			output.setSkills(skillOut);
 			
@@ -251,4 +260,36 @@ public class ViewController {
 		
 	}
 
+	//gets a user list with the connected users of the active user
+	@GetMapping("/connected")
+	public ResponseEntity<Object> connected() {
+		
+		UserEntity currUser = secService.currentUser();
+		UserListOutputModel output = new UserListOutputModel();
+		try {
+			for (ConnectionEntity c : currUser.getConnections()) {
+				UserEntity u = c.getConnected();
+				output.addUser(new UserOutputModel.UserOutputBuilder(u.getEmail())
+													.name(u.getName())
+													.surname(u.getSurname())
+													.telNumber(u.getTelNumber())
+													.picture(sm.getFile(u.getPicture())).build()
+						);
+			}
+			for (ConnectionEntity c : currUser.getConnectedTo()) {
+				UserEntity u = c.getUser();
+				output.addUser(new UserOutputModel.UserOutputBuilder(u.getEmail())
+													.name(u.getName())
+													.surname(u.getSurname())
+													.telNumber(u.getTelNumber())
+													.picture(sm.getFile(u.getPicture())).build()
+						);
+			}
+		} catch (IOException e) {
+			return new ResponseEntity<>("Could not load profile pictures", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(output, HttpStatus.OK);
+		
+	}
+	
 }

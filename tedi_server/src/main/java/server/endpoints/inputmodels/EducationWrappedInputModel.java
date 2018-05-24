@@ -21,7 +21,7 @@ public class EducationWrappedInputModel {
 		this.educations = educations;
 	}
 
-	public void setPublic(boolean isPublic) {
+	public void setIsPublic(boolean isPublic) {
 		this.isPublic = isPublic;
 	}
 	
