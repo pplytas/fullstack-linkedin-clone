@@ -244,13 +244,28 @@ public class UserController {
 		
 		UserEntity currUser = secService.currentUser();
 		UserEntity connUser = userRepo.findByEmail(email);
+		if (connUser == null) {
+			return new ResponseEntity<>("Not existing user with such email", HttpStatus.BAD_REQUEST);
+		}
 		//cant make yourself a connected person to you
 		if (currUser.getId() == connUser.getId()) {
 			return new ResponseEntity<>("Can't connect to self", HttpStatus.BAD_REQUEST);
 		}
-		ConnectionEntity connection = new ConnectionEntity(currUser, connUser);
-		connRepo.save(connection);
-		return new ResponseEntity<>(HttpStatus.OK);
+		if (connRepo.findByUserAndConnectedAndIsPending(currUser, connUser, false) != null ||
+				connRepo.findByUserAndConnectedAndIsPending(connUser, currUser, false) != null) {
+			return new ResponseEntity<>("User is already connected", HttpStatus.CONFLICT);
+		}
+		else if (connRepo.findByUserAndConnectedAndIsPending(connUser, currUser, true) != null) {
+			ConnectionEntity connection = connRepo.findByUserAndConnectedAndIsPending(connUser, currUser, true);
+			connection.setIsPending(false);
+			connRepo.save(connection);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		else {
+			ConnectionEntity connection = new ConnectionEntity(currUser, connUser, true);
+			connRepo.save(connection);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
 		
 	}
 	

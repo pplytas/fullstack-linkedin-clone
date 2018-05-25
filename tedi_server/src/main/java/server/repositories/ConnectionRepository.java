@@ -9,6 +9,6 @@ import server.entities.UserEntity;
 @Repository
 public interface ConnectionRepository extends JpaRepository<ConnectionEntity, Long> {
 	
-	ConnectionEntity findByUserAndConnected(UserEntity u, UserEntity c);
+	ConnectionEntity findByUserAndConnectedAndIsPending(UserEntity u, UserEntity c, Boolean isPending);
 
 }
