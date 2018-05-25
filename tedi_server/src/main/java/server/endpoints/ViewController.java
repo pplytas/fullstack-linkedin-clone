@@ -33,6 +33,7 @@ import server.entities.UpvoteEntity;
 import server.entities.UserEntity;
 import server.repositories.ArticleRepository;
 import server.repositories.CommentRepository;
+import server.repositories.ConnectionRepository;
 import server.repositories.UpvoteRepository;
 import server.repositories.UserRepository;
 import server.utilities.StorageManager;
@@ -59,6 +60,9 @@ public class ViewController {
 	
 	@Autowired
 	private UpvoteRepository upvoteRepo;
+	
+	@Autowired
+	private ConnectionRepository connRepo;
 	
 	//gets info for a given user
 	//or for the active user, if no parameter is specified
@@ -112,8 +116,16 @@ public class ViewController {
 			output.setTelNumber(user.getTelNumber());
 			output.setPicture(sm.getFile(user.getPicture()));
 			
+			//check if the user we are getting details for is connected to us
+			boolean viewPrivate = false;
+			if (user.equals(secService.currentUser()) ||
+				connRepo.findByUserAndConnected(secService.currentUser(), user) != null ||
+				connRepo.findByUserAndConnected(user, secService.currentUser()) != null) {
+				viewPrivate = true;
+			}
+			
 			List<EducationOutputModel> eduOut = new ArrayList<>();
-			if (user.isEducationPublic() || user.equals(secService.currentUser())) {
+			if (user.isEducationPublic() || viewPrivate) {
 				List<EducationEntity> eduList = user.getEducation();
 				for (EducationEntity e : eduList) {
 					EducationOutputModel eOut = new EducationOutputModel();
@@ -126,7 +138,7 @@ public class ViewController {
 			output.setEducation(eduOut);
 			
 			List<ExperienceOutputModel> expOut = new ArrayList<>();
-			if (user.isExperiencePublic() || user.equals(secService.currentUser())) {
+			if (user.isExperiencePublic() || viewPrivate) {
 				List<ExperienceEntity> expList = user.getExperience();
 				for (ExperienceEntity e : expList) {
 					ExperienceOutputModel xOut = new ExperienceOutputModel();
@@ -140,7 +152,7 @@ public class ViewController {
 			output.setExperience(expOut);
 			
 			List<SkillOutputModel> skillOut = new ArrayList<>();
-			if (user.isSkillsPublic() || user.equals(secService.currentUser())) {
+			if (user.isSkillsPublic() || viewPrivate) {
 				List<SkillEntity> skillList = user.getSkills();
 				for (SkillEntity s : skillList) {
 					SkillOutputModel sOut = new SkillOutputModel();
