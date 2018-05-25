@@ -119,8 +119,8 @@ public class ViewController {
 			//check if the user we are getting details for is connected to us
 			boolean viewPrivate = false;
 			if (user.equals(secService.currentUser()) ||
-				connRepo.findByUserAndConnected(secService.currentUser(), user) != null ||
-				connRepo.findByUserAndConnected(user, secService.currentUser()) != null) {
+				connRepo.findByUserAndConnectedAndIsPending(secService.currentUser(), user, false) != null ||
+				connRepo.findByUserAndConnectedAndIsPending(user, secService.currentUser(), false) != null) {
 				viewPrivate = true;
 			}
 			

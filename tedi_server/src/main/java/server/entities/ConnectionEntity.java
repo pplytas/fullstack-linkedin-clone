@@ -1,5 +1,6 @@
 package server.entities;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -21,12 +22,18 @@ public class ConnectionEntity {
 	@JoinColumn(name = "connected_id", insertable = false, updatable = false)
 	private UserEntity connected;
 	
-	public ConnectionEntity() {}
+	@Column
+	private Boolean isPending;
 	
-	public ConnectionEntity(UserEntity user, UserEntity connected) {
+	public ConnectionEntity() {
+		//NOT TO BE USED IN OUR CODE
+	}
+	
+	public ConnectionEntity(UserEntity user, UserEntity connected, boolean isPending) {
 		this.connectionPK = new ConnectionEntityPK(user.getId(), connected.getId());
 		this.user = user;
 		this.connected = connected;
+		this.isPending = isPending;
 	}
 
 	public UserEntity getUser() {
@@ -36,5 +43,15 @@ public class ConnectionEntity {
 	public UserEntity getConnected() {
 		return connected;
 	}
+
+	public Boolean getIsPending() {
+		return isPending;
+	}
+
+	public void setIsPending(boolean isPending) {
+		this.isPending = isPending;
+	}
+	
+	
 	
 }
