@@ -3,6 +3,7 @@ package server.entities;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -14,11 +15,11 @@ public class ConnectionEntity {
 	@EmbeddedId
 	private ConnectionEntityPK connectionPK;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", insertable = false, updatable = false)
 	private UserEntity user;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "connected_id", insertable = false, updatable = false)
 	private UserEntity connected;
 	

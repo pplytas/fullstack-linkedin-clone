@@ -3,6 +3,7 @@ package server.endpoints;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import server.auth.SecurityService;
 import server.endpoints.outputmodels.ArticleListOutputModel;
 import server.endpoints.outputmodels.ArticleOutputModel;
+import server.endpoints.outputmodels.ChatMessageOutputModel;
+import server.endpoints.outputmodels.ChatOutputModel;
 import server.endpoints.outputmodels.CommentOutputModel;
 import server.endpoints.outputmodels.EducationOutputModel;
 import server.endpoints.outputmodels.ExperienceOutputModel;
@@ -24,14 +27,17 @@ import server.endpoints.outputmodels.UserDetailedOutputModel;
 import server.endpoints.outputmodels.UserListOutputModel;
 import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.ArticleEntity;
+import server.entities.ChatEntity;
 import server.entities.CommentEntity;
 import server.entities.ConnectionEntity;
 import server.entities.EducationEntity;
 import server.entities.ExperienceEntity;
+import server.entities.RoleEntity;
 import server.entities.SkillEntity;
 import server.entities.UpvoteEntity;
 import server.entities.UserEntity;
 import server.repositories.ArticleRepository;
+import server.repositories.ChatRepository;
 import server.repositories.CommentRepository;
 import server.repositories.ConnectionRepository;
 import server.repositories.UpvoteRepository;
@@ -63,6 +69,9 @@ public class ViewController {
 	
 	@Autowired
 	private ConnectionRepository connRepo;
+	
+	@Autowired
+	private ChatRepository chatRepo;
 	
 	//gets info for a given user
 	//or for the active user, if no parameter is specified
@@ -108,6 +117,17 @@ public class ViewController {
 			
 			if (user == null)
 				return new ResponseEntity<>("No active user found", HttpStatus.NOT_FOUND);
+			
+			Set<RoleEntity> userRoles = user.getRoles();
+			boolean userIsAdmin = false;
+			for (RoleEntity r : userRoles) {
+				if (r.getName().equals("ADMIN")) {
+					userIsAdmin = true;
+				}
+			}
+			if (userIsAdmin) {
+				return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
+			}
 			
 			UserDetailedOutputModel output = new UserDetailedOutputModel();
 			output.setEmail(user.getEmail());
@@ -299,6 +319,39 @@ public class ViewController {
 			}
 		} catch (IOException e) {
 			return new ResponseEntity<>("Could not load profile pictures", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(output, HttpStatus.OK);
+		
+	}
+	
+	//gets the messages between current user and user specified by email
+	@GetMapping("/messages")
+	public ResponseEntity<Object> messages(@RequestParam String email) {
+		
+		UserEntity currUser = secService.currentUser();
+		UserEntity otherUser = userRepo.findByEmail(email);
+		if (otherUser == null) {
+			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
+		}
+		Set<RoleEntity> otherRoles = otherUser.getRoles();
+		boolean otherIsAdmin = false;
+		for (RoleEntity r : otherRoles) {
+			if (r.getName().equals("ADMIN")) {
+				otherIsAdmin = true;
+			}
+		}
+		if (otherIsAdmin) {
+			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
+		}
+		//I dont check for connected or not users, but can be easily implemented if needed
+		List<ChatEntity> messages = chatRepo.findBySenderAndReceiverInversibleOrderByIdDesc(currUser, otherUser);
+		ChatOutputModel output = new ChatOutputModel();
+		for (ChatEntity c : messages) {
+			ChatMessageOutputModel mOut = new ChatMessageOutputModel();
+			mOut.setMessage(c.getMessage());
+			mOut.setSender(c.getSender().getEmail());
+			mOut.setReceiver(c.getReceiver().getEmail());
+			output.addMessage(mOut);
 		}
 		return new ResponseEntity<>(output, HttpStatus.OK);
 		

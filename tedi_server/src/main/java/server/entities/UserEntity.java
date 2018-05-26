@@ -84,6 +84,14 @@ public class UserEntity {
 			mappedBy = "connected", orphanRemoval = true)
 	private List<ConnectionEntity> connectedTo = new ArrayList<>();
 	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+				mappedBy = "sender", orphanRemoval = true)
+	private List<ChatEntity> sentMessages = new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+			mappedBy = "receiver", orphanRemoval = true)
+	private List<ChatEntity> receivedMessages = new ArrayList<>();
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "id"),
 				inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -178,6 +186,14 @@ public class UserEntity {
 	
 	public List<ConnectionEntity> getConnectedTo() {
 		return connectedTo;
+	}
+	
+	public List<ChatEntity> getSentMessages() {
+		return sentMessages;
+	}
+	
+	public List<ChatEntity> getReceivedMessages() {
+		return receivedMessages;
 	}
 	
 	public Set<RoleEntity> getRoles() {
@@ -286,6 +302,22 @@ public class UserEntity {
 	
 	public void addConnectedTo(ConnectionEntity connectedTo) {
 		this.connectedTo.add(connectedTo);
+	}
+	
+	public void setSentMessages(List<ChatEntity> sentMessages) {
+		this.sentMessages = sentMessages;
+	}
+	
+	public void addSentMessage(ChatEntity sentMessage) {
+		this.sentMessages.add(sentMessage);
+	}
+	
+	public void setReceivedMessages(List<ChatEntity> receivedMessages) {
+		this.receivedMessages = receivedMessages;
+	}
+	
+	public void addReceivedMessage(ChatEntity receivedMessage) {
+		this.receivedMessages.add(receivedMessage);
 	}
 	
 	public void setRoles(Set<RoleEntity> roles) {
