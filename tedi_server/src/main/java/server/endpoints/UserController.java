@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import server.auth.SecurityService;
 import server.auth.UserService;
 import server.endpoints.inputmodels.ArticleInputModel;
+import server.endpoints.inputmodels.ChatMessageInputModel;
 import server.endpoints.inputmodels.CommentInputModel;
 import server.endpoints.inputmodels.EducationInputModel;
 import server.endpoints.inputmodels.EducationWrappedInputModel;
@@ -26,14 +28,17 @@ import server.endpoints.inputmodels.ExperienceWrappedInputModel;
 import server.endpoints.inputmodels.SkillInputModel;
 import server.endpoints.inputmodels.SkillWrappedInputModel;
 import server.entities.ArticleEntity;
+import server.entities.ChatEntity;
 import server.entities.CommentEntity;
 import server.entities.ConnectionEntity;
 import server.entities.EducationEntity;
 import server.entities.ExperienceEntity;
+import server.entities.RoleEntity;
 import server.entities.SkillEntity;
 import server.entities.UpvoteEntity;
 import server.entities.UserEntity;
 import server.repositories.ArticleRepository;
+import server.repositories.ChatRepository;
 import server.repositories.CommentRepository;
 import server.repositories.ConnectionRepository;
 import server.repositories.EducationRepository;
@@ -81,6 +86,9 @@ public class UserController {
 	
 	@Autowired
 	private ConnectionRepository connRepo;
+	
+	@Autowired
+	private ChatRepository chatRepo;
 	
 	//update current user credentials (only for users, not admins)
 	@PutMapping("/update")
@@ -245,7 +253,19 @@ public class UserController {
 		UserEntity currUser = secService.currentUser();
 		UserEntity connUser = userRepo.findByEmail(email);
 		if (connUser == null) {
-			return new ResponseEntity<>("Not existing user with such email", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
+		}
+		//if the user we are trying to connect is admin, quietly reject with "not existing user" error
+		//has to be done in separate if because connUser.getRoles() can throw NullPointerException
+		Set<RoleEntity> connRoles = connUser.getRoles();
+		boolean connIsAdmin = false;
+		for (RoleEntity r : connRoles) {
+			if (r.getName().equals("ADMIN")) {
+				connIsAdmin = true;
+			}
+		}
+		if (connIsAdmin) {
+			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
 		}
 		//cant make yourself a connected person to you
 		if (currUser.getId() == connUser.getId()) {
@@ -259,13 +279,40 @@ public class UserController {
 			ConnectionEntity connection = connRepo.findByUserAndConnectedAndIsPending(connUser, currUser, true);
 			connection.setIsPending(false);
 			connRepo.save(connection);
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>("Connection request from " + email + " accepted", HttpStatus.OK);
 		}
 		else {
 			ConnectionEntity connection = new ConnectionEntity(currUser, connUser, true);
 			connRepo.save(connection);
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>("Connection request sent to " + email,HttpStatus.OK);
 		}
+		
+	}
+	
+	@PostMapping("/message")
+	public ResponseEntity<Object> message(@RequestBody ChatMessageInputModel input) {
+		
+		UserEntity currUser = secService.currentUser();
+		UserEntity otherUser = userRepo.findByEmail(input.getEmail());
+		
+		if (otherUser == null) {
+			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
+		}
+		if (otherUser.getId() == currUser.getId()) { //this is optional, i.e. facebook permits this!
+			return new ResponseEntity<>("Can't message self", HttpStatus.BAD_REQUEST);
+		}
+		//check if the 2 users are connected (optional again)
+		if (connRepo.findByUserAndConnectedAndIsPending(currUser, otherUser, false) == null &&
+			connRepo.findByUserAndConnectedAndIsPending(otherUser, currUser, false) == null) {
+			return new ResponseEntity<>("Can't message not connected user", HttpStatus.NOT_ACCEPTABLE);
+		}
+		
+		ChatEntity newMessage = new ChatEntity();
+		newMessage.setSender(currUser);
+		newMessage.setReceiver(otherUser);
+		newMessage.setMessage(input.getMessage());
+		chatRepo.save(newMessage);
+		return new ResponseEntity<>(HttpStatus.OK);
 		
 	}
 	
