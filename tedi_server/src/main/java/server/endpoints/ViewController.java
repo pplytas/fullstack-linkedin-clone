@@ -292,24 +292,35 @@ public class ViewController {
 		
 	}
 
-	//gets a user list with the connected users of the active user
-	@GetMapping("/connected")
-	public ResponseEntity<Object> connected() {
+	//gets a user list with the connected or the pending to connect users of the active user
+	//parameter specified which of the 2
+	@GetMapping("/connections")
+	public ResponseEntity<Object> getConnection(@RequestParam(defaultValue = "connected") String type) {
 		
 		UserEntity currUser = secService.currentUser();
 		UserListOutputModel output = new UserListOutputModel();
+		List<ConnectionEntity> requestedConnections;
+		if (type.equals("connected")) {
+			requestedConnections = connRepo.findByUserInversibleAndIsPending(currUser, false);
+		}
+		else if (type.equals("pending")) {
+			requestedConnections = connRepo.findByConnectedAndIsPending(currUser, true);
+		}
+		else if (type.equals("sent")) {
+			requestedConnections = connRepo.findByUserAndIsPending(currUser, true);
+		}
+		else {
+			return new ResponseEntity<>("Parameter must be connected, pending or sent", HttpStatus.BAD_REQUEST);
+		}
 		try {
-			for (ConnectionEntity c : currUser.getConnections()) {
-				UserEntity u = c.getConnected();
-				output.addUser(new UserOutputModel.UserOutputBuilder(u.getEmail())
-													.name(u.getName())
-													.surname(u.getSurname())
-													.telNumber(u.getTelNumber())
-													.picture(sm.getFile(u.getPicture())).build()
-						);
-			}
-			for (ConnectionEntity c : currUser.getConnectedTo()) {
-				UserEntity u = c.getUser();
+			for (ConnectionEntity c : requestedConnections) {
+				UserEntity u;
+				if (c.getUser().equals(currUser)) {
+					u = c.getConnected();
+				}
+				else {
+					u = c.getUser();
+				}
 				output.addUser(new UserOutputModel.UserOutputBuilder(u.getEmail())
 													.name(u.getName())
 													.surname(u.getSurname())
