@@ -45,6 +45,6 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     		if (isAdmin)
     			response.sendRedirect("/admin/userlist");
     		else
-    			response.sendRedirect("/view/account");
+    			response.sendRedirect("/user/simple");
     }
 }

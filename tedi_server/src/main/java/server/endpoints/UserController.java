@@ -166,7 +166,7 @@ public class UserController {
 	
 	//gets info for a given user
 	//or for the active user, if no parameter is specified
-	@GetMapping(value="/account")
+	@GetMapping(value="/simple")
 	public ResponseEntity<Object> getAccount(@RequestParam(defaultValue = "") String email) {
 		
 		try {
@@ -195,7 +195,7 @@ public class UserController {
 	
 	//gets detailed info for a given user
 	//or for the active user, if no parameter is specified
-	@GetMapping(value = "/account/details")
+	@GetMapping(value = "/details")
 	public ResponseEntity<Object> getAccountDetails(@RequestParam(defaultValue = "") String email) {
 		
 		try {
