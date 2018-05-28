@@ -2,13 +2,14 @@ package server.endpoints;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,33 +19,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 import server.auth.SecurityService;
 import server.auth.UserService;
-import server.endpoints.inputmodels.ArticleInputModel;
-import server.endpoints.inputmodels.ChatMessageInputModel;
-import server.endpoints.inputmodels.CommentInputModel;
 import server.endpoints.inputmodels.EducationInputModel;
 import server.endpoints.inputmodels.EducationWrappedInputModel;
 import server.endpoints.inputmodels.ExperienceInputModel;
 import server.endpoints.inputmodels.ExperienceWrappedInputModel;
 import server.endpoints.inputmodels.SkillInputModel;
 import server.endpoints.inputmodels.SkillWrappedInputModel;
-import server.entities.ArticleEntity;
-import server.entities.ChatEntity;
-import server.entities.CommentEntity;
-import server.entities.ConnectionEntity;
+import server.endpoints.outputmodels.EducationOutputModel;
+import server.endpoints.outputmodels.ExperienceOutputModel;
+import server.endpoints.outputmodels.SkillOutputModel;
+import server.endpoints.outputmodels.UserDetailedOutputModel;
+import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.EducationEntity;
 import server.entities.ExperienceEntity;
 import server.entities.RoleEntity;
 import server.entities.SkillEntity;
-import server.entities.UpvoteEntity;
 import server.entities.UserEntity;
-import server.repositories.ArticleRepository;
-import server.repositories.ChatRepository;
-import server.repositories.CommentRepository;
 import server.repositories.ConnectionRepository;
 import server.repositories.EducationRepository;
 import server.repositories.ExperienceRepository;
 import server.repositories.SkillRepository;
-import server.repositories.UpvoteRepository;
 import server.repositories.UserRepository;
 import server.utilities.StorageManager;
 import server.utilities.Validator;
@@ -76,19 +70,7 @@ public class UserController {
 	private SkillRepository skillRepo;
 	
 	@Autowired
-	private ArticleRepository articleRepo;
-	
-	@Autowired
-	private CommentRepository commentRepo;
-	
-	@Autowired
-	private UpvoteRepository upvoteRepo;
-	
-	@Autowired
 	private ConnectionRepository connRepo;
-	
-	@Autowired
-	private ChatRepository chatRepo;
 	
 	//update current user credentials (only for users, not admins)
 	@PutMapping("/update")
@@ -182,137 +164,118 @@ public class UserController {
 		
 	}
 	
-	//add a new article for the current user
-	@PostMapping("/article")
-	public ResponseEntity<Object> addArticle(@RequestBody ArticleInputModel input) {
+	//gets info for a given user
+	//or for the active user, if no parameter is specified
+	@GetMapping(value="/account")
+	public ResponseEntity<Object> getAccount(@RequestParam(defaultValue = "") String email) {
 		
 		try {
-			UserEntity currentUser = secService.currentUser();
+			UserEntity user;
 			
-			ArticleEntity article = new ArticleEntity();
-			article.setTitle(input.getTitle());
-			article.setText(input.getText());
-			article.setMediafile(sm.storeFile(input.getFile()));
-			article.setUser(currentUser);
-			article.setDateTime();
-			articleRepo.save(article);
+			if (email.equals(""))
+				user = secService.currentUser();
+			else
+				user = userRepo.findByEmail(email);
 			
-			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (IOException e) {
-			return new ResponseEntity<>("Could not save media file", HttpStatus.INTERNAL_SERVER_ERROR);
+			if (user == null)
+				return new ResponseEntity<>("No active user found", HttpStatus.NOT_FOUND);
+
+			return new ResponseEntity<>(
+					new UserOutputModel.UserOutputBuilder(user.getEmail())
+														.name(user.getName())
+														.surname(user.getSurname())
+														.telNumber(user.getTelNumber())
+														.picture(sm.getFile(user.getPicture())).build()
+					, HttpStatus.OK);
 		}
-		
+		catch (IOException e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
-	//add a new comment to the article specified by articleId, with commentator the current user
-	@PostMapping("/comment")
-	public ResponseEntity<Object> addComment(@RequestBody CommentInputModel input) {
+	//gets detailed info for a given user
+	//or for the active user, if no parameter is specified
+	@GetMapping(value = "/account/details")
+	public ResponseEntity<Object> getAccountDetails(@RequestParam(defaultValue = "") String email) {
 		
-		UserEntity currUser = secService.currentUser();
-		Optional<ArticleEntity> optArticle = articleRepo.findById(input.getArticleId());
-		if (optArticle.isPresent()) {
-			ArticleEntity refArticle = optArticle.get();
-			CommentEntity comment = new CommentEntity();
-			comment.setText(input.getText());
-			comment.setArticle(refArticle);
-			comment.setUser(currUser);
-			comment.setDateTime();
-			commentRepo.save(comment);
-			return new ResponseEntity<>(HttpStatus.OK);
-		}
-		else {
-			return new ResponseEntity<>("Could not find specified article", HttpStatus.NOT_FOUND);
-		}
-		
-	}
-	
-	//upvote an article specified by its article id
-	//can be easily transformed to also upvote comments in the future
-	@PostMapping("/upvote")
-	public ResponseEntity<Object> upvote(@RequestParam Long articleId) {
-		
-		UserEntity currUser = secService.currentUser();
-		Optional<ArticleEntity> optArticle = articleRepo.findById(articleId);
-		if (optArticle.isPresent()) {
-			ArticleEntity refArticle = optArticle.get();
-			UpvoteEntity upvote = new UpvoteEntity(currUser, refArticle);
-			upvoteRepo.save(upvote);
-			return new ResponseEntity<>(HttpStatus.OK);
-		}
-		else {
-			return new ResponseEntity<>("Could not find specified article", HttpStatus.NOT_FOUND);
-		}
-		
-	}
-	
-	//add a new connection between active user and the one specified by the parameter
-	//TODO verify that connected user is not admin
-	@PostMapping("/connect")
-	public ResponseEntity<Object> connect(@RequestParam String email) {
-		
-		UserEntity currUser = secService.currentUser();
-		UserEntity connUser = userRepo.findByEmail(email);
-		if (connUser == null) {
-			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
-		}
-		//if the user we are trying to connect is admin, quietly reject with "not existing user" error
-		//has to be done in separate if because connUser.getRoles() can throw NullPointerException
-		Set<RoleEntity> connRoles = connUser.getRoles();
-		boolean connIsAdmin = false;
-		for (RoleEntity r : connRoles) {
-			if (r.getName().equals("ADMIN")) {
-				connIsAdmin = true;
+		try {
+			UserEntity user;
+			if (email.equals(""))
+				user = secService.currentUser();
+			else
+				user = userRepo.findByEmail(email);
+			
+			if (user == null)
+				return new ResponseEntity<>("No active user found", HttpStatus.NOT_FOUND);
+			
+			Set<RoleEntity> userRoles = user.getRoles();
+			boolean userIsAdmin = false;
+			for (RoleEntity r : userRoles) {
+				if (r.getName().equals("ADMIN")) {
+					userIsAdmin = true;
+				}
 			}
+			if (userIsAdmin) {
+				return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
+			}
+			
+			UserDetailedOutputModel output = new UserDetailedOutputModel();
+			output.setEmail(user.getEmail());
+			output.setName(user.getName());
+			output.setSurname(user.getSurname());
+			output.setTelNumber(user.getTelNumber());
+			output.setPicture(sm.getFile(user.getPicture()));
+			
+			//check if the user we are getting details for is connected to us
+			boolean viewPrivate = false;
+			if (user.equals(secService.currentUser()) ||
+				connRepo.findByUserAndConnectedAndIsPending(secService.currentUser(), user, false) != null ||
+				connRepo.findByUserAndConnectedAndIsPending(user, secService.currentUser(), false) != null) {
+				viewPrivate = true;
+			}
+			
+			List<EducationOutputModel> eduOut = new ArrayList<>();
+			if (user.isEducationPublic() || viewPrivate) {
+				List<EducationEntity> eduList = user.getEducation();
+				for (EducationEntity e : eduList) {
+					EducationOutputModel eOut = new EducationOutputModel();
+					eOut.setOrganization(e.getOrganization());
+					eOut.setStart(e.getStart());
+					eOut.setFinish(e.getFinish());
+					eduOut.add(eOut);
+				}
+			}
+			output.setEducation(eduOut);
+			
+			List<ExperienceOutputModel> expOut = new ArrayList<>();
+			if (user.isExperiencePublic() || viewPrivate) {
+				List<ExperienceEntity> expList = user.getExperience();
+				for (ExperienceEntity e : expList) {
+					ExperienceOutputModel xOut = new ExperienceOutputModel();
+					xOut.setCompany(e.getCompany());
+					xOut.setPosition(e.getPosition());
+					xOut.setStart(e.getStart());
+					xOut.setFinish(e.getFinish());
+					expOut.add(xOut);
+				}
+			}
+			output.setExperience(expOut);
+			
+			List<SkillOutputModel> skillOut = new ArrayList<>();
+			if (user.isSkillsPublic() || viewPrivate) {
+				List<SkillEntity> skillList = user.getSkills();
+				for (SkillEntity s : skillList) {
+					SkillOutputModel sOut = new SkillOutputModel();
+					sOut.setName(s.getName());
+					skillOut.add(sOut);
+				}
+			}
+			output.setSkills(skillOut);
+			
+			return new ResponseEntity<>(output, HttpStatus.OK);
+		} catch (IOException e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		if (connIsAdmin) {
-			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
-		}
-		//cant make yourself a connected person to you
-		if (currUser.getId() == connUser.getId()) {
-			return new ResponseEntity<>("Can't connect to self", HttpStatus.BAD_REQUEST);
-		}
-		if (connRepo.findByUserAndConnectedAndIsPending(currUser, connUser, false) != null ||
-				connRepo.findByUserAndConnectedAndIsPending(connUser, currUser, false) != null) {
-			return new ResponseEntity<>("User is already connected", HttpStatus.CONFLICT);
-		}
-		else if (connRepo.findByUserAndConnectedAndIsPending(connUser, currUser, true) != null) {
-			ConnectionEntity connection = connRepo.findByUserAndConnectedAndIsPending(connUser, currUser, true);
-			connection.setIsPending(false);
-			connRepo.save(connection);
-			return new ResponseEntity<>("Connection request from " + email + " accepted", HttpStatus.OK);
-		}
-		else {
-			ConnectionEntity connection = new ConnectionEntity(currUser, connUser, true);
-			connRepo.save(connection);
-			return new ResponseEntity<>("Connection request sent to " + email,HttpStatus.OK);
-		}
-		
-	}
-	
-	@PostMapping("/message")
-	public ResponseEntity<Object> message(@RequestBody ChatMessageInputModel input) {
-		
-		UserEntity currUser = secService.currentUser();
-		UserEntity otherUser = userRepo.findByEmail(input.getEmail());
-		
-		if (otherUser == null) {
-			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
-		}
-		if (otherUser.getId() == currUser.getId()) { //this is optional, i.e. facebook permits this!
-			return new ResponseEntity<>("Can't message self", HttpStatus.BAD_REQUEST);
-		}
-		//check if the 2 users are connected (optional again)
-		if (connRepo.findByUserAndConnectedAndIsPending(currUser, otherUser, false) == null &&
-			connRepo.findByUserAndConnectedAndIsPending(otherUser, currUser, false) == null) {
-			return new ResponseEntity<>("Can't message not connected user", HttpStatus.NOT_ACCEPTABLE);
-		}
-		
-		ChatEntity newMessage = new ChatEntity();
-		newMessage.setSender(currUser);
-		newMessage.setReceiver(otherUser);
-		newMessage.setMessage(input.getMessage());
-		chatRepo.save(newMessage);
-		return new ResponseEntity<>(HttpStatus.OK);
 		
 	}
 	
