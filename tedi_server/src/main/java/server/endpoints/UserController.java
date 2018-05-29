@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,7 +31,6 @@ import server.endpoints.outputmodels.UserDetailedOutputModel;
 import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.EducationEntity;
 import server.entities.ExperienceEntity;
-import server.entities.RoleEntity;
 import server.entities.SkillEntity;
 import server.entities.UserEntity;
 import server.repositories.ConnectionRepository;
@@ -206,16 +204,9 @@ public class UserController {
 				user = userRepo.findByEmail(email);
 			
 			if (user == null)
-				return new ResponseEntity<>("No active user found", HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
 			
-			Set<RoleEntity> userRoles = user.getRoles();
-			boolean userIsAdmin = false;
-			for (RoleEntity r : userRoles) {
-				if (r.getName().equals("ADMIN")) {
-					userIsAdmin = true;
-				}
-			}
-			if (userIsAdmin) {
+			if (!Validator.validateUserAuth(user)) {
 				return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
 			}
 			

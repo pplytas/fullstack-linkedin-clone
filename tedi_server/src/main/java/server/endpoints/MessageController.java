@@ -22,6 +22,7 @@ import server.entities.UserEntity;
 import server.repositories.ChatRepository;
 import server.repositories.ConnectionRepository;
 import server.repositories.UserRepository;
+import server.utilities.Validator;
 
 @RestController
 public class MessageController {
@@ -74,14 +75,7 @@ public class MessageController {
 		if (otherUser == null) {
 			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
 		}
-		Set<RoleEntity> otherRoles = otherUser.getRoles();
-		boolean otherIsAdmin = false;
-		for (RoleEntity r : otherRoles) {
-			if (r.getName().equals("ADMIN")) {
-				otherIsAdmin = true;
-			}
-		}
-		if (otherIsAdmin) {
+		if (!Validator.validateUserAuth(otherUser)) {
 			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
 		}
 		//I dont check for connected or not users, but can be easily implemented if needed

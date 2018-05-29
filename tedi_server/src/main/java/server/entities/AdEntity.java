@@ -93,6 +93,10 @@ public class AdEntity {
 		this.skills = skills;
 	}
 	
+	public void addSkill(AdSkillEntity skill) {
+		this.skills.add(skill);
+	}
+	
 	public void setPublisher(UserEntity publisher) {
 		this.publisher = publisher;
 	}
