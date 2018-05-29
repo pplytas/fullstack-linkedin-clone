@@ -11,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -31,11 +33,15 @@ public class AdEntity {
 	private String description;
 	
 	@Temporal(value = TemporalType.DATE)
-	private Date postDate;
+	private Date publishDate;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
-				mappedBy = "ad")
+				mappedBy = "ad", orphanRemoval = true)
 	private List<AdSkillEntity> skills = new ArrayList<>();
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "publisher")
+	private UserEntity publisher;
 	
 	public AdEntity() {}
 
@@ -51,12 +57,16 @@ public class AdEntity {
 		return description;
 	}
 
-	public Date getPostDate() {
-		return postDate;
+	public Date getPublishDate() {
+		return publishDate;
 	}
 
 	public List<AdSkillEntity> getSkills() {
 		return skills;
+	}
+	
+	public UserEntity getPublisher() {
+		return publisher;
 	}
 
 	public void setId(Long id) {
@@ -70,13 +80,21 @@ public class AdEntity {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	public void setPublishDate() {
+		this.publishDate = new Date();
+	}
 
-	public void setPostDate(Date postDate) {
-		this.postDate = postDate;
+	public void setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
 	}
 
 	public void setSkills(List<AdSkillEntity> skills) {
 		this.skills = skills;
+	}
+	
+	public void setPublisher(UserEntity publisher) {
+		this.publisher = publisher;
 	}
 	
 }

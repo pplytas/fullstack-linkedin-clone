@@ -81,7 +81,7 @@ public class UserEntity {
 	private List<ConnectionEntity> connections = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
-			mappedBy = "connected", orphanRemoval = true)
+				mappedBy = "connected", orphanRemoval = true)
 	private List<ConnectionEntity> connectedTo = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
@@ -89,8 +89,12 @@ public class UserEntity {
 	private List<ChatEntity> sentMessages = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
-			mappedBy = "receiver", orphanRemoval = true)
+				mappedBy = "receiver", orphanRemoval = true)
 	private List<ChatEntity> receivedMessages = new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+				mappedBy = "publisher", orphanRemoval = true)
+	private List<AdEntity> ads = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "id"),
@@ -194,6 +198,10 @@ public class UserEntity {
 	
 	public List<ChatEntity> getReceivedMessages() {
 		return receivedMessages;
+	}
+	
+	public List<AdEntity> getAds() {
+		return ads;
 	}
 	
 	public Set<RoleEntity> getRoles() {
@@ -318,6 +326,14 @@ public class UserEntity {
 	
 	public void addReceivedMessage(ChatEntity receivedMessage) {
 		this.receivedMessages.add(receivedMessage);
+	}
+	
+	public void setAds(List<AdEntity> ads) {
+		this.ads = ads;
+	}
+	
+	public void addAd(AdEntity ad) {
+		this.ads.add(ad);
 	}
 	
 	public void setRoles(Set<RoleEntity> roles) {
