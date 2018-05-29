@@ -43,11 +43,11 @@ public class ArticleEntity {
 	private UserEntity user;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
-				mappedBy = "article")
+				mappedBy = "article", orphanRemoval = true)
 	private List<CommentEntity> comments = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
-				mappedBy = "article")
+				mappedBy = "article", orphanRemoval = true)
 	private List<UpvoteEntity> upvotes = new ArrayList<>();
 	
 	public ArticleEntity() {}

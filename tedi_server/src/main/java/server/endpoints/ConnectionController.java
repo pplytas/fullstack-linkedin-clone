@@ -2,7 +2,6 @@ package server.endpoints;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,11 +15,11 @@ import server.auth.SecurityService;
 import server.endpoints.outputmodels.UserListOutputModel;
 import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.ConnectionEntity;
-import server.entities.RoleEntity;
 import server.entities.UserEntity;
 import server.repositories.ConnectionRepository;
 import server.repositories.UserRepository;
 import server.utilities.StorageManager;
+import server.utilities.Validator;
 
 @RestController
 public class ConnectionController {
@@ -48,14 +47,7 @@ public class ConnectionController {
 		}
 		//if the user we are trying to connect is admin, quietly reject with "not existing user" error
 		//has to be done in separate if because connUser.getRoles() can throw NullPointerException
-		Set<RoleEntity> connRoles = connUser.getRoles();
-		boolean connIsAdmin = false;
-		for (RoleEntity r : connRoles) {
-			if (r.getName().equals("ADMIN")) {
-				connIsAdmin = true;
-			}
-		}
-		if (connIsAdmin) {
+		if (!Validator.validateUserAuth(connUser)) {
 			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
 		}
 		//cant make yourself a connected person to you
