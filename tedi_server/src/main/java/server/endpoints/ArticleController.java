@@ -139,7 +139,7 @@ public class ArticleController {
 			for (ArticleEntity a : articles) {
 				ArticleOutputModel outA = new ArticleOutputModel();
 				outA.setId(a.getId());
-				outA.setAuthor(refUser.getEmail());
+				outA.setAuthor(a.getUser().getEmail());
 				outA.setTitle(a.getTitle());
 				outA.setText(a.getText());
 				outA.setFile(sm.getFile(a.getMediafile()));
@@ -191,6 +191,44 @@ public class ArticleController {
 				ArticleOutputModel outA = new ArticleOutputModel();
 				outA.setId(a.getId());
 				outA.setAuthor(refUser.getEmail());
+				outA.setTitle(a.getTitle());
+				outA.setText(a.getText());
+				outA.setFile(sm.getFile(a.getMediafile()));
+				outA.setDateTime(a.getDateTime());
+				List<CommentEntity> comments = commentRepo.findByArticleOrderByDateTimeDesc(a);
+				for (CommentEntity c : comments) {
+					CommentOutputModel cOut = new CommentOutputModel();
+					cOut.setText(c.getText());
+					cOut.setCommentator(c.getUser().getEmail());
+					cOut.setDateTime(c.getDateTime());
+					outA.addComment(cOut);
+				}
+				List<UpvoteEntity> upvotes = upvoteRepo.findByArticle(a);
+				for (UpvoteEntity u : upvotes) {
+					UpvoteOutputModel uOut = new UpvoteOutputModel();
+					uOut.setUpvoter(u.getUser().getEmail());
+					outA.addUpvote(uOut);
+				}
+				output.addArticle(outA);
+			}
+			return new ResponseEntity<>(output, HttpStatus.OK);
+		} catch (IOException e) {
+			return new ResponseEntity<>("Could not load media file", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+	
+	//gets the feed for the active user in chronological order
+	@GetMapping("/feed")
+	public ResponseEntity<Object> getFeed() {
+		
+		UserEntity currUser = secService.currentUser();
+		ArticleListOutputModel output = new ArticleListOutputModel();
+		try {
+			for (ArticleEntity a : articleRepo.findFeedOrderByDateTimeDesc(currUser)) {
+				ArticleOutputModel outA = new ArticleOutputModel();
+				outA.setId(a.getId());
+				outA.setAuthor(a.getUser().getEmail());
 				outA.setTitle(a.getTitle());
 				outA.setText(a.getText());
 				outA.setFile(sm.getFile(a.getMediafile()));
