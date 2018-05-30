@@ -1,7 +1,6 @@
 package server.endpoints;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,6 @@ import server.endpoints.inputmodels.ChatMessageInputModel;
 import server.endpoints.outputmodels.ChatMessageOutputModel;
 import server.endpoints.outputmodels.ChatOutputModel;
 import server.entities.ChatEntity;
-import server.entities.RoleEntity;
 import server.entities.UserEntity;
 import server.repositories.ChatRepository;
 import server.repositories.ConnectionRepository;
