@@ -5,15 +5,19 @@ import java.util.List;
 
 public class EmailListInputModel {
 	
-	List<String> emails = new ArrayList<>();
+	List<EmailInputModel> emails = new ArrayList<>();
 	
 	public EmailListInputModel() {}
 
 	public List<String> getEmails() {
-		return emails;
+		List<String> emailStr = new ArrayList<>();
+		for (EmailInputModel e : emails) {
+			emailStr.add(e.getEmail());
+		}
+		return emailStr;
 	}
 
-	public void setEmails(List<String> emails) {
+	public void setEmails(List<EmailInputModel> emails) {
 		this.emails = emails;
 	}
 
