@@ -280,11 +280,11 @@ public class UserController {
 				else {
 					u = c.getConnected();
 				}
-				UserOutputModel uOut = new UserOutputModel.UserOutputBuilder(user.getEmail())
-						.name(user.getName())
-						.surname(user.getSurname())
-						.telNumber(user.getTelNumber())
-						.picture(sm.getFile(user.getPicture())).build();
+				UserOutputModel uOut = new UserOutputModel.UserOutputBuilder(u.getEmail())
+						.name(u.getName())
+						.surname(u.getSurname())
+						.telNumber(u.getTelNumber())
+						.picture(sm.getFile(u.getPicture())).build();
 				connOut.add(uOut);
 			}
 			output.setConnected(connOut);
