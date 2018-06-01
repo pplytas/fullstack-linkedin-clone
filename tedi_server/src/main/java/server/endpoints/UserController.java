@@ -24,15 +24,20 @@ import server.endpoints.inputmodels.ExperienceInputModel;
 import server.endpoints.inputmodels.ExperienceWrappedInputModel;
 import server.endpoints.inputmodels.SkillInputModel;
 import server.endpoints.inputmodels.SkillWrappedInputModel;
+import server.endpoints.outputmodels.AdOutputModel;
 import server.endpoints.outputmodels.EducationOutputModel;
 import server.endpoints.outputmodels.ExperienceOutputModel;
 import server.endpoints.outputmodels.SkillOutputModel;
 import server.endpoints.outputmodels.UserDetailedOutputModel;
 import server.endpoints.outputmodels.UserOutputModel;
+import server.entities.AdEntity;
+import server.entities.AdSkillEntity;
+import server.entities.ConnectionEntity;
 import server.entities.EducationEntity;
 import server.entities.ExperienceEntity;
 import server.entities.SkillEntity;
 import server.entities.UserEntity;
+import server.repositories.AdRepository;
 import server.repositories.ConnectionRepository;
 import server.repositories.EducationRepository;
 import server.repositories.ExperienceRepository;
@@ -69,6 +74,9 @@ public class UserController {
 	
 	@Autowired
 	private ConnectionRepository connRepo;
+	
+	@Autowired
+	private AdRepository adRepo;
 	
 	//update current user credentials (only for users, not admins)
 	@PutMapping("/update")
@@ -262,6 +270,44 @@ public class UserController {
 				}
 			}
 			output.setSkills(skillOut);
+			
+			List<UserOutputModel> connOut = new ArrayList<>();
+			for (ConnectionEntity c : connRepo.findByUserInversibleAndIsPending(user, false)) {
+				UserEntity u;
+				if (!c.getUser().equals(user)) {
+					u = c.getUser();
+				}
+				else {
+					u = c.getConnected();
+				}
+				UserOutputModel uOut = new UserOutputModel.UserOutputBuilder(user.getEmail())
+						.name(user.getName())
+						.surname(user.getSurname())
+						.telNumber(user.getTelNumber())
+						.picture(sm.getFile(user.getPicture())).build();
+				connOut.add(uOut);
+			}
+			output.setConnected(connOut);
+			
+			List<AdOutputModel> adsOut = new ArrayList<>();
+			for (AdEntity ad : adRepo.findByPublisher(user)) {
+				AdOutputModel adOut = new AdOutputModel();
+				adOut.setId(ad.getId());
+				adOut.setTitle(ad.getTitle());
+				adOut.setDescription(ad.getDescription());
+				adOut.setPublisher(new UserOutputModel.UserOutputBuilder(user.getEmail())
+															.name(user.getName())
+															.surname(user.getSurname())
+															.telNumber(user.getTelNumber())
+															.picture(sm.getFile(user.getPicture())).build());
+				for (AdSkillEntity adskill : ad.getSkills()) {
+					SkillOutputModel sOut = new SkillOutputModel();
+					sOut.setName(adskill.getName());
+					adOut.addSkill(sOut);
+				}
+				adsOut.add(adOut);
+			}
+			output.setAds(adsOut);
 			
 			return new ResponseEntity<>(output, HttpStatus.OK);
 		} catch (IOException e) {
