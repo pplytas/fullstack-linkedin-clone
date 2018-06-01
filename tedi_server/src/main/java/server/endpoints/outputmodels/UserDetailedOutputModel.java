@@ -13,6 +13,8 @@ public class UserDetailedOutputModel {
 	private List<EducationOutputModel> education = new ArrayList<>();
 	private List<ExperienceOutputModel> experience = new ArrayList<>();
 	private List<SkillOutputModel> skills = new ArrayList<>();
+	private List<UserOutputModel> connected = new ArrayList<>();
+	private List<AdOutputModel> ads = new ArrayList<>();
 	
 	public UserDetailedOutputModel() {}
 
@@ -47,6 +49,14 @@ public class UserDetailedOutputModel {
 	public List<SkillOutputModel> getSkills() {
 		return skills;
 	}
+	
+	public List<UserOutputModel> getConnected() {
+		return connected;
+	}
+	
+	public List<AdOutputModel> getAds() {
+		return ads;
+	}
 
 	public void setEmail(String email) {
 		this.email = email;
@@ -78,6 +88,14 @@ public class UserDetailedOutputModel {
 
 	public void setSkills(List<SkillOutputModel> skills) {
 		this.skills = skills;
+	}
+	
+	public void setConnected(List<UserOutputModel> connected) {
+		this.connected = connected;
+	}
+	
+	public void setAds(List<AdOutputModel> ads) {
+		this.ads = ads;
 	}
 
 }

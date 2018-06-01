@@ -7,10 +7,13 @@ import org.springframework.stereotype.Repository;
 
 import server.entities.ArticleEntity;
 import server.entities.CommentEntity;
+import server.entities.UserEntity;
 
 @Repository
 public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 
 	List<CommentEntity> findByArticleOrderByDateTimeDesc(ArticleEntity article);
+	
+	List<CommentEntity> findByUser(UserEntity user);
 	
 }
