@@ -5,13 +5,26 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import server.endpoints.outputmodels.UserDetailedOutputModel;
 
 @Component
 public class StorageManager {
@@ -20,6 +33,31 @@ public class StorageManager {
 
 	@Value("${uploads_path}")	
 	private String filePath;
+	
+	@Value("${export_path}")
+	private String exportPath;
+	
+	public ByteArrayResource exportUsers(List<UserDetailedOutputModel> users) throws IOException, ParserConfigurationException {
+		
+		//create document
+		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		Document doc = docBuilder.newDocument();
+				
+		//root element
+		Element root = doc.createElement("users");
+		doc.appendChild(root);
+		
+		//add each user's data
+		for (UserDetailedOutputModel u : users) {
+			
+			//TODO
+			
+		}
+		
+		Path path = Paths.get(exportPath + "/export.xml");
+		return new ByteArrayResource(Files.readAllBytes(path));
+		
+	}
 	
 	public String storeFile(String filestring) throws IOException {
 		
