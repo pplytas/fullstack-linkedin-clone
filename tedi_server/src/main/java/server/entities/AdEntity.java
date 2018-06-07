@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import server.classification.Categories;
+
 @Entity
 @Table(name = "ads")
 public class AdEntity {
@@ -43,6 +45,8 @@ public class AdEntity {
 	@JoinColumn(name = "publisher")
 	private UserEntity publisher;
 	
+	private Categories category;
+	
 	public AdEntity() {}
 
 	public Long getId() {
@@ -67,6 +71,10 @@ public class AdEntity {
 	
 	public UserEntity getPublisher() {
 		return publisher;
+	}
+	
+	public Categories getCategories() {
+		return category;
 	}
 
 	public void setId(Long id) {
@@ -99,6 +107,10 @@ public class AdEntity {
 	
 	public void setPublisher(UserEntity publisher) {
 		this.publisher = publisher;
+	}
+	
+	public void setCategories(Categories category) {
+		this.category = category;
 	}
 	
 }

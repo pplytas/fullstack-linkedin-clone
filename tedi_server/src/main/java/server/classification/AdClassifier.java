@@ -54,10 +54,7 @@ public class AdClassifier extends Classifier<AdEntity> {
 	}
 	
 	protected Categories getItemCategory(AdEntity ad) {
-		
-		//todo return ad.getCategory()
-		return null;
-		
+		return ad.getCategories();		
 	}
 	
 }

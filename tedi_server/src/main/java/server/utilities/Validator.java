@@ -1,6 +1,5 @@
 package server.utilities;
 
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import server.entities.RoleEntity;

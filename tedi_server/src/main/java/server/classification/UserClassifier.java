@@ -49,10 +49,7 @@ public class UserClassifier extends Classifier<UserEntity> {
 	}
 	
 	protected Categories getItemCategory(UserEntity user) {
-		
-		//todo return user.getCategory()
-		return null;
-		
+		return user.getCategory();
 	}
 
 }
