@@ -1,7 +1,12 @@
 package server.endpoints;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +27,7 @@ import server.endpoints.outputmodels.SkillOutputModel;
 import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.AdEntity;
 import server.entities.AdSkillEntity;
+import server.entities.SkillEntity;
 import server.entities.UserSkillEntity;
 import server.entities.UserEntity;
 import server.repositories.AdRepository;
@@ -113,14 +119,50 @@ public class AdController {
 	public ResponseEntity<Object> getSuggested() {
 		
 		UserEntity user = secService.currentUser();
-		List<UserSkillEntity> skills  = user.getSkills();
-		List<AdEntity> allAds = adRepo.findAll();
+		//sets here help us to have O(1) add and search time
+		Set<String> currSkillSet = new HashSet<>();
+		for (SkillEntity s : user.getSkills()) {
+			currSkillSet.add(s.getName());
+		}
+		Set<AdEntity> allAds = new HashSet<>(adRepo.findAll());
+		Set<AdEntity> temporaryAds = new HashSet<>();
+		//list here because we need it ordered correctly
+		List<AdOutputModel> returned = new ArrayList<>();
 		
 		//O(n^2) nearest neighbour algorithm
 		while (!allAds.isEmpty()) {
 			
-			//TODO create a superclass for skillentities!!!!! will really help and is consistent with the schema!
+			//this map is used to efficiently (in terms of time) count the ads with the max number of same skills
+			Map<Integer, Set<AdEntity>> countSameSkills = new HashMap<>();
+			int maxCommon = 0;
+			for (AdEntity ad : allAds) {
+				
+				int sameCounter = 0;
+				for (SkillEntity sk : ad.getSkills()) {
+					//contains does .equals() as specified by documentation, not a reference check!
+					if (currSkillSet.contains(sk.getName())) {
+						sameCounter++;
+						if (sameCounter > maxCommon) {
+							maxCommon = sameCounter;
+						}
+					}
+				}
+				//add this ad at the map node with the respective sameskills counter
+				if (countSameSkills.containsKey(sameCounter)) {
+					countSameSkills.get(sameCounter).add(ad);
+				}
+				else {
+					Set<AdEntity> newSet = new HashSet<>();
+					newSet.add(ad);
+					countSameSkills.put(sameCounter, newSet);
+				}
+				
+			}
 			
+			for (AdEntity ad : countSameSkills.get(maxCommon)) {
+				temporaryAds.add(ad);
+				allAds.remove(ad);
+			}
 			//TODO search by skills in the list to find the ad that matches most of the skills
 			//TODO remove them from allAds and add them to a temp returning list
 			//TODO then, for all the ads that matched, find the ones that match most of their skills
