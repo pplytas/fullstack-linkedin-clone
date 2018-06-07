@@ -62,7 +62,7 @@ public class UserEntity {
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
 				mappedBy = "user")
-	private List<SkillEntity> skills = new ArrayList<>();
+	private List<UserSkillEntity> skills = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
 				mappedBy = "user")
@@ -168,7 +168,7 @@ public class UserEntity {
 		return skillsPublic;
 	}
 	
-	public List<SkillEntity> getSkills() {
+	public List<UserSkillEntity> getSkills() {
 		return skills;
 	}
 	
@@ -264,11 +264,11 @@ public class UserEntity {
 		this.skillsPublic = skillsPublic;
 	}
 	
-	public void setSkills(List<SkillEntity> skills) {
+	public void setSkills(List<UserSkillEntity> skills) {
 		this.skills = skills;
 	}
 	
-	public void addSkill(SkillEntity skill) {
+	public void addSkill(UserSkillEntity skill) {
 		this.skills.add(skill);
 	}
 	

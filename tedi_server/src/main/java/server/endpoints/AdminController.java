@@ -27,7 +27,7 @@ import server.entities.AdSkillEntity;
 import server.entities.ConnectionEntity;
 import server.entities.EducationEntity;
 import server.entities.ExperienceEntity;
-import server.entities.SkillEntity;
+import server.entities.UserSkillEntity;
 import server.entities.UserEntity;
 import server.repositories.ConnectionRepository;
 import server.repositories.UserRepository;
@@ -121,8 +121,8 @@ public class AdminController {
 			output.setExperience(expOut);
 			
 			List<SkillOutputModel> skillOut = new ArrayList<>();
-			List<SkillEntity> skillList = user.getSkills();
-			for (SkillEntity s : skillList) {
+			List<UserSkillEntity> skillList = user.getSkills();
+			for (UserSkillEntity s : skillList) {
 				SkillOutputModel sOut = new SkillOutputModel();
 				sOut.setName(s.getName());
 				skillOut.add(sOut);

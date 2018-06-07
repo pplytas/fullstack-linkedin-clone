@@ -22,7 +22,7 @@ import server.endpoints.outputmodels.SkillOutputModel;
 import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.AdEntity;
 import server.entities.AdSkillEntity;
-import server.entities.SkillEntity;
+import server.entities.UserSkillEntity;
 import server.entities.UserEntity;
 import server.repositories.AdRepository;
 import server.repositories.UserRepository;
@@ -113,7 +113,7 @@ public class AdController {
 	public ResponseEntity<Object> getSuggested() {
 		
 		UserEntity user = secService.currentUser();
-		List<SkillEntity> skills  = user.getSkills();
+		List<UserSkillEntity> skills  = user.getSkills();
 		List<AdEntity> allAds = adRepo.findAll();
 		
 		//O(n^2) nearest neighbour algorithm
