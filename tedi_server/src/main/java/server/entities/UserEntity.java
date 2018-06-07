@@ -1,9 +1,7 @@
 package server.entities;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,10 +11,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import server.classification.Categories;
 
 @Entity
 @Table(name = "user")
@@ -96,6 +95,8 @@ public class UserEntity {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
 				mappedBy = "publisher", orphanRemoval = true)
 	private List<AdEntity> ads = new ArrayList<>();
+	
+	private Categories category;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "role")
@@ -202,6 +203,10 @@ public class UserEntity {
 	
 	public List<AdEntity> getAds() {
 		return ads;
+	}
+	
+	public Categories getCategory() {
+		return category;
 	}
 	
 	public RoleEntity getRole() {
@@ -334,6 +339,10 @@ public class UserEntity {
 	
 	public void addAd(AdEntity ad) {
 		this.ads.add(ad);
+	}
+	
+	public void setCategories(Categories category) {
+		this.category = category;
 	}
 	
 	public void setRole(RoleEntity role) {
