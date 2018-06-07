@@ -1,14 +1,46 @@
 package server.classification;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Classifier {
+public abstract class Classifier<T> {
 	
-	private final int k = 5;
+	private int k;
 	
-	public List<Neighbor> UpdateNeighbors(List<Neighbor> neighbors, 
+	public Classifier() {
+		this.k = 5;
+	}
+	
+	public Classifier(int k) {
+		this.k = k;
+	}
+	
+	public abstract int calculateDistance(T item1, T item2);
+	
+	//this is created to enable getCategory in unknown class structure
+	//protected because we do not want it seen outside of package/extended classes
+	protected abstract Categories getItemCategory(T item);
+	
+	public Categories classify(T nItem, List<T> dataset) {
+		
+		if (k > dataset.size()) {
+			k = dataset.size();
+		}
+		
+		List<Neighbor> neighbors = new ArrayList<>();
+		for (T dataitem : dataset) {
+			int distance = calculateDistance(nItem, dataitem);
+			neighbors = updateNeighbors(neighbors, getItemCategory(dataitem), distance);
+		}
+		
+		Map<Categories, Integer> count = countNeighborCategories(neighbors);
+		return findMaxCategory(count);
+		
+	}
+	
+	public List<Neighbor> updateNeighbors(List<Neighbor> neighbors, 
 			Categories category, int distance) {
 		
 		if (neighbors.size() < k) {	
