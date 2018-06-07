@@ -37,11 +37,10 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
  	
     		response.setStatus(200);
     		boolean isAdmin = false;
-    		for (RoleEntity r : secService.currentUser().getRoles()) {
-    			if (r.getName().equals("ADMIN")) {
-    				isAdmin = true;
-    			}
-    		}
+    		RoleEntity r = secService.currentUser().getRole();
+			if (r.getName().equals("ADMIN")) {
+				isAdmin = true;
+			}
     		if (isAdmin)
     			response.sendRedirect("/admin/userlist");
     		else

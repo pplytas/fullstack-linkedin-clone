@@ -7,5 +7,7 @@ import server.entities.RoleEntity;
 
 @Repository
 public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
+
+	RoleEntity findByName(String name);
 	
 }

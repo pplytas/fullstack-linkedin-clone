@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -96,10 +97,9 @@ public class UserEntity {
 				mappedBy = "publisher", orphanRemoval = true)
 	private List<AdEntity> ads = new ArrayList<>();
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "id"),
-				inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<RoleEntity> roles = new HashSet<>();
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "role")
+	private RoleEntity role;
 	
 	public UserEntity() {
 		this.educationPublic = false;
@@ -114,7 +114,7 @@ public class UserEntity {
 		this.surname = builder.surname;
 		this.telNumber = builder.telNumber;
 		this.picture = builder.picture;
-		this.roles = builder.roles;
+		this.role = builder.role;
 		this.educationPublic = false;
 		this.experiencePublic = false;
 		this.skillsPublic = false;
@@ -204,8 +204,8 @@ public class UserEntity {
 		return ads;
 	}
 	
-	public Set<RoleEntity> getRoles() {
-		return roles;
+	public RoleEntity getRole() {
+		return role;
 	}
 	
 	public void setId(Long id) {
@@ -336,12 +336,8 @@ public class UserEntity {
 		this.ads.add(ad);
 	}
 	
-	public void setRoles(Set<RoleEntity> roles) {
-		this.roles = roles;
-	}
-	
-	public void addRole(RoleEntity role) {
-		this.roles.add(role);
+	public void setRole(RoleEntity role) {
+		this.role = role;
 	}
 	
 	public static class UserBuilder {
@@ -351,7 +347,7 @@ public class UserEntity {
 		private String surname;
 		private String telNumber;
 		private String picture;
-		private Set<RoleEntity> roles = new HashSet<>();
+		private RoleEntity role;
 		
 		public UserBuilder(String email, String password) {
 			this.email = email;
@@ -378,13 +374,8 @@ public class UserEntity {
 			return this;
 		}
 		
-		public UserBuilder roles(Set<RoleEntity> roles) {
-			this.roles = roles;
-			return this;
-		}
-		
 		public UserBuilder role(RoleEntity role) {
-			this.roles.add(role);
+			this.role = role;
 			return this;
 		}
 		

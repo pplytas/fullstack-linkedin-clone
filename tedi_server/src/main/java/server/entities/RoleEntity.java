@@ -1,10 +1,16 @@
 package server.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -19,6 +25,10 @@ public class RoleEntity {
 	@Column
 	private String name;
 	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,
+			mappedBy = "role", orphanRemoval = true)
+	private List<UserEntity> users = new ArrayList<>();
+	
 	public RoleEntity() {}
 	
 	public RoleEntity(String name) {
@@ -32,6 +42,10 @@ public class RoleEntity {
 	public String getName() {
 		return name;
 	}
+	
+	public List<UserEntity> getUsers() {
+		return users;
+	}
 
 	public void setId(Long id) {
 		this.id = id;
@@ -39,6 +53,10 @@ public class RoleEntity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public void setUsers(List<UserEntity> users) {
+		this.users = users;
 	}
 
 }
