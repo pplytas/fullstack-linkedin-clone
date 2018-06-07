@@ -82,9 +82,6 @@ public class UserController {
 	private AdRepository adRepo;
 	
 	@Autowired
-	private RoleRepository roleRepo;
-	
-	@Autowired
 	private UserClassifier userClass;
 	
 	//update current user credentials (only for users, not admins)

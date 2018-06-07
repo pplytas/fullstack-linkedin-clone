@@ -1,6 +1,7 @@
 package server.endpoints;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import server.auth.SecurityService;
+import server.classification.AdClassifier;
+import server.classification.Categories;
 import server.endpoints.inputmodels.AdInputModel;
 import server.endpoints.inputmodels.SkillInputModel;
 import server.endpoints.outputmodels.AdListOutputModel;
@@ -43,6 +46,9 @@ public class AdController {
 	@Autowired
 	private AdRepository adRepo;
 	
+	@Autowired
+	private AdClassifier adClass;
+	
 	@PostMapping("/add")
 	public ResponseEntity<Object> publishAd(@RequestBody AdInputModel input) {
 		
@@ -58,6 +64,8 @@ public class AdController {
 		}
 		newAd.setPublisher(currUser);
 		newAd.setPublishDate();
+		Categories category = adClass.classify(newAd, adRepo.findAll());
+		newAd.setCategories(category);
 		adRepo.save(newAd);
 		return new ResponseEntity<>("Ad published successfully", HttpStatus.OK);
 		
@@ -91,6 +99,38 @@ public class AdController {
 															.surname(user.getSurname())
 															.telNumber(user.getTelNumber())
 															.picture(sm.getFile(user.getPicture())).build());
+				for (AdSkillEntity adskill : ad.getSkills()) {
+					SkillOutputModel sOut = new SkillOutputModel();
+					sOut.setName(adskill.getName());
+					adOut.addSkill(sOut);
+				}
+				output.addAd(adOut);
+			}
+			return new ResponseEntity<>(output, HttpStatus.OK);
+		} catch (IOException e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+	
+	//get suggested ads based on the classification category of the user and the ads
+	@GetMapping("/suggested")
+	public ResponseEntity<Object> getSuggested() {
+		
+		UserEntity currUser = secService.currentUser();
+		List<AdEntity> suggestedAds = adRepo.findByCategoriesAndPublisherIsNotNull(currUser.getCategory());
+		AdListOutputModel output = new AdListOutputModel();
+		try {
+			for (AdEntity ad : suggestedAds) {
+				AdOutputModel adOut = new AdOutputModel();
+				adOut.setId(ad.getId());
+				adOut.setTitle(ad.getTitle());
+				adOut.setDescription(ad.getDescription());
+				adOut.setPublisher(new UserOutputModel.UserOutputBuilder(adOut.getPublisher().getEmail())
+															.name(adOut.getPublisher().getName())
+															.surname(adOut.getPublisher().getSurname())
+															.telNumber(adOut.getPublisher().getTelNumber())
+															.picture(sm.getFile(adOut.getPublisher().getPicture())).build());
 				for (AdSkillEntity adskill : ad.getSkills()) {
 					SkillOutputModel sOut = new SkillOutputModel();
 					sOut.setName(adskill.getName());
