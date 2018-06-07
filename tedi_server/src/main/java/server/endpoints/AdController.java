@@ -1,6 +1,12 @@
 package server.endpoints;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +27,8 @@ import server.endpoints.outputmodels.SkillOutputModel;
 import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.AdEntity;
 import server.entities.AdSkillEntity;
+import server.entities.SkillEntity;
+import server.entities.UserSkillEntity;
 import server.entities.UserEntity;
 import server.repositories.AdRepository;
 import server.repositories.UserRepository;

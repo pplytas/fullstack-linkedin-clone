@@ -35,13 +35,13 @@ import server.entities.AdSkillEntity;
 import server.entities.ConnectionEntity;
 import server.entities.EducationEntity;
 import server.entities.ExperienceEntity;
-import server.entities.SkillEntity;
+import server.entities.UserSkillEntity;
 import server.entities.UserEntity;
 import server.repositories.AdRepository;
 import server.repositories.ConnectionRepository;
 import server.repositories.EducationRepository;
 import server.repositories.ExperienceRepository;
-import server.repositories.SkillRepository;
+import server.repositories.UserSkillRepository;
 import server.repositories.UserRepository;
 import server.utilities.StorageManager;
 import server.utilities.Validator;
@@ -70,7 +70,7 @@ public class UserController {
 	private ExperienceRepository expRepo;
 	
 	@Autowired
-	private SkillRepository skillRepo;
+	private UserSkillRepository skillRepo;
 	
 	@Autowired
 	private ConnectionRepository connRepo;
@@ -156,10 +156,10 @@ public class UserController {
 		
 		UserEntity currUser = secService.currentUser();
 		currUser.setSkillsPublic(input.isPublic());
-		List<SkillEntity> old = skillRepo.findByUser(currUser);
+		List<UserSkillEntity> old = skillRepo.findByUser(currUser);
 		skillRepo.deleteAll(old);
 		for (SkillInputModel s : input.getSkills()) {
-			SkillEntity entity = new SkillEntity();
+			UserSkillEntity entity = new UserSkillEntity();
 			entity.setName(s.getName());
 			entity.setUser(currUser);
 			skillRepo.save(entity);
@@ -262,8 +262,8 @@ public class UserController {
 			
 			List<SkillOutputModel> skillOut = new ArrayList<>();
 			if (user.isSkillsPublic() || viewPrivate) {
-				List<SkillEntity> skillList = user.getSkills();
-				for (SkillEntity s : skillList) {
+				List<UserSkillEntity> skillList = user.getSkills();
+				for (UserSkillEntity s : skillList) {
 					SkillOutputModel sOut = new SkillOutputModel();
 					sOut.setName(s.getName());
 					skillOut.add(sOut);
