@@ -1,8 +1,5 @@
 package server.auth;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import server.entities.RoleEntity;
 import server.entities.UserEntity;
+import server.repositories.RoleRepository;
 import server.repositories.UserRepository;
 
 @Component
@@ -24,11 +22,22 @@ public class UserServiceImpl implements UserService {
 	private UserRepository userRepo;
 	
 	@Autowired
+	private RoleRepository roleRepo;
+	
+	@Autowired
 	private BCryptPasswordEncoder bCryptEncoder;
 	
 	//todo properly initialize db through hibernate instead
 	@PostConstruct
-	private void initializeAdmins() {
+	private void initializeDB() {
+		if (roleRepo.findByName("ADMIN") == null) {
+			RoleEntity adminRole = new RoleEntity("ADMIN");
+			roleRepo.save(adminRole);
+		}
+		if (roleRepo.findByName("USER") == null) {
+			RoleEntity userRole = new RoleEntity("USER");
+			roleRepo.save(userRole);
+		}
 		if (findByEmail("d@root.com") == null) {
 			UserEntity admin1 = new UserEntity.UserBuilder("d@root.com", "toor")
 												.name("Dimitris").surname("Gounaris").build();
@@ -44,16 +53,15 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void saveAdmin(UserEntity user) {
 		user.setPassword(bCryptEncoder.encode(user.getPassword()));
-		user.addRole(new RoleEntity("ADMIN"));
+		user.setRole(roleRepo.findByName("ADMIN"));
 		userRepo.save(user);
 	}
 	
 	@Override
 	public void save(UserEntity user) {
 		user.setPassword(bCryptEncoder.encode(user.getPassword()));
-		Set<RoleEntity> roleSet = new HashSet<>();
-		roleSet.add(new RoleEntity("USER")); //only users are created after the first configuration
-		user.setRoles(roleSet);
+		//only users are created after the first configuration
+		user.setRole(roleRepo.findByName("USER"));
 		userRepo.save(user);
 	}
 	
