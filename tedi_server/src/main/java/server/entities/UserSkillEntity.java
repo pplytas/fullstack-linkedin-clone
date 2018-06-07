@@ -15,6 +15,11 @@ public class UserSkillEntity extends SkillEntity {
 	private UserEntity user;
 	
 	public UserSkillEntity() {}
+	
+	public UserSkillEntity(String name, UserEntity user) {
+		super(name);
+		this.user = user;
+	}
 
 	public UserEntity getUser() {
 		return user;

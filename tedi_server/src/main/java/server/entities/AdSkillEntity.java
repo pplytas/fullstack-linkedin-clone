@@ -15,6 +15,11 @@ public class AdSkillEntity extends SkillEntity {
 	private AdEntity ad;
 	
 	public AdSkillEntity() {}
+	
+	public AdSkillEntity(String name, AdEntity ad) {
+		super(name);
+		this.ad = ad;
+	}
 
 	public AdEntity getAd() {
 		return ad;

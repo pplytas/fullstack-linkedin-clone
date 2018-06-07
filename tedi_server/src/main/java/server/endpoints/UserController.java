@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import server.auth.SecurityService;
 import server.auth.UserService;
+import server.classification.Categories;
+import server.classification.UserClassifier;
 import server.endpoints.inputmodels.EducationInputModel;
 import server.endpoints.inputmodels.EducationWrappedInputModel;
 import server.endpoints.inputmodels.ExperienceInputModel;
@@ -41,6 +43,7 @@ import server.repositories.AdRepository;
 import server.repositories.ConnectionRepository;
 import server.repositories.EducationRepository;
 import server.repositories.ExperienceRepository;
+import server.repositories.RoleRepository;
 import server.repositories.UserSkillRepository;
 import server.repositories.UserRepository;
 import server.utilities.StorageManager;
@@ -77,6 +80,12 @@ public class UserController {
 	
 	@Autowired
 	private AdRepository adRepo;
+	
+	@Autowired
+	private RoleRepository roleRepo;
+	
+	@Autowired
+	private UserClassifier userClass;
 	
 	//update current user credentials (only for users, not admins)
 	@PutMapping("/update")
@@ -164,7 +173,10 @@ public class UserController {
 			entity.setUser(currUser);
 			skillRepo.save(entity);
 		}
-		
+		//avoid using admin users or self in classification
+		Categories newCategory = userClass.classify(currUser, userRepo.findByEmailNotAndRoleNotAdminOrIsNull(currUser.getEmail()));
+		currUser.setCategories(newCategory);
+		//System.out.println(newCategory.getCategory());
 		userRepo.save(currUser);
 		return new ResponseEntity<>(HttpStatus.OK);
 		

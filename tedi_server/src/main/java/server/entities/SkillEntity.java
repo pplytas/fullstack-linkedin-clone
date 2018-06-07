@@ -18,6 +18,10 @@ public abstract class SkillEntity {
 	
 	public SkillEntity() {}
 
+	public SkillEntity(String name) {
+		this.name = name;
+	}
+	
 	public Long getId() {
 		return id;
 	}
