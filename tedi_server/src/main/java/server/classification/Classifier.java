@@ -17,7 +17,8 @@ public abstract class Classifier<T> {
 		this.k = k;
 	}
 	
-	public abstract int calculateDistance(T item1, T item2);
+	//protected because we do not want it seen outside of package/extended classes
+	protected abstract int calculateDistance(T item1, T item2);
 	
 	//this is created to enable getCategory in unknown class structure
 	//protected because we do not want it seen outside of package/extended classes
