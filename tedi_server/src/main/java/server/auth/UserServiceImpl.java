@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import server.classification.Categories;
 import server.entities.RoleEntity;
 import server.entities.UserEntity;
 import server.repositories.RoleRepository;
@@ -49,40 +48,11 @@ public class UserServiceImpl implements UserService {
 												.name("Panos").surname("Plytas").build();
 			saveAdmin(admin2);
 		}
-		//creating 3 test users for each category, to help in data training
-		for (int i=1; i<=3; i++) {
-			if (findByEmail("software" + i) == null) {
-				UserEntity test = new UserEntity.UserBuilder("software" + i, null).build();
-				test.setCategories(Categories.SOFTWARE);
-				saveUnregistered(test);
-			}
-		}
-		for (int i=1; i<=3; i++) {
-			if (findByEmail("telecom" + i) == null) {
-				UserEntity test = new UserEntity.UserBuilder("telecom" + i, null).build();
-				test.setCategories(Categories.TELECOMMUNICATIONS);
-				saveUnregistered(test);
-			}
-		}
-		for (int i=1; i<=3; i++) {
-			if (findByEmail("hr" + i) == null) {
-				UserEntity test = new UserEntity.UserBuilder("hr" + i, null).build();
-				test.setCategories(Categories.HR);
-				saveUnregistered(test);
-			}
-		}
 	}
 	
 	private void saveAdmin(UserEntity user) {
 		user.setPassword(bCryptEncoder.encode(user.getPassword()));
 		user.setRole(roleRepo.findByName("ADMIN"));
-		userRepo.save(user);
-	}
-	
-	//to disable logins in this user, all we need to do is to set email to something non permitted (to avoid conflicts on new registered users)
-	//and not save a role for the user, thus not saving him in the SpringSecurity table
-	private void saveUnregistered(UserEntity user) {
-		user.setPassword(null); //null password to differentiate when looking at db
 		userRepo.save(user);
 	}
 	
