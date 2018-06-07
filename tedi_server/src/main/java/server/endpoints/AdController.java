@@ -1,6 +1,7 @@
 package server.endpoints;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import server.endpoints.outputmodels.SkillOutputModel;
 import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.AdEntity;
 import server.entities.AdSkillEntity;
+import server.entities.SkillEntity;
 import server.entities.UserEntity;
 import server.repositories.AdRepository;
 import server.repositories.UserRepository;
@@ -102,6 +104,33 @@ public class AdController {
 		} catch (IOException e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		
+	}
+	
+	//Makes use of Nearest Neighbour algorithm to give back an ordered list of the ads
+	//using user's skills to instantiate the "path"
+	@GetMapping("/suggested")
+	public ResponseEntity<Object> getSuggested() {
+		
+		UserEntity user = secService.currentUser();
+		List<SkillEntity> skills  = user.getSkills();
+		List<AdEntity> allAds = adRepo.findAll();
+		
+		//O(n^2) nearest neighbour algorithm
+		while (!allAds.isEmpty()) {
+			
+			//TODO create a superclass for skillentities!!!!! will really help and is consistent with the schema!
+			
+			//TODO search by skills in the list to find the ad that matches most of the skills
+			//TODO remove them from allAds and add them to a temp returning list
+			//TODO then, for all the ads that matched, find the ones that match most of their skills
+			//TODO add temp returning list to return list (to not confuse with previous added returnables)
+			//TODO set temp returning list to be the new ads found from matching
+			//TODO repeat
+			
+		}
+		
+		return new ResponseEntity<>(HttpStatus.OK);
 		
 	}
 
