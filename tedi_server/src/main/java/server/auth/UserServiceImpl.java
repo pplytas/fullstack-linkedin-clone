@@ -70,9 +70,9 @@ public class UserServiceImpl implements UserService {
 		UserDetails origUser = (UserDetails) SecurityContextHolder.getContext()
 												.getAuthentication().getPrincipal();
 		UserEntity origEntity = userRepo.findByEmail(origUser.getUsername());
-		if (email.equals(""))
+		if (email == null || email.equals(""))
 			email = origUser.getUsername();
-		if (password.equals("")) {
+		if (password == null || password.equals("")) {
 			password = origEntity.getPassword();
 		}
 		else

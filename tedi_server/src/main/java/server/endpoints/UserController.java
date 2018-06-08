@@ -24,6 +24,7 @@ import server.endpoints.inputmodels.EducationInputModel;
 import server.endpoints.inputmodels.EducationWrappedInputModel;
 import server.endpoints.inputmodels.ExperienceInputModel;
 import server.endpoints.inputmodels.ExperienceWrappedInputModel;
+import server.endpoints.inputmodels.RegisterInputModel;
 import server.endpoints.inputmodels.SkillInputModel;
 import server.endpoints.inputmodels.SkillWrappedInputModel;
 import server.endpoints.outputmodels.AdOutputModel;
@@ -43,7 +44,6 @@ import server.repositories.AdRepository;
 import server.repositories.ConnectionRepository;
 import server.repositories.EducationRepository;
 import server.repositories.ExperienceRepository;
-import server.repositories.RoleRepository;
 import server.repositories.UserSkillRepository;
 import server.repositories.UserRepository;
 import server.utilities.StorageManager;
@@ -86,20 +86,38 @@ public class UserController {
 	
 	//update current user credentials (only for users, not admins)
 	@PutMapping("/update")
-	public ResponseEntity<Object> updateUser(@RequestParam(defaultValue = "") String email,
-											 @RequestParam(defaultValue = "") String password) {
+	public ResponseEntity<Object> updateUser(@RequestBody RegisterInputModel input) {
 		
-		if (!email.equals("")) {
-			if (userRepo.findByEmail(email) != null) {
+		UserEntity currUser = secService.currentUser();
+		if (input.getEmail() != null) {
+			if (userRepo.findByEmail(input.getEmail()) != null) {
 				String msg = "A user with this email is already registered";
 				return new ResponseEntity<>(msg, HttpStatus.CONFLICT);
 			}
-			if (!Validator.validateEmail(email)) {
+			if (!Validator.validateEmail(input.getEmail())) {
 				String msg = "Invalid email format";
 				return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
 			}
 		}
-		userService.updateCredentials(email, password);
+		if (input.getEmail() == null) {
+			input.setEmail("");
+		}
+		if (input.getPassword() == null) {
+			input.setPassword("");
+		}
+		//function below ignores empty email or password
+		userService.updateCredentials(input.getEmail(), input.getPassword());
+		
+		//for the rest of the data we expect user to add correct info
+		currUser.setName(input.getName());
+		currUser.setSurname(input.getSurname());
+		currUser.setTelNumber(input.getTelNumber());
+		try {
+			String storedpath = sm.storeFile(input.getPicture());
+			currUser.setPicture(storedpath);
+		} catch (IOException e) {
+			//keep the old picture since the exception is thrown at storeFile line
+		}
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 		
