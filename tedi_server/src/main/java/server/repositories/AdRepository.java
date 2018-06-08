@@ -18,6 +18,6 @@ public interface AdRepository extends JpaRepository<AdEntity, Long> {
 	
 	List<AdEntity> findByPublisherIsNotNull();
 	
-	List<AdEntity> findByCategoriesAndPublisherIsNotNull(Categories category);
+	List<AdEntity> findByCategoryAndPublisherIsNotNull(Categories category);
 	
 }

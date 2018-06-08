@@ -45,6 +45,7 @@ public class AdEntity {
 	@JoinColumn(name = "publisher")
 	private UserEntity publisher;
 	
+	@Column
 	private Categories category;
 	
 	public AdEntity() {}

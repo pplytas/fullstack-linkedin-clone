@@ -72,7 +72,7 @@ public class AdClassifier extends Classifier<AdEntity> {
 	@PostConstruct
 	protected void generateInitialDataset() {
 		//creating 3 test ads for each category, to help in data training
-		for (int i=1; i<3; i++) {
+		for (int i=1; i<=3; i++) {
 			if (adRepo.findByTitleAndPublisherIsNull("software" + i) == null) {
 				AdEntity test = new AdEntity();
 				test.setTitle("software" + i);
@@ -88,7 +88,7 @@ public class AdClassifier extends Classifier<AdEntity> {
 				adRepo.save(test);
 			}
 		}
-		for (int i=1; i<3; i++) {
+		for (int i=1; i<=3; i++) {
 			if (adRepo.findByTitleAndPublisherIsNull("telecommunications"+i) == null) {
 				AdEntity test = new AdEntity();
 				test.setTitle("telecommunications" + i);
@@ -103,7 +103,7 @@ public class AdClassifier extends Classifier<AdEntity> {
 				adRepo.save(test);
 			}
 		}
-		for (int i=1; i<3; i++) {
+		for (int i=1; i<=3; i++) {
 			if (adRepo.findByTitleAndPublisherIsNull("hr"+i) == null) {
 				AdEntity test = new AdEntity();
 				test.setTitle("hr" + i);

@@ -118,7 +118,7 @@ public class AdController {
 	public ResponseEntity<Object> getSuggested() {
 		
 		UserEntity currUser = secService.currentUser();
-		List<AdEntity> suggestedAds = adRepo.findByCategoriesAndPublisherIsNotNull(currUser.getCategory());
+		List<AdEntity> suggestedAds = adRepo.findByCategoryAndPublisherIsNotNull(currUser.getCategory());
 		AdListOutputModel output = new AdListOutputModel();
 		try {
 			for (AdEntity ad : suggestedAds) {
