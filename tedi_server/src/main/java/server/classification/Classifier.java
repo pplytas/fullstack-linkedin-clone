@@ -24,18 +24,15 @@ public abstract class Classifier<T> {
 	//protected because we do not want it seen outside of package/extended classes
 	protected abstract Categories getItemCategory(T item);
 
-	abstract void generateInitialDataset();
+	protected abstract void generateInitialDataset();
 	
 	public Categories classify(T nItem, List<T> dataset) {
-		
-		System.out.println("CLASSIFY ------");
-		
+				
 		if (k > dataset.size()) {
 			k = dataset.size();
 		}
 		
 		List<Neighbor> neighbors = new ArrayList<>();
-		System.out.println(dataset.size());
 		for (T dataitem : dataset) {
 			int distance = calculateDistance(nItem, dataitem);
 			neighbors = updateNeighbors(neighbors, getItemCategory(dataitem), distance);
@@ -83,7 +80,6 @@ public abstract class Classifier<T> {
 		int max = 0;
 		Categories maxCat = null; //realistically it will never stay null
 		for (Map.Entry<Categories, Integer> entry : count.entrySet()) {
-			System.out.println(entry.getValue());
 			if (entry.getValue()>max) {
 				max = entry.getValue();
 				maxCat = entry.getKey();
