@@ -343,4 +343,46 @@ public class UserController {
 		
 	}
 	
+	//searches and returns a non detailed user list
+	@GetMapping("/search/simple")
+	public ResponseEntity<Object> searchAccounts(@RequestParam String query) {
+		
+		//first, we split the string to allow for name + surname query
+		String[] split = query.split("\\s+");
+		List<UserEntity> results;
+		if (split.length == 1) {
+			results = userRepo.findByNameContainingOrSurnameContaining(split[0], split[0]);
+		}
+		else if (split.length == 2) {
+			results = userRepo.findByNameContainingAndSurnameContaining(split[0], split[1]);
+		}
+		else {
+			results = userRepo.findByNameContainingOrSurnameContaining(query, query);
+		}
+		
+		UserListOutputModel output = new UserListOutputModel();
+		try {
+			for (UserEntity user : results) {
+				Set<RoleEntity> roles = user.getRoles();
+				boolean isAdmin = false;
+				for (RoleEntity r : roles) {
+					if (r.getName().equals("ADMIN")) {
+						isAdmin = true;
+					}
+				}
+				if (!isAdmin) {
+					output.addUser(new UserOutputModel.UserOutputBuilder(user.getEmail())
+																	.name(user.getName())
+																	.surname(user.getSurname())
+																	.telNumber(user.getTelNumber())
+																	.picture(sm.getFile(user.getPicture())).build());
+				}
+			}
+			return new ResponseEntity<>(output, HttpStatus.OK);
+		} catch (IOException e) {
+			return new ResponseEntity<>("Could not load profile picture", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+	
 }
