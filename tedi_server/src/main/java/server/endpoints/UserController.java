@@ -32,6 +32,7 @@ import server.endpoints.outputmodels.EducationOutputModel;
 import server.endpoints.outputmodels.ExperienceOutputModel;
 import server.endpoints.outputmodels.SkillOutputModel;
 import server.endpoints.outputmodels.UserDetailedOutputModel;
+import server.endpoints.outputmodels.UserListOutputModel;
 import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.AdEntity;
 import server.entities.AdSkillEntity;
@@ -363,14 +364,7 @@ public class UserController {
 		UserListOutputModel output = new UserListOutputModel();
 		try {
 			for (UserEntity user : results) {
-				Set<RoleEntity> roles = user.getRoles();
-				boolean isAdmin = false;
-				for (RoleEntity r : roles) {
-					if (r.getName().equals("ADMIN")) {
-						isAdmin = true;
-					}
-				}
-				if (!isAdmin) {
+				if (Validator.validateUserAuth(user)) {
 					output.addUser(new UserOutputModel.UserOutputBuilder(user.getEmail())
 																	.name(user.getName())
 																	.surname(user.getSurname())

@@ -15,6 +15,10 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	
 	@Query("SELECT u FROM UserEntity u WHERE u.email != ?1 AND (u.role is null OR u.role != 1)")
 	List<UserEntity> findByEmailNotAndRoleNotAdminOrIsNull(String email);
+	
+	List<UserEntity> findByNameContainingOrSurnameContaining(String partialName, String partialSurname);
+	
+	List<UserEntity> findByNameContainingAndSurnameContaining(String partialName, String partialSurname);
 		
 	List<UserEntity> findAll();
 	
