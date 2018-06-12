@@ -14,6 +14,9 @@ public interface ConnectionRepository extends JpaRepository<ConnectionEntity, Lo
 	
 	ConnectionEntity findByUserAndConnectedAndIsPending(UserEntity u, UserEntity c, Boolean isPending);
 	
+	@Query("SELECT c FROM ConnectionEntity c WHERE( (user = ?1 AND connected = ?2) OR (user = ?2 AND connected = ?1)) AND isPending = ?3")
+	ConnectionEntity findByUserAndConnectedInversibleAndIsPending(UserEntity u, UserEntity c, Boolean isPending);
+	
 	@Query("SELECT c FROM ConnectionEntity c WHERE (user = ?1 OR connected = ?1) AND isPending = ?2")
 	List<ConnectionEntity> findByUserInversibleAndIsPending(UserEntity u1, Boolean isPending);
 	

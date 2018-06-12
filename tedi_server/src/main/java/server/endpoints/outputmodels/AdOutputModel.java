@@ -1,6 +1,8 @@
 package server.endpoints.outputmodels;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AdOutputModel {
@@ -10,6 +12,7 @@ public class AdOutputModel {
 	private String description;
 	private List<SkillOutputModel> skills;
 	private UserOutputModel publisher;
+	private String publishDate;
 	
 	public AdOutputModel() {
 		skills = new ArrayList<>();
@@ -35,6 +38,10 @@ public class AdOutputModel {
 		return publisher;
 	}
 	
+	public String getPublishDate() {
+		return publishDate;
+	}
+	
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -57,6 +64,16 @@ public class AdOutputModel {
 	
 	public void setPublisher(UserOutputModel publisher) {
 		this.publisher = publisher;
+	}
+	
+	public void setPublishDate(Date publishDate) {
+		if (publishDate == null) {
+			this.publishDate = null;
+			return;
+		}
+			
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		this.publishDate = sdf.format(publishDate);
 	}
 	
 }

@@ -26,6 +26,7 @@ import server.entities.AdEntity;
 import server.entities.AdSkillEntity;
 import server.entities.UserEntity;
 import server.repositories.AdRepository;
+import server.repositories.ConnectionRepository;
 import server.repositories.UserRepository;
 import server.utilities.StorageManager;
 import server.utilities.Validator;
@@ -45,6 +46,9 @@ public class AdController {
 	
 	@Autowired
 	private AdRepository adRepo;
+	
+	@Autowired
+	private ConnectionRepository connRepo;
 	
 	@Autowired
 	private AdClassifier adClass;
@@ -99,6 +103,7 @@ public class AdController {
 															.surname(user.getSurname())
 															.telNumber(user.getTelNumber())
 															.picture(sm.getFile(user.getPicture())).build());
+				adOut.setPublishDate(ad.getPublishDate());
 				for (AdSkillEntity adskill : ad.getSkills()) {
 					SkillOutputModel sOut = new SkillOutputModel();
 					sOut.setName(adskill.getName());
@@ -118,25 +123,36 @@ public class AdController {
 	public ResponseEntity<Object> getSuggested() {
 		
 		UserEntity currUser = secService.currentUser();
-		List<AdEntity> suggestedAds = adRepo.findByCategoryAndPublisherIsNotNull(currUser.getCategory());
+		//this is so that the final list has the ads sorted from newest to oldest
+		List<AdEntity> suggestedAds = adRepo.findByCategoryAndPublisherIsNotNullOrderByPublishDateDesc(currUser.getCategory());
 		AdListOutputModel output = new AdListOutputModel();
 		try {
 			for (AdEntity ad : suggestedAds) {
+				//ignore ads by same user
+				if (ad.getPublisher() == currUser) continue;
 				AdOutputModel adOut = new AdOutputModel();
 				adOut.setId(ad.getId());
 				adOut.setTitle(ad.getTitle());
 				adOut.setDescription(ad.getDescription());
-				adOut.setPublisher(new UserOutputModel.UserOutputBuilder(adOut.getPublisher().getEmail())
-															.name(adOut.getPublisher().getName())
-															.surname(adOut.getPublisher().getSurname())
-															.telNumber(adOut.getPublisher().getTelNumber())
-															.picture(sm.getFile(adOut.getPublisher().getPicture())).build());
+				adOut.setPublisher(new UserOutputModel.UserOutputBuilder(ad.getPublisher().getEmail())
+															.name(ad.getPublisher().getName())
+															.surname(ad.getPublisher().getSurname())
+															.telNumber(ad.getPublisher().getTelNumber())
+															.picture(sm.getFile(ad.getPublisher().getPicture())).build());
+				adOut.setPublishDate(ad.getPublishDate());
 				for (AdSkillEntity adskill : ad.getSkills()) {
 					SkillOutputModel sOut = new SkillOutputModel();
 					sOut.setName(adskill.getName());
 					adOut.addSkill(sOut);
 				}
-				output.addAd(adOut);
+				if (connRepo.findByUserAndConnectedInversibleAndIsPending(currUser, ad.getPublisher(), false) != null) {
+					System.out.println("IN FOR " + ad.getPublisher().getEmail());
+					output.addAdByConn(adOut);
+				}
+				else {
+					System.out.println("OUT FOR " + ad.getPublisher().getEmail());
+					output.addAd(adOut);
+				}
 			}
 			return new ResponseEntity<>(output, HttpStatus.OK);
 		} catch (IOException e) {
