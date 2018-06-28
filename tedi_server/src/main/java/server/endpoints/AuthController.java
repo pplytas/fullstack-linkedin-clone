@@ -35,6 +35,10 @@ public class AuthController {
 		if (!Validator.validateEmail(input.getEmail())) {
 			return new ResponseEntity<>("Invalid email format", HttpStatus.BAD_REQUEST);
 		}
+		if (input.getPassword() == null || input.getPassword().equals("")) {
+			String msg = "Can't register with empty password";
+			return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
+		}
 		if (userService.findByEmail(input.getEmail()) != null) {
 			String msg = "A user with this email is already registered";
 			return new ResponseEntity<>(msg, HttpStatus.CONFLICT);
