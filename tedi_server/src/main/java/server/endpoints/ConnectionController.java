@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -69,6 +70,21 @@ public class ConnectionController {
 			connRepo.save(connection);
 			return new ResponseEntity<>("Connection request sent to " + email,HttpStatus.OK);
 		}
+		
+	}
+	
+	//this can be used to delete connections or to reject connection requests
+	//if needed, we can split the 2 functionalities later
+	@DeleteMapping("/connection/delete")
+	public ResponseEntity<Object> deleteConnection(@RequestParam String email) {
+		
+		UserEntity currUser = secService.currentUser();
+		UserEntity connUser = userRepo.findByEmail(email);
+		if (connUser == null) {
+			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
+		}
+		connRepo.deleteByUserAndConnectedInversible(currUser, connUser);
+		return new ResponseEntity<>(HttpStatus.OK);
 		
 	}
 	

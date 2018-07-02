@@ -23,5 +23,9 @@ public interface ConnectionRepository extends JpaRepository<ConnectionEntity, Lo
 	List<ConnectionEntity> findByUserAndIsPending(UserEntity u, Boolean isPending);
 	
 	List<ConnectionEntity> findByConnectedAndIsPending(UserEntity u, Boolean isPending);
+	
+	@Query("DELETE FROM ConnectionEntity c WHERE "
+			+ "(user = ?1 AND connected = ?2) OR (user = ?2 AND connected = ?1)")
+	void deleteByUserAndConnectedInversible(UserEntity u, UserEntity c);
 
 }
