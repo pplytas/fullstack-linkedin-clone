@@ -127,7 +127,6 @@ public class UserController {
 	@PostMapping("/education")
 	public ResponseEntity<Object> setEducation(@RequestBody EducationWrappedInputModel input) {
 		
-		System.out.println(input.isPublic());
 		UserEntity currUser = secService.currentUser();
 		currUser.setEducationPublic(input.isPublic());
 		try {
@@ -144,7 +143,6 @@ public class UserController {
 		} catch (ParseException e) {
 			return new ResponseEntity<>("Could not parse education data", HttpStatus.BAD_REQUEST);
 		}
-		System.out.println("TEST " + currUser.isEducationPublic());
 		userRepo.save(currUser);
 		return new ResponseEntity<>(HttpStatus.OK);
 		
@@ -192,7 +190,6 @@ public class UserController {
 		//avoid using admin users or self in classification
 		Categories newCategory = userClass.classify(currUser, userRepo.findByEmailNotAndRoleNotAdminOrIsNull(currUser.getEmail()));
 		currUser.setCategories(newCategory);
-		//System.out.println(newCategory.getCategory());
 		userRepo.save(currUser);
 		return new ResponseEntity<>(HttpStatus.OK);
 		
