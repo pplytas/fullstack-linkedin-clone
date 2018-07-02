@@ -1,7 +1,7 @@
 package server.classification;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -28,15 +28,14 @@ public class UserClassifier extends Classifier<UserEntity> {
 	}
 	
 	//calculates distance based on how many common skills the users have
-	//TODO change it to something better
 	protected int calculateDistance(UserEntity user1, UserEntity user2) {
 		
 		int totalDistance = 0;
-		List<String> user1Skills = new ArrayList<>();
+		Set<String> user1Skills = new HashSet<>();
 		for (SkillEntity s : user1.getSkills()) {
 			user1Skills.add(s.getName().toLowerCase());
 		}
-		List<String> user2Skills = new ArrayList<>();
+		Set<String> user2Skills = new HashSet<>();
 		for (SkillEntity s : user2.getSkills()) {
 			user2Skills.add(s.getName().toLowerCase());
 		}

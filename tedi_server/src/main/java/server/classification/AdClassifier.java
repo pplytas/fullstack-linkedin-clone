@@ -1,7 +1,7 @@
 package server.classification;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -29,16 +29,14 @@ public class AdClassifier extends Classifier<AdEntity> {
 	}
 	
 	//calculates distance based on how many common skills the ads have
-	//also by hamming distance on title and description
-	//TODO change it to something better
 	protected int calculateDistance(AdEntity ad1, AdEntity ad2) {
 		
 		int totalDistance = 0;
-		List<String> ad1Skills = new ArrayList<>();
+		Set<String> ad1Skills = new HashSet<>();
 		for (SkillEntity s : ad1.getSkills()) {
 			ad1Skills.add(s.getName().toLowerCase());
 		}
-		List<String> ad2Skills = new ArrayList<>();
+		Set<String> ad2Skills = new HashSet<>();
 		for (SkillEntity s : ad2.getSkills()) {
 			ad2Skills.add(s.getName().toLowerCase());
 		}
@@ -57,8 +55,8 @@ public class AdClassifier extends Classifier<AdEntity> {
 			}
 		}
 		
-		totalDistance += Distance.Hamming(ad1.getTitle(), ad2.getTitle());
-		totalDistance += Distance.Hamming(ad1.getDescription(), ad2.getDescription());
+		totalDistance += Distance.Levenshtein(ad1.getTitle(), ad2.getTitle());
+		totalDistance += Distance.Levenshtein(ad1.getDescription(), ad2.getDescription());
 		
 		return totalDistance;
 		
