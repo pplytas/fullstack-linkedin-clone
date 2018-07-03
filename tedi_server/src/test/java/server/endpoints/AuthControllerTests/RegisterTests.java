@@ -2,53 +2,32 @@ package server.endpoints.AuthControllerTests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import server.endpoints.AuthorizedTests;
 import server.endpoints.inputmodels.RegisterInputModel;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @ContextConfiguration
 @WebAppConfiguration
-public class RegisterTests {
-	
-	@Resource
-	private FilterChainProxy springSecurityFilterChain;
-	
-	@Autowired
-	private WebApplicationContext wac;
-	
-	private MockMvc mockMvc;
-	
-	@Autowired
-	private ObjectMapper objectMapper;
+public class RegisterTests extends AuthorizedTests {
 	
 	@Before
 	public void setup() throws Exception {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).addFilter(springSecurityFilterChain).build();
+		setupMockMvc();
 	}
 	
 	@Test
@@ -57,8 +36,6 @@ public class RegisterTests {
 		Assert.assertNotNull(serContext);
 		Assert.assertTrue(serContext instanceof MockServletContext);
 	}
-	
-	//Tests for registering users
 	
 	@Test
 	public void registerUsersFull() {
@@ -155,14 +132,6 @@ public class RegisterTests {
 			e.printStackTrace();
 			fail();
 		}
-	}
-	
-	private MockHttpServletResponse register(RegisterInputModel input) throws Exception {
-		MvcResult result = this.mockMvc.perform(post("/register")
-							.contentType(MediaType.APPLICATION_JSON)
-							.content(objectMapper.writeValueAsString(input)))
-							.andReturn();
-		return result.getResponse();
 	}
 	
 }
