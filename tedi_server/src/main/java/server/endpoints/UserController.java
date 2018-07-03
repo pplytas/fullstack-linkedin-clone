@@ -109,15 +109,19 @@ public class UserController {
 		//function below ignores empty email or password
 		userService.updateCredentials(input.getEmail(), input.getPassword());
 		
-		//for the rest of the data we expect user to add correct info
-		currUser.setName(input.getName());
-		currUser.setSurname(input.getSurname());
-		currUser.setTelNumber(input.getTelNumber());
-		try {
-			String storedpath = sm.storeFile(input.getPicture());
-			currUser.setPicture(storedpath);
-		} catch (IOException e) {
-			//keep the old picture since the exception is thrown at storeFile line
+		if (input.getName() != null)
+			currUser.setName(input.getName());
+		if (input.getSurname() != null)
+			currUser.setSurname(input.getSurname());
+		if (input.getTelNumber() != null)
+			currUser.setTelNumber(input.getTelNumber());
+		if (input.getPicture() != null) {
+			try {
+				String storedpath = sm.storeFile(input.getPicture());
+				currUser.setPicture(storedpath);
+			} catch (IOException e) {
+				//keep the old picture since the exception is thrown at storeFile line
+			}
 		}
 		
 		return new ResponseEntity<>(HttpStatus.OK);

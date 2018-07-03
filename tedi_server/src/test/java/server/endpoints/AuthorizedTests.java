@@ -28,7 +28,7 @@ public abstract class AuthorizedTests {
 	protected WebApplicationContext wac;
 	
 	@Autowired
-	private ObjectMapper objectMapper;
+	protected ObjectMapper objectMapper;
 	
 	protected MockMvc mockMvc;
 	
