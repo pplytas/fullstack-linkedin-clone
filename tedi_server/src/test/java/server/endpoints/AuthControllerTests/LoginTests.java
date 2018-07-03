@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 
 import org.junit.Assert;
@@ -13,8 +15,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -31,6 +36,9 @@ import server.auth.SecurityService;
 @WebAppConfiguration
 public class LoginTests {
 	
+	@Resource
+	private FilterChainProxy springSecurityFilterChain;
+	
 	@Autowired
 	private WebApplicationContext wac;
 	
@@ -39,9 +47,11 @@ public class LoginTests {
 	
 	private MockMvc mockMvc;
 	
+	private MockHttpSession session;
+	
 	@Before
 	public void setup() throws Exception {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).addFilter(springSecurityFilterChain).build();
 	}
 	
 	@Test
@@ -58,29 +68,31 @@ public class LoginTests {
 	public void sequentiallyLoginAndLogoutExistingUsers() {
 		try {
 			MockHttpServletResponse result = login("a@a.a", "a");
-			assertEquals(200, result.getStatus());
+			assertEquals(302, result.getStatus());
+			assertEquals(200, getSimpleUserView().getStatus());
 			result = logout();
 			assertEquals(200, result.getStatus());
-			assertEquals(null, secService.currentUser());
+			assertEquals(403, getSimpleUserView().getStatus());
 			
 			result = login("f@f.f", "f");
-			assertEquals(200, result.getStatus());
+			assertEquals(302, result.getStatus());
+			assertEquals(200, getSimpleUserView().getStatus());
 			result = logout();
 			assertEquals(200, result.getStatus());
-			assertEquals(null, secService.currentUser());
+			assertEquals(403, getSimpleUserView().getStatus());
 			
 			result = login("k@k.k", "k");
-			assertEquals(200, result.getStatus());
+			assertEquals(302, result.getStatus());
+			assertEquals(200, getSimpleUserView().getStatus());
 			result = logout();
 			assertEquals(200, result.getStatus());
-			assertEquals(null, secService.currentUser());
+			assertEquals(403, getSimpleUserView().getStatus());
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
 		}
 	}
 	
-	/* not working for some reason!
 	@Test
 	public void loginWithNonExistingAccount() {
 		try {
@@ -90,7 +102,7 @@ public class LoginTests {
 			e.printStackTrace();
 			fail();
 		}
-	}*/
+	}
 	
 	@Test
 	public void logoutWithoutLogin() {
@@ -104,16 +116,29 @@ public class LoginTests {
 		}
 	}
 	
-	private MockHttpServletResponse login(String email, String password) throws Exception {
-		MvcResult result = mockMvc.perform(post("/login")
+	 protected MockHttpServletResponse login(String email, String password) throws Exception {
+		MvcResult result = mockMvc
+							.perform(post("/login")
+							.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 							.param("email", email)
 							.param("password", password))
 							.andReturn();
+		session = (MockHttpSession)result.getRequest().getSession();
 		return result.getResponse();
 	}
 	
 	private MockHttpServletResponse logout() throws Exception {
 		MvcResult result = mockMvc.perform(get("/logout")).andReturn();
+		session = null;
+		return result.getResponse();
+	}
+	
+	private MockHttpServletResponse getSimpleUserView() throws Exception {
+		MvcResult result;
+		if (session == null)
+			result = mockMvc.perform(get("/user/simple")).andDo(print()).andReturn();
+		else
+			result = mockMvc.perform(get("/user/simple").session(session)).andDo(print()).andReturn();
 		return result.getResponse();
 	}
 	

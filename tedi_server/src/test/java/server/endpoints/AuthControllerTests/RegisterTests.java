@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 
 import org.junit.Assert;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -33,6 +35,9 @@ import server.endpoints.inputmodels.RegisterInputModel;
 @WebAppConfiguration
 public class RegisterTests {
 	
+	@Resource
+	private FilterChainProxy springSecurityFilterChain;
+	
 	@Autowired
 	private WebApplicationContext wac;
 	
@@ -43,7 +48,7 @@ public class RegisterTests {
 	
 	@Before
 	public void setup() throws Exception {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).addFilter(springSecurityFilterChain).build();
 	}
 	
 	@Test
