@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import server.auth.SecurityService;
+import server.auth.UserDetailsServiceImpl;
 import server.entities.RoleEntity;
 
 
@@ -35,15 +36,16 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     	
     		mylogger.info("LOGIN SUCCESS");
  	
-    		response.setStatus(200);
     		boolean isAdmin = false;
+    		
     		RoleEntity r = secService.currentUser().getRole();
-			if (r.getName().equals("ADMIN")) {
+    		
+			if (r.getName().equals("ROLE_ADMIN")) {
 				isAdmin = true;
 			}
     		if (isAdmin)
-    			response.sendRedirect("/admin/userlist");
+    			response.setStatus(202);
     		else
-    			response.sendRedirect("/user/simple");
+    			response.setStatus(200);
     }
 }
