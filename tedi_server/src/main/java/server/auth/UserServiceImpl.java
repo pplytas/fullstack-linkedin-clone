@@ -30,12 +30,12 @@ public class UserServiceImpl implements UserService {
 	//todo properly initialize db through hibernate instead
 	@PostConstruct
 	private void initializeDB() {
-		if (roleRepo.findByName("ADMIN") == null) {
-			RoleEntity adminRole = new RoleEntity("ADMIN");
+		if (roleRepo.findByName("ROLE_ADMIN") == null) {
+			RoleEntity adminRole = new RoleEntity("ROLE_ADMIN");
 			roleRepo.save(adminRole);
 		}
-		if (roleRepo.findByName("USER") == null) {
-			RoleEntity userRole = new RoleEntity("USER");
+		if (roleRepo.findByName("ROLE_USER") == null) {
+			RoleEntity userRole = new RoleEntity("ROLE_USER");
 			roleRepo.save(userRole);
 		}
 		if (findByEmail("d@root.com") == null) {
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 	
 	private void saveAdmin(UserEntity user) {
 		user.setPassword(bCryptEncoder.encode(user.getPassword()));
-		user.setRole(roleRepo.findByName("ADMIN"));
+		user.setRole(roleRepo.findByName("ROLE_ADMIN"));
 		userRepo.save(user);
 	}
 	
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
 	public void save(UserEntity user) {
 		user.setPassword(bCryptEncoder.encode(user.getPassword()));
 		//only users are created after the first configuration
-		user.setRole(roleRepo.findByName("USER"));
+		user.setRole(roleRepo.findByName("ROLE_USER"));
 		userRepo.save(user);
 	}
 	
