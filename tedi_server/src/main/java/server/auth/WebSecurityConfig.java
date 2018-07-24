@@ -1,17 +1,25 @@
 package server.auth;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import server.auth.handlers.CustomLogoutHandler;
 import server.auth.handlers.LoginFailureHandler;
@@ -49,9 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/login",
 						 "/register",
 						 "/hello").permitAll()
-			.antMatchers("/admin",
-						 "/admin/*").hasAuthority("ADMIN")
-			.anyRequest().hasAuthority("USER")
+			.anyRequest().authenticated()
 			.and()
 			.formLogin()
 			.loginPage("/login").loginProcessingUrl("/login")
@@ -61,7 +67,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.failureHandler(failureHandler).permitAll()
 			.and()
 			.logout()
-			.logoutSuccessHandler(customLogout).permitAll();
+			.logoutSuccessHandler(customLogout).permitAll().and()
+	        .addFilterBefore(new JWTLoginFilter("/login", authenticationManager()),
+	                UsernamePasswordAuthenticationFilter.class)
+	        .addFilterBefore(new JWTAuthenticationFilter(),
+	                UsernamePasswordAuthenticationFilter.class);;
 	}
 	
 	@Bean
@@ -73,6 +83,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+	}
+	
+	@Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
+    }
+	
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(Arrays.asList("*"));
+		configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS"));
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
 	}
 	
 }
