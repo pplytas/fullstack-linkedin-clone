@@ -71,6 +71,7 @@
   			// 		console.log(this);
   			// 	}
   			// };
+<<<<<<< HEAD
 		}
 
 		globalFunctionsFactory.getuserlist = function() {
@@ -178,6 +179,8 @@
 				console.log(response);
 				console.log("Details Failed");
 			});
+=======
+>>>>>>> Add 3 methods of making http requests in generalService.js
 		}
 
 		return globalFunctionsFactory;
