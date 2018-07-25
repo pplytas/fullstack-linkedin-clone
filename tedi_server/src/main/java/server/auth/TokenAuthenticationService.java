@@ -39,7 +39,6 @@ public class TokenAuthenticationService {
 			      .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
 			          .getBody()
 			          .getSubject();
-			
 			  return user != null ?
 			          new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList()) :
 			          null;
