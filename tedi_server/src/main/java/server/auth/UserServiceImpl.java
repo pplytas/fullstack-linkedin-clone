@@ -65,13 +65,11 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public void updateCredentials(String email, String password) {
-		//basically we update both the Spring Security UserDetails entity and out UserEntity database table
-		UserDetails origUser = (UserDetails) SecurityContextHolder.getContext()
-												.getAuthentication().getPrincipal();
-		UserEntity origEntity = userRepo.findByEmail(origUser.getUsername());
+	public String updateCredentials(String email, String password) {
+
+		UserEntity origEntity = userRepo.findByEmail((String)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 		if (email == null || email.equals(""))
-			email = origUser.getUsername();
+			email = origEntity.getEmail();
 		if (password == null || password.equals("")) {
 			password = origEntity.getPassword();
 		}
@@ -84,18 +82,17 @@ public class UserServiceImpl implements UserService {
 		UserDetails updatedUser = new User(
 										email,
 										password,
-										origUser.isEnabled(),
-										origUser.isAccountNonExpired(),
-										origUser.isCredentialsNonExpired(),
-										origUser.isAccountNonLocked(),
-										origUser.getAuthorities()
+										true,
+										true,
+										true,
+										true,
+										SecurityContextHolder.getContext().getAuthentication().getAuthorities()
 										);
 		SecurityContextHolder.getContext().setAuthentication(
 											new UsernamePasswordAuthenticationToken(updatedUser, updatedUser.getPassword(), updatedUser.getAuthorities())
 										);
 		userRepo.save(origEntity);
-		System.out.println(((UserDetails)(SecurityContextHolder.getContext()
-												.getAuthentication().getPrincipal())).getUsername());
+		return TokenAuthenticationService.addAuthentication(email);
 	}
 	
 	@Override

@@ -107,7 +107,7 @@ public class UserController {
 			input.setPassword("");
 		}
 		//function below ignores empty email or password
-		userService.updateCredentials(input.getEmail(), input.getPassword());
+		String newToken = userService.updateCredentials(input.getEmail(), input.getPassword());
 		
 		if (input.getName() != null)
 			currUser.setName(input.getName());
@@ -124,7 +124,7 @@ public class UserController {
 			}
 		}
 		
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(newToken, HttpStatus.OK);
 		
 	}
 	

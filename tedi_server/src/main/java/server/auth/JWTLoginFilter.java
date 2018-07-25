@@ -1,7 +1,6 @@
 package server.auth;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +13,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -31,18 +32,24 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 	      throws AuthenticationException, IOException, ServletException {
 		  AccountCredentials creds = new ObjectMapper()
 			        .readValue(req.getInputStream(), AccountCredentials.class);
+		  Set<GrantedAuthority> authorities = new HashSet<>();
+		  if (creds.getEmail().equals("p@root.com") || creds.getEmail().equals("d@root.com")) {
+			  authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		  } else {
+			  authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+		  }
 	    return getAuthenticationManager().authenticate(
 	        new UsernamePasswordAuthenticationToken(
 	            creds.getEmail(),
 	            creds.getPassword(),
-	            Collections.emptyList()
+	            authorities
 	        )
 	    );
 	  }
 
 	  @Override
 	  protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication auth) throws IOException, ServletException {
-	    TokenAuthenticationService
+		  TokenAuthenticationService
 	        .addAuthentication(res, auth.getName());
 	  }
 
