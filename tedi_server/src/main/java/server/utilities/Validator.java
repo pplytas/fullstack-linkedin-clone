@@ -20,7 +20,7 @@ public class Validator {
 	
 	public static boolean validateUserAuth(UserEntity user) {
 		RoleEntity r = user.getRole();
-		if (r.getName().equals("ADMIN")) {
+		if (r.getName().equals("ROLE_ADMIN")) {
 			return false;
 		}
 		return true;
