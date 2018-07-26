@@ -44,8 +44,10 @@ public class TokenAuthenticationService {
 	static void addAuthentication(HttpServletResponse res, String username) {
 		Claims claims = Jwts.claims();
 		if (username.equals("p@root.com") || username.equals("d@root.com")) {
+			res.setStatus(202);
 			claims.put("auth", new SimpleGrantedAuthority("ROLE_ADMIN").getAuthority());
 		} else {
+			res.setStatus(200);
 			claims.put("auth", new SimpleGrantedAuthority("ROLE_USER").getAuthority());
 		}
 		claims.setSubject(username);
