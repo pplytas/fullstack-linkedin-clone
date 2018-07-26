@@ -36,8 +36,8 @@
 			}).then(function onSuccess(response) {
 				// Handle success
 				console.log(response);
-				console.log(response.headers());
-				console.log(response.headers("Authorization"));
+				localStorage.isjwt = response.headers("Authorization");
+				console.log(localStorage.isjwt);
 				console.log("Login Successful");
 			}).catch(function onError(response) {
 				// Handle error
@@ -74,6 +74,36 @@
   			// 		console.log(this);
   			// 	}
   			// };
+		}
+
+		globalFunctionsFactory.getuserlist = function() {
+            var endpoint = '/admin/userlist';
+			var url = $rootScope.tediAPI + endpoint;
+
+			// $.ajax({
+			// 	type: "POST",
+			// 	url: url,
+			// 	contentType: "application/json; charset=utf-8",
+			// 	data: parameter,
+			// 	success : function(data) {
+			// 		localStorage.isjwt = data.token;
+			// 		console.log("Login Successful");
+			// 	}
+			// });
+
+			return $http({
+				method: "GET",
+				url: url,
+                headers: { 'Content-Type': 'application/json' },
+			}).then(function onSuccess(response) {
+				// Handle success
+				console.log(response);
+				console.log("UserList Successful");
+			}).catch(function onError(response) {
+				// Handle error
+				console.log(response);
+				console.log("UserList Failed");
+			});
 		}
 
 		return globalFunctionsFactory;
