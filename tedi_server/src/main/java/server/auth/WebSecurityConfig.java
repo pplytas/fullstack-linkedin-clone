@@ -13,10 +13,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -58,8 +59,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						 "/register",
 						 "/hello").permitAll()
 			.antMatchers("/admin",
-						 "/admin/*").hasRole("ADMIN")
-			.anyRequest().hasRole("USER")
+					 	"/admin/*").hasAuthority("ROLE_ADMIN")
+			.anyRequest().hasAuthority("ROLE_USER")
 			.and()
 			.formLogin()
 			.usernameParameter("email").passwordParameter("password")
@@ -68,8 +69,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.failureHandler(failureHandler).permitAll()
 			.and()
 			.logout()
-			.logoutSuccessHandler(customLogout).permitAll().and().httpBasic()
-			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+			.logoutSuccessHandler(customLogout).permitAll().and()
+	        .addFilterBefore(new JWTLoginFilter("/login", authenticationManager()),
+	                UsernamePasswordAuthenticationFilter.class)
+	        .addFilterBefore(new JWTAuthenticationFilter(),
+	                UsernamePasswordAuthenticationFilter.class);;
 	}
 	
 	@Bean
@@ -83,8 +87,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
 	}
 	
-	/* To allow Pre-flight [OPTIONS] request from browser */
-    @Override
+
+	@Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
     }
@@ -94,6 +98,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(Arrays.asList("*"));
 		configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS"));
+		configuration.addExposedHeader("Authorization");
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
