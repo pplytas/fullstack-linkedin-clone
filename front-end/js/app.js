@@ -22,8 +22,9 @@
 	})
 	.run(function ($rootScope, globalFunctions) {
 		globalFunctions.init_app();
-        globalFunctions.login("d@root.com", "toor");
-		globalFunctions.getuserlist();
+        globalFunctions.login("test@user.com", "test");
+		//globalFunctions.getuserlist();
+		globalFunctions.updateUser("new@user.com", "new", "testname", "testsurname", "2108888888", "bla");
 	});
 
 })();
