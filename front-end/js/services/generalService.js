@@ -21,7 +21,7 @@
 				method: "POST",
 				url: url,
                 headers: { 'Content-Type': 'application/json' },
-                data: parameter,
+                data: parameter
 			}).then(function onSuccess(response) {		// Handle success
 				console.log(response);
 				localStorage.isjwt = response.headers("Authorization").replace('Bearer ', '');
@@ -79,7 +79,7 @@
 			return $http({
 				method: "GET",
 				url: url,
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json' }
 			}).then(function onSuccess(response) {		// Handle success
 				console.log(response);
 				console.log("UserList Successful");
@@ -105,13 +105,35 @@
 			return $http({
 				method: "PUT",
 				url: url,
-				data: newUser,
+				data: newUser
 			}).then(function onSuccess(response) {		// Handle success
 				console.log(response);
 				console.log("Update Successful");
 			}).catch(function onError(response) {		// Handle error
 				console.log(response);
 				console.log("Update Failed");
+			});
+		}
+
+		globalFunctionsFactory.getUserDetails = function(email = null) {
+			var endpoint = '/user/details';
+			var url = $rootScope.tediAPI + endpoint;
+
+			data = {
+				"email": email
+			};
+
+			return $http({
+				method: "GET",
+				url: url,
+				headers: { 'Content-Type': 'application/json' },
+				data: data
+			}).then(function onSuccess(response) {		// Handle success
+				console.log(response);
+				console.log("Details Successful");
+			}).catch(function onError(response) {		// Handle error
+				console.log(response);
+				console.log("Details Failed");
 			});
 		}
 

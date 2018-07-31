@@ -24,7 +24,8 @@
 		globalFunctions.init_app();
         globalFunctions.login("test@user.com", "test");
 		//globalFunctions.getuserlist();
-		globalFunctions.updateUser("new@user.com", "new", "testname", "testsurname", "2108888888", "bla");
+		globalFunctions.getUserDetails("test@user.com");
+		//globalFunctions.updateUser("new@user.com", "new", "testname", "testsurname", "2108888888", "bla");
 	});
 
 })();
