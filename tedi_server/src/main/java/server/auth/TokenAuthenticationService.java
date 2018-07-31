@@ -9,76 +9,72 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import server.entities.UserEntity;
+import server.repositories.UserRepository;
 
+@Service
 public class TokenAuthenticationService {
+	
+	private UserRepository userRepo;
+	
+	@Autowired
+	public TokenAuthenticationService(UserRepository userRepo) {
+		this.userRepo = userRepo;
+	}
 	
 	static final long EXPIRATIONTIME = 864_000_000; // 10 days
 	static final String SECRET = "ThisIsASecret";
 	static final String TOKEN_PREFIX = "Bearer";
 	static final String HEADER_STRING = "Authorization";
 	
-	static String addAuthentication(String username) {
+	public void addAuthentication(HttpServletResponse res, String username) {
 		Claims claims = Jwts.claims();
-		if (username.equals("p@root.com") || username.equals("d@root.com")) {
-			claims.put("auth", new SimpleGrantedAuthority("ROLE_ADMIN").getAuthority());
-		} else {
-			claims.put("auth", new SimpleGrantedAuthority("ROLE_USER").getAuthority());
-		}
-		claims.setSubject(username);
-	   String JWT = Jwts.builder()
-	        .setClaims(claims)
-	        .setExpiration(new Date(System.currentTimeMillis() + EXPIRATIONTIME))
-	        .signWith(SignatureAlgorithm.HS512, SECRET)
-	        .compact();
-	   return JWT;
-	}
-	
-	static void addAuthentication(HttpServletResponse res, String username) {
-		Claims claims = Jwts.claims();
-		if (username.equals("p@root.com") || username.equals("d@root.com")) {
+		UserEntity currUser = userRepo.findByEmail(username);
+		if (currUser.getRole().getName().equals("ROLE_ADMIN")) {
 			res.setStatus(202);
 			claims.put("auth", new SimpleGrantedAuthority("ROLE_ADMIN").getAuthority());
 		} else {
 			res.setStatus(200);
 			claims.put("auth", new SimpleGrantedAuthority("ROLE_USER").getAuthority());
 		}
-		claims.setSubject(username);
-	   String JWT = Jwts.builder()
+		claims.setSubject(currUser.getId().toString());
+		String JWT = Jwts.builder()
 	        .setClaims(claims)
 	        .setExpiration(new Date(System.currentTimeMillis() + EXPIRATIONTIME))
 	        .signWith(SignatureAlgorithm.HS512, SECRET)
 	        .compact();
-	   res.addHeader(HEADER_STRING, TOKEN_PREFIX + " " + JWT);
+		res.addHeader(HEADER_STRING, TOKEN_PREFIX + " " + JWT);
 	}
 	
-	static Authentication getAuthentication(HttpServletRequest request) {
+	public Authentication getAuthentication(HttpServletRequest request) {
 		try {  
 		String token = request.getHeader(HEADER_STRING);
 		  if (token != null) {
 			  // parse the token.
-			  String user = (String) Jwts.parser()
+			  Long userId = Long.parseLong(Jwts.parser()
 			      .setSigningKey(SECRET)
 			      .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
 			          .getBody()
-			          .getSubject();
-			  System.out.println(user);
+			          .getSubject());
+			  UserEntity currUser = userRepo.findById(userId).orElse(null);
 			  String authority = (String) Jwts.parser()
 				      .setSigningKey(SECRET)
 				      .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
 				          .getBody().get("auth");
-			  System.out.println(authority);
 			  Set<GrantedAuthority> authorities = new HashSet<>();
 			  authorities.add(new SimpleGrantedAuthority(authority));
-			  return user != null ?
-			          new UsernamePasswordAuthenticationToken(user, null, authorities) :
+			  return currUser != null ?
+			          new UsernamePasswordAuthenticationToken(currUser.getId(), null, authorities) :
 			          null;
 		  }
 		}catch (Exception e) {

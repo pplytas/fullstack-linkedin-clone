@@ -6,7 +6,7 @@ public interface UserService {
 
 	void save(UserEntity user);
 	
-	String updateCredentials(String email, String password);
+	void updateCredentials(String email, String password);
 	
 	UserEntity findByEmail(String email);
 	
