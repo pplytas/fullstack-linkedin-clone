@@ -22,10 +22,11 @@
 	})
 	.run(function ($rootScope, globalFunctions) {
 		globalFunctions.init_app();
-        globalFunctions.login("test@user.com", "test");
+        globalFunctions.login("test1@user.com", "test");
+		//globalFunctions.registerUser("test@user.com", "test");
 		//globalFunctions.getuserlist();
-		globalFunctions.getUserDetails("test@user.com");
-		//globalFunctions.updateUser("new@user.com", "new", "testname", "testsurname", "2108888888", "bla");
+		//globalFunctions.getUserDetails("test@user.com");
+		//globalFunctions.updateUser();
 	});
 
 })();

@@ -29,6 +29,7 @@
 				console.log("Login Successful");
 			}).catch(function onError(response) {		// Handle error
 				console.log(response);
+				console.log(response.headers("Authorization"));
 				console.log("Login Failed");
 			});
 
@@ -89,7 +90,48 @@
 			});
 		}
 
-		globalFunctionsFactory.updateUser = function(email, password, name, surname, telNumber, picture) {
+		globalFunctionsFactory.registerUser = function(
+			email,
+			password,
+			name = null,
+			surname = null,
+			telNumber = null,
+			picture = null
+		) {
+			var endpoint = '/register';
+			var url = $rootScope.tediAPI + endpoint;
+
+			var newUser = {
+				"email": email,
+				"password": password,
+				"name": name,
+				"surname": surname,
+				"telNumber": telNumber,
+				"picture": picture
+			};
+
+			return $http({
+				method: "POST",
+				url: url,
+				headers: { 'Content-Type': 'application/json' },
+				data: newUser
+			}).then(function onSuccess(response) {		// Handle success
+				console.log(response);
+				console.log("Register Successful");
+			}).catch(function onError(response) {		// Handle error
+				console.log(response);
+				console.log("Register Failed");
+			});
+		}
+
+		globalFunctionsFactory.updateUser = function(
+			email = null,
+			password = null,
+			name = null,
+			surname = null,
+			telNumber = null,
+			picture = null
+		) {
 			var endpoint = '/user/update';
 			var url = $rootScope.tediAPI + endpoint;
 
@@ -105,6 +147,7 @@
 			return $http({
 				method: "PUT",
 				url: url,
+				headers: { 'Content-Type': 'application/json' },
 				data: newUser
 			}).then(function onSuccess(response) {		// Handle success
 				console.log(response);
