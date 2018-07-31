@@ -25,7 +25,7 @@ import server.repositories.UserRepository;
 @Service
 public class TokenAuthenticationService {
 	
-	private UserRepository userRepo;
+	private final UserRepository userRepo;
 	
 	@Autowired
 	public TokenAuthenticationService(UserRepository userRepo) {

@@ -17,7 +17,7 @@ import org.springframework.web.filter.GenericFilterBean;
 @Service
 public class JWTAuthenticationFilter extends GenericFilterBean {
 	
-	private TokenAuthenticationService tokenAuthService;
+	private final TokenAuthenticationService tokenAuthService;
 	
 	@Autowired
 	public JWTAuthenticationFilter(TokenAuthenticationService tokenAuthService) {

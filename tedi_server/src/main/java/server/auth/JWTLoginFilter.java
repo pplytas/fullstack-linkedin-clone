@@ -25,15 +25,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import server.entities.UserEntity;
 import server.repositories.UserRepository;
 
-@Service
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 	
-	private TokenAuthenticationService tokenAuthService;
-	private UserRepository userRepo;
+	private final TokenAuthenticationService tokenAuthService;
+	private final UserRepository userRepo;
 	
 	private static final String url = "/login";
 	
-	@Autowired
 	public JWTLoginFilter(UserRepository userRepo, TokenAuthenticationService tokenAuthService, AuthenticationManager authManager) {
 		super(new AntPathRequestMatcher(url));
 		this.userRepo = userRepo;
