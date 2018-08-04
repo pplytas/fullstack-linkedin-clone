@@ -65,9 +65,12 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public String updateCredentials(String email, String password) {
+	public void updateCredentials(String email, String password) {
 
-		UserEntity origEntity = userRepo.findByEmail((String)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+		UserEntity origEntity = userRepo.findById((Long)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).orElse(null);
+		if (origEntity == null) {
+			return;
+		}
 		if (email == null || email.equals(""))
 			email = origEntity.getEmail();
 		if (password == null || password.equals("")) {
@@ -89,10 +92,9 @@ public class UserServiceImpl implements UserService {
 										SecurityContextHolder.getContext().getAuthentication().getAuthorities()
 										);
 		SecurityContextHolder.getContext().setAuthentication(
-											new UsernamePasswordAuthenticationToken(updatedUser, updatedUser.getPassword(), updatedUser.getAuthorities())
+											new UsernamePasswordAuthenticationToken(updatedUser, null, updatedUser.getAuthorities())
 										);
 		userRepo.save(origEntity);
-		return TokenAuthenticationService.addAuthentication(email);
 	}
 	
 	@Override

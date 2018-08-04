@@ -107,7 +107,7 @@ public class UserController {
 			input.setPassword("");
 		}
 		//function below ignores empty email or password
-		String newToken = userService.updateCredentials(input.getEmail(), input.getPassword());
+		userService.updateCredentials(input.getEmail(), input.getPassword());
 		
 		if (input.getName() != null)
 			currUser.setName(input.getName());
@@ -123,8 +123,9 @@ public class UserController {
 				//keep the old picture since the exception is thrown at storeFile line
 			}
 		}
+		userRepo.save(currUser);
 		
-		return new ResponseEntity<>(newToken, HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 		
 	}
 	

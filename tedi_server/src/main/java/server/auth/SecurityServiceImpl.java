@@ -23,7 +23,7 @@ public class SecurityServiceImpl implements SecurityService {
 	public UserEntity currentUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		try {
-			UserEntity authUser =  userRepo.findByEmail((String)auth.getPrincipal());
+			UserEntity authUser =  userRepo.findById((Long)auth.getPrincipal()).orElse(null);
 			return authUser;
 		} catch (Exception e) {
 			mylogger.log(Level.INFO, "Exception", e);

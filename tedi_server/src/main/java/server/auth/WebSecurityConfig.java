@@ -25,6 +25,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import server.auth.handlers.CustomLogoutHandler;
 import server.auth.handlers.LoginFailureHandler;
 import server.auth.handlers.LoginSuccessHandler;
+import server.repositories.UserRepository;
 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
@@ -35,6 +36,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private UserDetailsService userDetailsService;
 	
 	@Autowired
+	private UserRepository userRepo;
+	
+	@Autowired
 	private LoginSuccessHandler successHandler;
 	
 	@Autowired
@@ -42,6 +46,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private CustomLogoutHandler customLogout;
+	
+	@Autowired TokenAuthenticationService tokenAuthService;
 
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -70,9 +76,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.logout()
 			.logoutSuccessHandler(customLogout).permitAll().and()
-	        .addFilterBefore(new JWTLoginFilter("/login", authenticationManager()),
+	        .addFilterBefore(new JWTLoginFilter(userRepo, tokenAuthService, authenticationManager()),
 	                UsernamePasswordAuthenticationFilter.class)
-	        .addFilterBefore(new JWTAuthenticationFilter(),
+	        .addFilterBefore(new JWTAuthenticationFilter(tokenAuthService),
 	                UsernamePasswordAuthenticationFilter.class);;
 	}
 	
