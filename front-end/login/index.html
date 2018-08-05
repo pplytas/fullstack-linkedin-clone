@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>Login | TEDi BEAR</title>
+
+		<!-- ischeck : if all css is needed ! -->
+		<link rel="icon" type="image/x-icon" href="../img/favicon.png" />
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+		<!-- Start Load CSS -->
+		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700&subset=latin,greek' rel='stylesheet' type='text/css'>
+		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+		<link rel="stylesheet" href="../css/app.css">
+		<!-- End Load CSS -->
+
+	</head>
+	<body >
+
+		<section id="login">
+			<div class="container">
+				<div class="row justify-content-center">
+					<div class="col col-xs-10 col-sm-8 col-md-6">
+
+						<div class="logo">
+							<img src="../img/logo-blue.png" alt="TEDi Logo" class="img-responsive" />
+						</div>
+
+						<div id="loginmsg" class="alert alert-danger" role="alert">
+							Invalid credentials.
+						</div>
+
+						<div id="wait" class="alert alert-primary" role="alert">
+							We validate your credentials!
+						</div>
+
+						<form class="login-form" method="post">
+
+							<legend>Login to TEDi BEAR</legend>
+
+							<div class="form-group">
+								<label for="email">Email</label>
+								<input type="text" id="email" name="_email" value="" required="required" class="form-control"/>
+							</div>
+
+							<div class="form-group">
+								<label for="password">Password</label>
+								<input type="password" id="password" name="_password" required="required" class="form-control"/>
+							</div>
+
+							<input type="submit" id="_submit" name="_submit" value="LOG IN" class="btn btn-login btn btn-block"/>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</section>
+		<script>
+			$(document).ready(function(){
+
+				if (localStorage.isjwt) {
+					window.location.href = "/#";
+				}
+
+				function clear_messages() {
+					$('#wait').hide();
+					$('#loginmsg').hide();
+				}
+
+				clear_messages();
+
+				 $('#_submit').click(function(e) {
+					 	e.preventDefault();
+					 	clear_messages();
+						var url = 'https://localhost:8443/login'
+						var email = $('#email').val();
+						var password = $('#password').val();
+
+						var data = {
+							"email": email,
+							"password": password,
+						};
+
+						$.ajax({
+							type: "POST",
+							url: url,
+							contentType: "application/json",
+							data: JSON.stringify(data),
+							beforeSend: function() {
+								$('#wait').show()
+							},
+							success: function(data, status, $xhr) {
+								localStorage.isjwt = $xhr.getResponseHeader("Authorization").replace('Bearer ', '');
+								console.log("Login " + localStorage.isjwt);
+								window.location.href = "/#!/home";
+							},
+							error: function($xhr) {
+								clear_messages();
+								delete localStorage.isjwt;
+								if ($xhr.status >= 400 && $xhr.status < 500) {	// Invalid credentials
+									$('#loginmsg').show();
+								}
+							}
+						});
+				  });
+			});
+		</script>
+	</body>
+</html>

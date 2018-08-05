@@ -12,7 +12,7 @@
             var endpoint = '/login';
 			var url = $rootScope.tediAPI + endpoint;
 
-			var parameter = {
+			var data = {
 				"email": inputEmail,
 				"password": inputPassword
 			};
@@ -21,7 +21,7 @@
 				method: "POST",
 				url: url,
                 headers: { 'Content-Type': 'application/json' },
-                data: parameter
+                data: data
 			}).then(function onSuccess(response) {		// Handle success
 				console.log(response);
 				localStorage.isjwt = response.headers("Authorization").replace('Bearer ', '');
@@ -181,6 +181,21 @@
 			});
 =======
 >>>>>>> Add 3 methods of making http requests in generalService.js
+		}
+
+		globalFunctionsFactory.logout = function() {
+			var endpoint = '/logout';
+			var url = $rootScope.tediAPI + endpoint;
+
+			return $http({
+				method: "GET",
+				url: url,
+			}).then(function onSuccess(response) {		// Handle success
+				delete localStorage.isjwt;
+				console.log("Logout Successful");
+			}).catch(function onError(response) {		// Handle error
+				console.log("Logout Failed");
+			});
 		}
 
 		return globalFunctionsFactory;
