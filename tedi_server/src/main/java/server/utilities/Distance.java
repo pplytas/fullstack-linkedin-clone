@@ -31,7 +31,7 @@ public class Distance {
 		
 		if ( (s1 == null) || (s2 == null) ) return 0;
 		if ( (s1.length() == 0) || (s2.length() == 0) ) return 0;
-		if ( s1.equals(s2) ) return s1.length();
+		if ( s1.equals(s2) ) return 0;
 		
 		int s1WordCount = s1.length();
 		int s2WordCount = s2.length();

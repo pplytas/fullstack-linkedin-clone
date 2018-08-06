@@ -47,21 +47,21 @@ public class ArticleClassifier extends Classifier<ArticleEntity> {
 			if (articleRepo.findByTitleAndUserIsNull("AI" + i) == null) {
 				ArticleEntity article = new ArticleEntity();
 				article.setTitle("AI" + i);
-				article.setText("Neural networks may be our gate to the future. New algorithms improving deep learning and AI can help us predict the future more easily");
+				article.setText("Neural networks may be our gate to the future. New algorithms improving deep learning and AI can help us predict the future more easily, says google");
 				article.setCategories(Categories.AI);
 				articleRepo.save(article);
 			}
 			if (articleRepo.findByTitleAndUserIsNull("Biology" + i) == null) {
 				ArticleEntity article = new ArticleEntity();
 				article.setTitle("Biology" + i);
-				article.setText("A new kind of mitochondria, one of the components of the human cell, is discovered. The information that biologists in a lab found could prove useful to counter cancer and other diseases.");
+				article.setText("A new kind of mitochondria, one of the components of the human cell, is discovered. The information that biologists in a lab found useful for diseases");
 				article.setCategories(Categories.BIOLOGY);
 				articleRepo.save(article);
 			}
 			if (articleRepo.findByTitleAndUserIsNull("Gossip" + i) == null) {
 				ArticleEntity article = new ArticleEntity();
 				article.setTitle("Gossip" + i);
-				article.setText("The queen and the prince of England photographed together in vacation! Shocking news in Hollywood, as greek singer is invited to sing in the oscar awards ceremony");
+				article.setText("The queen and the prince of England photographed together in vacation! Shocking news, as greek singer is invited to sing in the oscar awards ceremony");
 				article.setCategories(Categories.GOSSIP);
 				articleRepo.save(article);
 			}
