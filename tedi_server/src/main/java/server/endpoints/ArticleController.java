@@ -2,8 +2,12 @@ package server.endpoints;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import server.auth.SecurityService;
+import server.classification.ArticleClassifier;
+import server.classification.Categories;
 import server.endpoints.inputmodels.ArticleInputModel;
 import server.endpoints.inputmodels.CommentInputModel;
 import server.endpoints.outputmodels.ArticleListOutputModel;
@@ -52,6 +58,9 @@ public class ArticleController {
 	@Autowired
 	private UpvoteRepository upvoteRepo;
 	
+	@Autowired
+	private ArticleClassifier articleClass;
+	
 	//add a new article for the current user
 	@PostMapping("/article/new")
 	public ResponseEntity<Object> addArticle(@RequestBody ArticleInputModel input) {
@@ -65,6 +74,8 @@ public class ArticleController {
 			article.setMediafile(sm.storeFile(input.getFile()));
 			article.setUser(currentUser);
 			article.setDateTime();
+			Categories category = articleClass.classify(article, articleRepo.findAll());
+			article.setCategories(category);
 			articleRepo.save(article);
 			
 			return new ResponseEntity<>(HttpStatus.OK);
@@ -223,9 +234,10 @@ public class ArticleController {
 	public ResponseEntity<Object> getFeed() {
 		
 		UserEntity currUser = secService.currentUser();
+		List<ArticleEntity> articles = getPersonalisedFeed(currUser);
 		ArticleListOutputModel output = new ArticleListOutputModel();
 		try {
-			for (ArticleEntity a : articleRepo.findFeedOrderByDateTimeDesc(currUser)) {
+			for (ArticleEntity a : articles) {
 				ArticleOutputModel outA = new ArticleOutputModel();
 				outA.setId(a.getId());
 				outA.setAuthor(a.getUser().getEmail());
@@ -254,6 +266,104 @@ public class ArticleController {
 			return new ResponseEntity<>("Could not load media file", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
+	}
+	
+	//functions below help to manipulate the feed based on the categories
+	private List<ArticleEntity> getPersonalisedFeed(UserEntity currUser) {
+		List<ArticleEntity> articlesDefaultOrder = articleRepo.findFeedOrderByDateTimeDesc(currUser);
+		//the fact that we got the time ordered list above 
+		//guarantees unaffected order in the sublists created in the map when we split
+		Map<Categories, List<ArticleEntity>> articlesCategoryMap = splitByCategory(articlesDefaultOrder);
+		List<CommentEntity> comments = commentRepo.findByUser(currUser);
+		List<UpvoteEntity> upvotes = upvoteRepo.findByUser(currUser);
+		int totalCommentsAndUpvotes = comments.size() + upvotes.size();
+		if (totalCommentsAndUpvotes == 0) {
+			//avoid 1/0 division in reordering
+			return articlesDefaultOrder;
+		}
+		Map<Categories, Integer> preferenceMap = getCommentsAndUpvotesPreferenceMap(comments, upvotes);
+		List<ArticleEntity> articlesPersonalisedOrder = reorderFeedArticles(articlesCategoryMap, preferenceMap, totalCommentsAndUpvotes);
+		return articlesPersonalisedOrder;
+	}
+	
+	//split the articles in a map for O(1) search time
+	private Map<Categories, List<ArticleEntity>> splitByCategory(List<ArticleEntity> articles) {
+		Map<Categories, List<ArticleEntity>> articleMap = new HashMap<>();
+		for (ArticleEntity article : articles) {
+			putArticleInMap(article, articleMap);
+		}
+		return articleMap;
+	}
+	
+	private void putArticleInMap(ArticleEntity article, Map<Categories, List<ArticleEntity>> articleMap) {
+		if (articleMap.containsKey(article.getCategories())) {
+			articleMap.get(article.getCategories()).add(article);
+		}
+		else {
+			List<ArticleEntity> valueList = new ArrayList<>();
+			valueList.add(article);
+			articleMap.put(article.getCategories(), valueList);
+		}
+	}
+	
+	private List<ArticleEntity> reorderFeedArticles(Map<Categories, List<ArticleEntity>> articlesMap, Map<Categories, Integer> preferenceMap, int totalPreferenceValues) {
+		boolean remainingArticles = false;
+		List<ArticleEntity> reorderedList = new ArrayList<>();
+		while (remainingArticles) {
+			remainingArticles = false;
+			List<ArticleEntity> partialReorderedList = new ArrayList<>();
+			for (Categories category : articlesMap.keySet()) {
+				List<ArticleEntity> categoryList = articlesMap.get(category);
+				//get ratio of reordered articles per 10
+				//if some categories end, the others will take their place, just after more iterations
+				int categoryEntries = preferenceMap.get(category) == null ? 1 : preferenceMap.get(category);
+				for (int i=0; i<(categoryEntries/totalPreferenceValues)*10; i++) {
+					if (!categoryList.isEmpty()) {
+						remainingArticles = true;
+						partialReorderedList.add(categoryList.remove(0));
+					} 
+					else {
+						break;
+					}
+				}
+			}
+			partialReorderedList = partialReorderedList.stream()
+			.sorted(Comparator.comparing(ArticleEntity::getDateTime))
+			.collect(Collectors.toList());
+			reorderedList.addAll(partialReorderedList);
+		}
+		return reorderedList;
+	}
+	
+	private Map<Categories, Integer> getCommentsAndUpvotesPreferenceMap(List<CommentEntity> comments, List<UpvoteEntity> upvotes) {
+		Map<Categories, Integer> preferenceMap = new HashMap<>();
+		countCommentsInCategories(comments, preferenceMap);
+		countUpvotesInCategories(upvotes, preferenceMap);
+		return preferenceMap;
+	}
+	
+	private void countCommentsInCategories(List<CommentEntity> comments, Map<Categories, Integer> map) {
+		for (CommentEntity comment : comments) {
+			if (map.containsKey(comment.getArticle().getCategories())) {
+				int previousValue = map.get(comment.getArticle().getCategories());
+				map.put(comment.getArticle().getCategories(), previousValue + 1);
+			}
+			else {
+				map.put(comment.getArticle().getCategories(), 1);
+			}
+		}
+	}
+	
+	private void countUpvotesInCategories(List<UpvoteEntity> upvotes, Map<Categories, Integer> map) {
+		for (UpvoteEntity upvote : upvotes) {
+			if (map.containsKey(upvote.getArticle().getCategories())) {
+				int previousValue = map.get(upvote.getArticle().getCategories());
+				map.put(upvote.getArticle().getCategories(), previousValue + 1);
+			}
+			else {
+				map.put(upvote.getArticle().getCategories(), 1);
+			}
+		}
 	}
 
 }
