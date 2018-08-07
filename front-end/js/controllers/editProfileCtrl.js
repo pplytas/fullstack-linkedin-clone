@@ -1,6 +1,6 @@
 (function() {
 	angular.module('tediApp')
-	.controller('editProfileCtrl', function($rootScope, $scope, $http) {
+	.controller('editProfileCtrl', function($rootScope, $scope) {
         $('#_submit').click(function(e) {
                e.preventDefault();
                var email = $('#email').val();

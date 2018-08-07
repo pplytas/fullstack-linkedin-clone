@@ -35,6 +35,15 @@
 		.when("/home", {
 			templateUrl: '../templates/home.html'
 		})
+		.when("/profile", {
+			templateUrl: '../templates/view-profile.html',
+			controller: 'viewProfileCtrl',
+			resolve: {
+				user: function($rootScope) {
+                    return $rootScope.getUserDetails();
+                }
+			}
+		})
 		.when("/edit", {
 			templateUrl: '../templates/edit-profile.html',
 			controller: 'editProfileCtrl'
@@ -48,11 +57,19 @@
 		globalFunctions.init_app();
         $rootScope.login = globalFunctions.login;
 		$rootScope.registerUser = globalFunctions.registerUser;
-		$rootScope.getuserlist = globalFunctions.getuserlist;
+		$rootScope.getUserList = globalFunctions.getUserList;
 		$rootScope.getUserDetails = globalFunctions.getUserDetails;
 		$rootScope.updateUser = globalFunctions.updateUser;
 		$rootScope.logout = globalFunctions.logout;
-		console.log(!localStorage.isjwt);
+
+		// $rootScope.user = {};
+		// $rootScope.getUserDetails().then(function(result) {
+		// 	$rootScope.user.email = result.email;
+		// 	$rootScope.user.firstName = result.name;
+		// 	$rootScope.user.lastName = result.surname;
+		// 	$rootScope.user.phoneNum = result.telNumber;
+		// 	$rootScope.user.picture = result.picture;
+        // });
 	});
 
 })();

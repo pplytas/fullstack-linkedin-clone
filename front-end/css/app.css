@@ -1,4 +1,11 @@
 /* ------------------- GENERAL ------------------- */
+html,
+body {
+    margin:0;
+    padding:0;
+    height:100%;
+}
+
 body {
     font-size: 100%;
     font-family: 'Open Sans', sans-serif;
@@ -34,21 +41,41 @@ body {
 }
 
 #login form label {
-	color: #1E88E5;
+	color: #007bff;
 	text-transform: uppercase;
 	font-size: 0.9rem;
 }
 
-.btn-login {
+.btn-light-blue {
     color: #fff;
-    background-color: #1E88E5;
+    background-color: #007EC7;
     border-color: #e1e1e1;
 }
 
+/* ------------------- APP BODY ------------------- */
+.app-body {
+    height: 100%;
+}
+
+/* ------------------- PLATFORM BODY ------------------- */
+.platform-body {
+    padding-top: 56px;
+    min-height: 100%;
+    position: relative;
+}
+
 /* ------------------- NAVBAR ------------------- */
+.navbar {
+    background-color: #283e4a;
+}
+
+.navbar-brand {
+    padding-top: 0;
+    padding-bottom: 0;
+}
 
 .header-logo {
-    width: 150px;
+    width: 55px;
 }
 
 .loading {
@@ -56,28 +83,32 @@ body {
     text-align: center;
 }
 
-.footer-logo {
-    width: 200px;
+/* ------------------- MAIN VIEW ------------------- */
+.main-view {
+    /* padding-top: 24px; */
+    padding-bottom: 100px;
 }
 
-footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+/* ------------------- VIEW PROFILE ------------------- */
+.profile-submenu .list-group-item {
+    border: currentColor;
 }
 
-footer .container .row .col {
-    text-align: center;
+.view-profile .active {
+    z-index: 2;
+    color: #000000;
+    background-color: #ffffff;
+    border-color: #ffffff;
+    border-bottom: 2px solid #517E96;
 }
 
-.footer-menu {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+.profile-submenu {
+    flex-direction: row;
 }
 
-.footer-menu li {
-    display: inline;
+.profile-submenu .list-group-item:hover {
+    background-color: #ffffff;
+    border-bottom: 2px solid #517E96;
 }
 
 /* ------------------- EDIT PROFILE ------------------- */
@@ -86,18 +117,31 @@ footer .container .row .col {
 }
 
 .edit-profile form legend {
-    text-align: center;
-    font-weight: 400;
-    color: #606060;
+    font-weight: 300;
+    font-size: 1.3rem;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e1e1e1;
 }
 
 .edit-profile form label {
-	color: #606060;
-	text-transform: uppercase;
+	color: #517E96;
+    font-weight: 700;
 	font-size: 0.9rem;
 }
 
 /* ------------------- FOOTER ------------------- */
-footer .container .row .col {
+.main-footer {
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:24px;   /* Height of the footer */
+}
+
+.main-footer .container .row .col {
+    text-align: center;
+}
+
+.main-footer .container .row .col {
     color: #606060;
+    font-weight: 300;
 }

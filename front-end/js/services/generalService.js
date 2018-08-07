@@ -32,48 +32,9 @@
 				console.log(response.headers("Authorization"));
 				console.log("Login Failed");
 			});
-
-			// $.ajax({
-			// 	type: "POST",
-			// 	url: url,
-			// 	contentType: "application/json; charset=utf-8",
-			// 	data: parameter,
-			// 	success : function(data) {
-			// 		localStorage.isjwt = data.token;
-			// 		console.log("Login Successful");
-			// 	}
-			// });
-
-			// $.ajax({
-  			//    url: "https://localhost:8443/login?email="+inputEmail+"&password="+"toor",
-  			//    data: {
-  			//       format: 'json'
-  			//    },
-  			//    error: function(response) {
-  			//       console.log(response);
-  			//    },
-  			//    dataType: 'json',
-  			//    success: function(data) {
-  			//       console.log(data);
-  			//    },
-  			//    type: 'POST'
-  			// });
-  			// var xhttp = new XMLHttpRequest();
-  			// xhttp.open("POST", "https://localhost:8443/login", true);
-  			// xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-  			// xhttp.send("email="+inputEmail+"&password="+inputPassword);
-  			//
-  			// xhttp.onreadystatechange = function() {
-  			// 	if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
-  			// 		console.log("1");
-  			// 		var headers = this.getAllResponseHeaders();
-  			// 		console.log(headers);
-  			// 		console.log(this);
-  			// 	}
-  			// };
 		}
 
-		globalFunctionsFactory.getuserlist = function() {
+		globalFunctionsFactory.getUserList = function() {
             var endpoint = '/admin/userlist';
 			var url = $rootScope.tediAPI + endpoint;
 
@@ -161,6 +122,7 @@
 		globalFunctionsFactory.getUserDetails = function(email = null) {
 			var endpoint = '/user/details';
 			var url = $rootScope.tediAPI + endpoint;
+			var responseData;
 
 			data = {
 				"email": email
@@ -174,9 +136,11 @@
 			}).then(function onSuccess(response) {		// Handle success
 				console.log(response);
 				console.log("Details Successful");
+				return response.data;
 			}).catch(function onError(response) {		// Handle error
 				console.log(response);
 				console.log("Details Failed");
+				return response.data;
 			});
 		}
 
