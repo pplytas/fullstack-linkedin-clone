@@ -20,6 +20,8 @@ public interface ArticleRepository extends JpaRepository<ArticleEntity, Long> {
 			+ "OR (a.id IN (SELECT u2.article FROM UpvoteEntity u2 WHERE u2.user IN (SELECT c4.connected FROM ConnectionEntity c4 WHERE (c4.user = ?1 OR c4.connected = ?1) AND c4.isPending = false))) ORDER BY a.dateTime DESC")
 	List<ArticleEntity> findFeedOrderByDateTimeDesc(UserEntity user);
 	
+	ArticleEntity findByTitleAndUserIsNull(String title);
+	
 	List<ArticleEntity> findByUserOrderByDateTimeDesc(UserEntity user);
 	
 }
