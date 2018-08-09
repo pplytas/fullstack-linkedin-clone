@@ -25,8 +25,8 @@ public class ArticleClassifier extends Classifier<ArticleEntity> {
 	
 	protected int calculateDistance(ArticleEntity a1, ArticleEntity a2) {
 		int totalDistance = 0;
-		totalDistance += Distance.Levenshtein(a1.getTitle(), a2.getTitle());
-		totalDistance += Distance.Levenshtein(a1.getText(), a2.getText());
+		totalDistance -= Distance.CommonWords(a1.getTitle(), a2.getTitle());
+		totalDistance -= Distance.CommonWords(a1.getText(), a2.getText());
 		return totalDistance;
 	}
 	
@@ -36,32 +36,32 @@ public class ArticleClassifier extends Classifier<ArticleEntity> {
 	
 	@PostConstruct
 	protected void generateInitialDataset() {
-		for (int i=1; i<=3; i++) {
-			if (articleRepo.findByTitleAndUserIsNull("Research" + i) == null) {
+		for (int i=1; i<=10; i++) {
+			if (articleRepo.findByTitleAndUserIsNull("Research " + i) == null) {
 				ArticleEntity article = new ArticleEntity();
-				article.setTitle("Research" + i);
-				article.setText("A new research paper reveals previously unknown information. The researchers seem to be unsure about the implications of such a scientific discovery");
+				article.setTitle("Research " + i);
+				article.setText(String.join(" ", Dataset.getRandomWords(Dataset.researchDataset, 20)));
 				article.setCategories(Categories.RESEARCH);
 				articleRepo.save(article);
 			}
-			if (articleRepo.findByTitleAndUserIsNull("AI" + i) == null) {
+			if (articleRepo.findByTitleAndUserIsNull("AI " + i) == null) {
 				ArticleEntity article = new ArticleEntity();
-				article.setTitle("AI" + i);
-				article.setText("Neural networks may be our gate to the future. New algorithms improving deep learning and AI can help us predict the future more easily, says google");
+				article.setTitle("AI " + i);
+				article.setText(String.join(" ", Dataset.getRandomWords(Dataset.aiDataset, 20)));
 				article.setCategories(Categories.AI);
 				articleRepo.save(article);
 			}
-			if (articleRepo.findByTitleAndUserIsNull("Biology" + i) == null) {
+			if (articleRepo.findByTitleAndUserIsNull("Biology " + i) == null) {
 				ArticleEntity article = new ArticleEntity();
-				article.setTitle("Biology" + i);
-				article.setText("A new kind of mitochondria, one of the components of the human cell, is discovered. The information that biologists in a lab found useful for diseases");
+				article.setTitle("Biology " + i);
+				article.setText(String.join(" ", Dataset.getRandomWords(Dataset.biologyDataset, 20)));
 				article.setCategories(Categories.BIOLOGY);
 				articleRepo.save(article);
 			}
-			if (articleRepo.findByTitleAndUserIsNull("Gossip" + i) == null) {
+			if (articleRepo.findByTitleAndUserIsNull("Gossip " + i) == null) {
 				ArticleEntity article = new ArticleEntity();
-				article.setTitle("Gossip" + i);
-				article.setText("The queen and the prince of England photographed together in vacation! Shocking news, as greek singer is invited to sing in the oscar awards ceremony");
+				article.setTitle("Gossip " + i);
+				article.setText(String.join(" ", Dataset.getRandomWords(Dataset.gossipDataset, 20)));
 				article.setCategories(Categories.GOSSIP);
 				articleRepo.save(article);
 			}

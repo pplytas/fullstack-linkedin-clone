@@ -307,7 +307,7 @@ public class ArticleController {
 	}
 	
 	private List<ArticleEntity> reorderFeedArticles(Map<Categories, List<ArticleEntity>> articlesMap, Map<Categories, Integer> preferenceMap, int totalPreferenceValues) {
-		boolean remainingArticles = false;
+		boolean remainingArticles = true;
 		List<ArticleEntity> reorderedList = new ArrayList<>();
 		while (remainingArticles) {
 			remainingArticles = false;
