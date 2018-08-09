@@ -38,6 +38,12 @@
 /.metadata/*
 .recommenders*
 
+#Added by Panagiotis#
+#####################
+
+.project
+/tedi_server/uploads/
+
 
 
 
