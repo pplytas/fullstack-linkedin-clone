@@ -43,11 +43,15 @@
                     return $rootScope.getUserDetails();
                 }
 			}
-		})
+        })
 		.when("/edit", {
 			templateUrl: '../templates/edit-profile.html',
 			controller: 'editProfileCtrl'
-		})
+        })
+        .when("/post", {
+            templateUrl: '../templates/post.html',
+            controller: 'postCtrl'
+        })
 		.otherwise({
 	        templateUrl: '../templates/home.html'
 	    });

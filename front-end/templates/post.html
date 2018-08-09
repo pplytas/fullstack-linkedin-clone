@@ -5,7 +5,7 @@
                 <div class="row justify-content-center">
                     <div class="col-6">
                         <div class="list-group profile-submenu">
-                            <a href="#" class="list-group-item list-group-item-action">Dashboard</a>
+                            <a href="#!/profile" class="list-group-item list-group-item-action">Dashboard</a>
                             <a href="#" class="list-group-item list-group-item-action">User</a>
                             <a href="#" class="list-group-item list-group-item-action active">Post</a>
                             <a href="#" class="list-group-item list-group-item-action">New</a>
@@ -32,7 +32,7 @@
                               <div class="form-group row">
                                 <label for="title" class="col-4 col-form-label">Title</label>
                                 <div class="col-8">
-                                  <input id="title" name="title" ng-model="tempUser.email" placeholder="Title" class="form-control here" required="required" type="text">
+                                  <input id="title" name="title" placeholder="Title" class="form-control here" required="required" type="text">
                                 </div>
                               </div>
                               <div class="form-group row">
@@ -41,16 +41,16 @@
                                   <textarea id="text" name="text" cols="40" rows="4" required="required" placeholder="Write your thoughts..." class="form-control"></textarea>
                                 </div>
                               </div>
-                            </form>
-                            <div class="form-group row">
+                              <div class="form-group row">
                                 <div class="col-8 text-center">
-                                    <button name="media" type="submit" class="btn">Insert media</button>
+                                    <button id="_media" name="_media" type="submit" class="btn">Insert media</button>
                                 </div>
-                            </div>
+                              </div>
+                            </form>
     		            </div>
                         <div class="form-group row justify-content-center mt-4">
                           <div class="col-8 text-center">
-                            <button name="submit" type="submit" class="btn btn-primary">Post article</button>
+                            <button id="_submit" name="_submit" type="submit" class="btn btn-primary">Post article</button>
                           </div>
                         </div>
     		        </div>
