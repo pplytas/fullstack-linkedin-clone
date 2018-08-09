@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import server.classification.Categories;
+
 @Entity
 @Table(name = "article")
 public class ArticleEntity {
@@ -49,6 +51,9 @@ public class ArticleEntity {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
 				mappedBy = "article", orphanRemoval = true)
 	private List<UpvoteEntity> upvotes = new ArrayList<>();
+	
+	@Column
+	private Categories category;
 	
 	public ArticleEntity() {}
 
@@ -82,6 +87,10 @@ public class ArticleEntity {
 	
 	public List<UpvoteEntity> getUpvotes() {
 		return upvotes;
+	}
+	
+	public Categories getCategories() {
+		return category;
 	}
 	
 	public void setId(Long id) {
@@ -126,6 +135,10 @@ public class ArticleEntity {
 	
 	public void addUpvote(UpvoteEntity upvote) {
 		this.upvotes.add(upvote);
+	}
+	
+	public void setCategories(Categories category) {
+		this.category = category;
 	}
 	
 }

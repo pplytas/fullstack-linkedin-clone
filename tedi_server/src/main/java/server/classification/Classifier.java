@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import server.entities.ArticleEntity;
+
 public abstract class Classifier<T> {
 	
 	private int k;
 	
 	public Classifier() {
-		this.k = 5;
+		this.k = 15;
 	}
 	
 	public Classifier(int k) {
@@ -35,10 +37,14 @@ public abstract class Classifier<T> {
 		List<Neighbor> neighbors = new ArrayList<>();
 		for (T dataitem : dataset) {
 			int distance = calculateDistance(nItem, dataitem);
+			System.out.println("Distance between " + ((ArticleEntity)dataitem).getTitle() + " and mine was " + distance);
 			neighbors = updateNeighbors(neighbors, getItemCategory(dataitem), distance);
 		}
 		
 		Map<Categories, Integer> count = countNeighborCategories(neighbors);
+		for (Map.Entry<Categories, Integer> cat : count.entrySet()) {
+			System.out.println(cat.getKey().toString() + " " + cat.getValue());
+		}
 		return findMaxCategory(count);
 		
 	}
