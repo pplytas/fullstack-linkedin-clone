@@ -96,6 +96,10 @@ public class UserEntity {
 				mappedBy = "publisher", orphanRemoval = true)
 	private List<AdEntity> ads = new ArrayList<>();
 	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+			mappedBy = "user")
+	private List<NotificationEntity> notifications = new ArrayList<>();
+	
 	private Categories category;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -203,6 +207,10 @@ public class UserEntity {
 	
 	public List<AdEntity> getAds() {
 		return ads;
+	}
+	
+	public List<NotificationEntity> getNotifications() {
+		return notifications;
 	}
 	
 	public Categories getCategory() {
@@ -339,6 +347,14 @@ public class UserEntity {
 	
 	public void addAd(AdEntity ad) {
 		this.ads.add(ad);
+	}
+	
+	public void setNotifications(List<NotificationEntity> notifications) {
+		this.notifications = notifications;
+	}
+	
+	public void addNotification(NotificationEntity notification) {
+		this.notifications.add(notification);
 	}
 	
 	public void setCategories(Categories category) {
