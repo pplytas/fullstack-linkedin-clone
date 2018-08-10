@@ -40,7 +40,10 @@ public class NotificationController {
 				nOut.setRefArticleId(notification.getReferencedArticle().getId());
 			}
 			nOut.setDateTime(notification.getDateTime());
+			nOut.setSeen(notification.getSeen());
 			output.addNotificationOutputModel(nOut);
+			notification.setSeen(true);
+			notificationRepo.save(notification);
 		}
 		return new ResponseEntity<>(output, HttpStatus.OK);
 	}

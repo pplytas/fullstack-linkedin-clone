@@ -21,6 +21,7 @@ public class NotificationService {
 		notification.setDateTime();
 		notification.setReferencedArticle(null);
 		notification.setMessage(message);
+		notification.setSeen(false);
 		notificationRepo.save(notification);
 	}
 
@@ -31,6 +32,7 @@ public class NotificationService {
 		notification.setDateTime();
 		notification.setReferencedArticle(referencedArticle);
 		notification.setMessage(message);
+		notification.setSeen(false);
 		notificationRepo.save(notification);
 	}
 	

@@ -9,6 +9,7 @@ public class NotificationOutputModel {
 	private String refUserEmail;
 	private Long refArticleId;
 	private String dateTime;
+	private Boolean seen;
 
 	public NotificationOutputModel() {}
 
@@ -26,6 +27,10 @@ public class NotificationOutputModel {
 	
 	public String getDateTime() {
 		return dateTime;
+	}
+	
+	public Boolean getSeen() {
+		return seen;
 	}
 
 	public void setRefUserEmail(String refUserEmail) {
@@ -48,5 +53,9 @@ public class NotificationOutputModel {
 			
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		this.dateTime = sdf.format(dateTime);
+	}
+	
+	public void setSeen(Boolean seen) {
+		this.seen = seen;
 	}
 }

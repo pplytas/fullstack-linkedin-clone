@@ -40,6 +40,9 @@ public class NotificationEntity {
 	@JoinColumn(name = "user")
 	private UserEntity user;
 	
+	@Column
+	private Boolean seen;
+	
 	public NotificationEntity() {}
 
 	public Long getId() {
@@ -64,6 +67,10 @@ public class NotificationEntity {
 
 	public UserEntity getUser() {
 		return user;
+	}
+	
+	public Boolean getSeen() {
+		return seen;
 	}
 
 	public void setId(Long id) {
@@ -92,6 +99,10 @@ public class NotificationEntity {
 
 	public void setUser(UserEntity user) {
 		this.user = user;
+	}
+	
+	public void setSeen(Boolean seen) {
+		this.seen = seen;
 	}
 	
 }
