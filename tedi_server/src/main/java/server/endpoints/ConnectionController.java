@@ -19,6 +19,7 @@ import server.entities.ConnectionEntity;
 import server.entities.UserEntity;
 import server.repositories.ConnectionRepository;
 import server.repositories.UserRepository;
+import server.services.NotificationService;
 import server.utilities.StorageManager;
 import server.utilities.Validator;
 
@@ -36,6 +37,9 @@ public class ConnectionController {
 	
 	@Autowired
 	private ConnectionRepository connRepo;
+
+	@Autowired
+	private NotificationService notificationService;
 
 	//add a new connection between active user and the one specified by the parameter
 	@PostMapping("/connect")
@@ -63,12 +67,23 @@ public class ConnectionController {
 			ConnectionEntity connection = connRepo.findByUserAndConnectedAndIsPending(connUser, currUser, true);
 			connection.setIsPending(false);
 			connRepo.save(connection);
-			return new ResponseEntity<>("Connection request from " + email + " accepted", HttpStatus.OK);
+			String responseMessage = "Connection request from " + email + " accepted";
+			String notificationMessage = "Connection request accepted from " + currUser.getName() + " " + currUser.getSurname();
+			notificationService.addNotification(connUser, currUser, notificationMessage);
+
+			return new ResponseEntity<>(responseMessage, HttpStatus.OK);
+		}
+		else if (connRepo.findByUserAndConnectedAndIsPending(currUser, connUser, true) != null) {
+			//can't resend pending request
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		else {
 			ConnectionEntity connection = new ConnectionEntity(currUser, connUser, true);
 			connRepo.save(connection);
-			return new ResponseEntity<>("Connection request sent to " + email,HttpStatus.OK);
+			String responseMessage = "Connection request sent to " + email;
+			String notificationMessage = "Connection request sent from " + currUser.getName() + " " + currUser.getSurname();
+			notificationService.addNotification(connUser, currUser, notificationMessage);
+			return new ResponseEntity<>(responseMessage, HttpStatus.OK);
 		}
 		
 	}

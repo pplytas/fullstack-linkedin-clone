@@ -14,18 +14,24 @@ public class NotificationService {
 	@Autowired
 	private NotificationRepository notificationRepo;
 	
-	public void addNotification(UserEntity user, UserEntity referencedUser) {
+	public void addNotification(UserEntity user, UserEntity referencedUser, String message) {
 		NotificationEntity notification = new NotificationEntity();
-		
+		notification.setUser(user);
+		notification.setReferencedUser(referencedUser);
+		notification.setDateTime();
+		notification.setReferencedArticle(null);
+		notification.setMessage(message);
+		notificationRepo.save(notification);
 	}
 
-	public void addNotification(UserEntity user, UserEntity referencedUser, ArticleEntity referencedArticle) {
-		
-	}
-	
-	public String generateNotificationText(NotificationEntity notification) {
-		
-		return "";
+	public void addNotification(UserEntity user, UserEntity referencedUser, ArticleEntity referencedArticle, String message) {
+		NotificationEntity notification = new NotificationEntity();
+		notification.setUser(user);
+		notification.setReferencedUser(referencedUser);
+		notification.setDateTime();
+		notification.setReferencedArticle(referencedArticle);
+		notification.setMessage(message);
+		notificationRepo.save(notification);
 	}
 	
 }

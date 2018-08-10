@@ -27,6 +27,9 @@ public class NotificationEntity {
 	
 	@Column
 	private ArticleEntity referencedArticle;
+
+	@Column
+	private String message;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateTime;
@@ -49,6 +52,10 @@ public class NotificationEntity {
 		return referencedArticle;
 	}
 
+	public String getMessage() {
+		return message;
+	}
+
 	public Date getDateTime() {
 		return dateTime;
 	}
@@ -67,6 +74,10 @@ public class NotificationEntity {
 	
 	public void setReferencedArticle(ArticleEntity referencedArticle) {
 		this.referencedArticle = referencedArticle;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 	public void setDateTime() {
