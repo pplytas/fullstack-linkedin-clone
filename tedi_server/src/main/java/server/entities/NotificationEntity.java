@@ -22,10 +22,12 @@ public class NotificationEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@Column
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ref_user")
 	private UserEntity referencedUser;
 	
-	@Column
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ref_article")
 	private ArticleEntity referencedArticle;
 
 	@Column

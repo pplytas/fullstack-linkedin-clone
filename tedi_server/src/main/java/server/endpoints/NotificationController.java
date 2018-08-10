@@ -11,6 +11,7 @@ import server.endpoints.outputmodels.NotificationOutputModel;
 import server.entities.NotificationEntity;
 import server.entities.UserEntity;
 import server.repositories.NotificationRepository;
+import server.services.NotificationService;
 
 import java.util.List;
 
@@ -21,6 +22,9 @@ public class NotificationController {
 	private SecurityService secService;
 
 	@Autowired
+	private NotificationService notificationService;
+	
+	@Autowired
 	private NotificationRepository notificationRepo;
 
 	@GetMapping("/notifications")
@@ -30,9 +34,12 @@ public class NotificationController {
 		NotificationListOutputModel output = new NotificationListOutputModel();
 		for (NotificationEntity notification : notifications) {
 			NotificationOutputModel nOut = new NotificationOutputModel();
-			nOut.setMessage(notification.getMessage());
+			nOut.setMessage(notificationService.refreshMessage(notification));
 			nOut.setRefUserEmail(notification.getReferencedUser().getEmail());
-			nOut.setRefArticleId(notification.getReferencedArticle().getId());
+			if (notification.getReferencedArticle() != null) {
+				nOut.setRefArticleId(notification.getReferencedArticle().getId());
+			}
+			nOut.setDateTime(notification.getDateTime());
 			output.addNotificationOutputModel(nOut);
 		}
 		return new ResponseEntity<>(output, HttpStatus.OK);

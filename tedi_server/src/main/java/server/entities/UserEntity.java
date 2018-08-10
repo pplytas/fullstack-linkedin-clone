@@ -100,6 +100,10 @@ public class UserEntity {
 			mappedBy = "user")
 	private List<NotificationEntity> notifications = new ArrayList<>();
 	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+			mappedBy = "referencedUser")
+	private List<NotificationEntity> refNotifications = new ArrayList<>();
+	
 	private Categories category;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -211,6 +215,10 @@ public class UserEntity {
 	
 	public List<NotificationEntity> getNotifications() {
 		return notifications;
+	}
+	
+	public List<NotificationEntity> getRefNotifications() {
+		return refNotifications;
 	}
 	
 	public Categories getCategory() {
@@ -355,6 +363,14 @@ public class UserEntity {
 	
 	public void addNotification(NotificationEntity notification) {
 		this.notifications.add(notification);
+	}
+	
+	public void setRefNotifications(List<NotificationEntity> refNotifications) {
+		this.refNotifications = refNotifications;
+	}
+	
+	public void addRefNotification(NotificationEntity refNotification) {
+		this.refNotifications.add(refNotification);
 	}
 	
 	public void setCategories(Categories category) {

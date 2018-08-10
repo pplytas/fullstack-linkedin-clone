@@ -34,4 +34,19 @@ public class NotificationService {
 		notificationRepo.save(notification);
 	}
 	
+	public String refreshMessage(NotificationEntity notification) {
+		String msg = notification.getMessage();
+		if (notification.getReferencedUser().getName() != null) {
+			msg = msg.replaceFirst("[?]", notification.getReferencedUser().getName());
+		} else {
+			msg = msg.replaceFirst("[?]", "");
+		}
+		if (notification.getReferencedUser().getSurname() != null) {
+			msg = msg.replaceFirst("[?]", notification.getReferencedUser().getSurname());
+		} else {
+			msg = msg.replaceFirst("[?]", "");
+		}
+		return msg;
+	}
+	
 }

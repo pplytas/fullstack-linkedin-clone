@@ -1,10 +1,14 @@
 package server.endpoints.outputmodels;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class NotificationOutputModel {
 
 	private String message;
 	private String refUserEmail;
 	private Long refArticleId;
+	private String dateTime;
 
 	public NotificationOutputModel() {}
 
@@ -19,6 +23,10 @@ public class NotificationOutputModel {
 	public String getRefUserEmail() {
 		return refUserEmail;
 	}
+	
+	public String getDateTime() {
+		return dateTime;
+	}
 
 	public void setRefUserEmail(String refUserEmail) {
 		this.refUserEmail = refUserEmail;
@@ -30,5 +38,15 @@ public class NotificationOutputModel {
 
 	public void setRefArticleId(Long refArticleId) {
 		this.refArticleId = refArticleId;
+	}
+	
+	public void setDateTime(Date dateTime) {
+		if (dateTime == null) {
+			this.dateTime = null;
+			return;
+		}
+			
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		this.dateTime = sdf.format(dateTime);
 	}
 }

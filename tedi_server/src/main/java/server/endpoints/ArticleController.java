@@ -103,7 +103,7 @@ public class ArticleController {
 			comment.setUser(currUser);
 			comment.setDateTime();
 			commentRepo.save(comment);
-			String notificationMessage = currUser.getName() + " " + currUser.getSurname() + " commented on your post";
+			String notificationMessage = "? ? commented on your post";
 			notificationService.addNotification(refArticle.getUser(), currUser, refArticle, notificationMessage);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
@@ -122,9 +122,12 @@ public class ArticleController {
 		Optional<ArticleEntity> optArticle = articleRepo.findById(articleId);
 		if (optArticle.isPresent()) {
 			ArticleEntity refArticle = optArticle.get();
+			if (upvoteRepo.findByArticleAndUser(refArticle, currUser) != null) {
+				return new ResponseEntity<>("Article already upvoted", HttpStatus.CONFLICT);
+			}
 			UpvoteEntity upvote = new UpvoteEntity(currUser, refArticle);
 			upvoteRepo.save(upvote);
-			String notificationMessage = currUser.getName() + " " + currUser.getSurname() + " upvoted your post";
+			String notificationMessage = "? ? upvoted your post";
 			notificationService.addNotification(refArticle.getUser(), currUser, refArticle, notificationMessage);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
@@ -199,7 +202,7 @@ public class ArticleController {
 			output.setText(article.getText());
 			output.setFile(sm.getFile(article.getMediafile()));
 			output.setDateTime(article.getDateTime());
-			List<CommentEntity> comments = commentRepo.findByArticleOrderByDateTimeDesc(a);
+			List<CommentEntity> comments = commentRepo.findByArticleOrderByDateTimeDesc(article);
 			for (CommentEntity c : comments) {
 				CommentOutputModel cOut = new CommentOutputModel();
 				cOut.setText(c.getText());
@@ -207,7 +210,7 @@ public class ArticleController {
 				cOut.setDateTime(c.getDateTime());
 				output.addComment(cOut);
 			}
-			List<UpvoteEntity> upvotes = upvoteRepo.findByArticle(a);
+			List<UpvoteEntity> upvotes = upvoteRepo.findByArticle(article);
 			for (UpvoteEntity u : upvotes) {
 				UpvoteOutputModel uOut = new UpvoteOutputModel();
 				uOut.setUpvoter(u.getUser().getEmail());

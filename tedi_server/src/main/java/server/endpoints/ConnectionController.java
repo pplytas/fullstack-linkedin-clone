@@ -68,20 +68,20 @@ public class ConnectionController {
 			connection.setIsPending(false);
 			connRepo.save(connection);
 			String responseMessage = "Connection request from " + email + " accepted";
-			String notificationMessage = "Connection request accepted from " + currUser.getName() + " " + currUser.getSurname();
+			String notificationMessage = "Connection request accepted from ? ?";
 			notificationService.addNotification(connUser, currUser, notificationMessage);
 
 			return new ResponseEntity<>(responseMessage, HttpStatus.OK);
 		}
 		else if (connRepo.findByUserAndConnectedAndIsPending(currUser, connUser, true) != null) {
 			//can't resend pending request
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>("Request already sent to user", HttpStatus.CONFLICT);
 		}
 		else {
 			ConnectionEntity connection = new ConnectionEntity(currUser, connUser, true);
 			connRepo.save(connection);
 			String responseMessage = "Connection request sent to " + email;
-			String notificationMessage = "Connection request sent from " + currUser.getName() + " " + currUser.getSurname();
+			String notificationMessage = "Connection request sent from ? ?";
 			notificationService.addNotification(connUser, currUser, notificationMessage);
 			return new ResponseEntity<>(responseMessage, HttpStatus.OK);
 		}
