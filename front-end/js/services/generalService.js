@@ -49,7 +49,7 @@
 				console.log(response);
 				console.log("UserList Failed");
 			});
-		}
+        }
 
 		globalFunctionsFactory.registerUser = function(
 			email,
@@ -157,7 +157,34 @@
 			}).catch(function onError(response) {		// Handle error
 				console.log("Logout Failed");
 			});
-		}
+        }
+        
+        globalFunctionsFactory.postArticle = function(
+            title,
+            text,
+            media = null
+        ) {
+            var endpoint = '/article/new';
+            var url = $rootScope.tediAPI + endpoint;
+            var newArticle = {
+                "title": title,
+                "text": text,
+                "media": media
+            }
+
+            return $http({
+                method: "POST",
+                url: url,
+                headers: { 'Content-Type': 'application/json' },
+				data: newArticle
+			}).then(function onSuccess(response) {		// Handle success
+				console.log(response);
+				console.log("Article posted Successful");
+			}).catch(function onError(response) {		// Handle error
+				console.log(response);
+				console.log("Article post Failed");
+			});
+        }
 
 		return globalFunctionsFactory;
 	})
