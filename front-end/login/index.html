@@ -7,8 +7,6 @@
 		<title>Login | TEDi BEAR</title>
 		<link rel="icon" type="image/x-icon" href="../img/logo-blue-short.png"/>
 
-		<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-
 		<!-- Start Load CSS -->
 		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700&subset=latin,greek' rel='stylesheet' type='text/css'>
 		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -17,70 +15,139 @@
 		<!-- End Load CSS -->
 
 	</head>
-	<body >
+	<body>
+		<div ng-app="loginApp">
+		<nav class="navbar fixed-top navbar-expand-lg navbar-dark">
+			<a class="navbar-brand" href="#">
+				<img src="../img/logo-white-short.png" alt="header logo" class="header-logo"/>
+			</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
 
-		<section id="login">
-			<div class="container">
-				<div class="row justify-content-center">
-					<div class="col col-xs-10 col-sm-8 col-md-6">
-
-						<div class="logo">
-							<img src="../img/logo-blue.png" alt="TEDi Logo" class="img-responsive" />
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<form class="form-inline ml-auto" id="sign-in-form">
+					<div class="alert alert-danger mr-1" id="invalid-msg" role="alert">
+						Invalid credentials
+					</div>
+					<div class="input-group mr-1">
+						<input type="email" class="form-control" id="email" placeholder="Email" aria-label="email" required aria-describedby="email-input">
+					</div>
+					<div class="input-group mr-1">
+						<input type="password" class="form-control" id="password" placeholder="Password" aria-label="password" required aria-describedby="password-input">
+					</div>
+					<button class="btn btn-outline-info my-2 my-sm-0" id="sign-in" type="submit">
+						<div class="mx-2" id="loading-spinner" role="alert">
+							<i class="fa fa-circle-o-notch fa-1x fa-spin px-1"></i>
 						</div>
+						<span>Sign In</span>
+					</button>
+				</form>
+				<div class="mx-2" style="color: #17a2b8;">
+					or
+				</div>
+				<button class="btn btn-outline-info my-2 my-sm-0" id="sign-up-top">Sign Up</button>
+			</div>
+		</nav>
 
-						<div id="loginmsg" class="alert alert-danger" role="alert">
+		<div>
+			<img src="../img/welcome-image.png" alt="Welcome Image" class="welcome-img"/>
+			<div class="container-fluid welcome-text">
+				<div class="row">
+					<div class="col-5 offset-1 pt-5">
+						<div class="pt-5">
+							<h5>Welcome to</h5>
+							<h1>TEDi BEAR</h1>
+							<p>an employment-oriented service to connect you with the world</br>created by D.Gounaris and P.Plytas.</p>
+						</div>
+					</div>
+					<div class="col col-xs-10 col-sm-8 col-md-4 offset-1" id="register" style="display: none;">
+						<form id="register-form">
+							<legend>Register to TEDi BEAR</legend>
+							<div class="form-group">
+								<label for="reg-email">Email*</label>
+								<input type="email" id="reg-email" required class="form-control"/>
+							</div>
+							<div class="form-group">
+								<label for="reg-password">Password*</label>
+								<input type="password" id="reg-password" required class="form-control"/>
+							</div>
+                            <div class="form-group container">
+                                <div class="row">
+                                    <div class="col-6 pl-0">
+        								<label for="firstname">First Name*</label>
+        								<input type="text" id="firstname" required class="form-control"/>
+                                    </div>
+                                    <div class="col-6 pr-0">
+                                        <label for="lastname">Last Name*</label>
+        								<input type="text" id="lastname" required class="form-control"/>
+                                    </div>
+                                </div>
+							</div>
+                            <div class="form-group">
+								<label for="phone">Phone Number</label>
+								<input type="tel" id="phone" class="form-control"/>
+							</div>
+							<div class="form-group container">
+                                <div class="row">
+                                    <div class="col-8 pl-0">
+										<label for="picture">Picture</label>
+										<input class="btn-info btn-block" type='file' value="Choose file" id="picture" ng-model='picture' base-sixty-four-input>
+                                    </div>
+                                    <div class="col-4 pr-0 text-center">
+                                        <img class="avatar-picture" data-ng-src="data:{{picture.filetype}};base64,{{picture.base64}}" src="../img/avatar-placeholder.png" data-err-src="../img/avatar-placeholder.png" alt="avatar">
+                                    </div>
+                                </div>
+							</div>
+							<input type="submit" id="register-btn" value="Register" class="btn btn-info btn-block"/>
+						</form>
+
+						<!-- <div id="loginmsg" class="alert alert-danger" role="alert">
 							Invalid credentials
 						</div>
 
 						<div id="wait" class="alert alert-primary" role="alert">
 							We validate your credentials
 							<i class="fa fa-circle-o-notch fa-1x fa-spin px-1"></i>
-						</div>
-
-						<form method="post">
-
-							<legend>Login to TEDi BEAR</legend>
-
-							<div class="form-group">
-								<label for="email">Email</label>
-								<input type="text" id="email" name="_email" value="" required="required" class="form-control"/>
-							</div>
-
-							<div class="form-group">
-								<label for="password">Password</label>
-								<input type="password" id="password" name="_password" required="required" class="form-control"/>
-							</div>
-
-							<input type="submit" id="_submit" name="_submit" value="LOG IN" class="btn btn-light-blue btn-block"/>
-
-							<a class="sign-up-link-text" href="/register">Don't have an account yet? Sign Up</a>
-						</form>
+						</div> -->
 
 					</div>
 				</div>
 			</div>
-		</section>
+		</div>
+		</div>
+
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+		<script src="../bower_components/angular/angular.min.js"></script>
+		<script src="../bower_components/angular-base64-upload/dist/angular-base64-upload.min.js"></script>
 		<script>
-			$(document).ready(function(){
+			var app = angular.module("loginApp", ['naif.base64']).run(function ($rootScope) {
+
+				$rootScope.picture;
 
 				if (localStorage.isjwt) {
 					window.location.href = "/#!/home";
 				}
 
 				function clear_messages() {
-					$('#wait').hide();
-					$('#loginmsg').hide();
+					$('#loading-spinner').hide();
+					$('#invalid-msg').hide();
 				}
 
-				clear_messages();
+				$('#sign-up-top').click(function(e) {
+					e.preventDefault();
+					$('#register').fadeIn(500);
+				});
 
-				 $('#_submit').click(function(e) {
-					 	e.preventDefault();
+				$('#sign-in').click(function(e) {
+					if(document.getElementById("sign-in-form").checkValidity()) {
+						e.preventDefault();
 					 	clear_messages();
 						var url = 'https://localhost:8443/login'
 						var email = $('#email').val();
 						var password = $('#password').val();
-
 						var data = {
 							"email": email,
 							"password": password
@@ -92,7 +159,8 @@
 							contentType: "application/json",
 							data: JSON.stringify(data),
 							beforeSend: function() {
-								$('#wait').show()
+								$('#loading-spinner').show();
+								$('#sign-in span').text('');
 							},
 							success: function(data, status, $xhr) {
 								localStorage.isjwt = $xhr.getResponseHeader("Authorization").replace('Bearer ', '');
@@ -101,13 +169,82 @@
 							},
 							error: function($xhr) {
 								clear_messages();
+								$('#sign-in span').text('Sign In');
 								delete localStorage.isjwt;
 								if ($xhr.status >= 400 && $xhr.status < 500) {	// Invalid credentials
-									$('#loginmsg').show();
+									$('#invalid-msg').show();
 								}
 							}
 						});
-				  });
+					}
+				});
+
+				$('#register-btn').click(function(e) {
+					if(document.getElementById("register-form").checkValidity()) {
+						e.preventDefault();
+					   clear_messages();
+					   var url = 'https://localhost:8443/register'
+					   var email = ($('#reg-email').val() == "" ?  null : $('#reg-email').val())
+					   var password = ($('#reg-password').val() == "" ?  null : $('#reg-password').val())
+					   var firstname = ($('#firstname').val() == "" ?  null : $('#firstname').val())
+					   var lastname = ($('#lastname').val() == "" ?  null : $('#lastname').val())
+					   var phone = ($('#phone').val() == "" ?  null : $('#phone').val())
+					   var picture = (!$rootScope.picture ? null : $rootScope.picture.base64)
+
+					   var data = {
+						   "email": email,
+						   "password": password,
+						   "name": firstname,
+						   "surname": lastname,
+						   "telNumber": phone,
+						   "picture": picture
+					   };
+
+					   console.log(data);
+
+					   $.ajax({
+						   type: "POST",
+						   url: url,
+						   contentType: "application/json",
+						   data: JSON.stringify(data),
+						   beforeSend: function() {
+							   $('#wait').show()
+						   },
+						   success: function(data, status, $xhr) {
+							   console.log("Register Successful");
+							   var url = 'https://localhost:8443/login'
+							   var data = {
+								   "email": data.email,
+								   "password": password
+							   };
+							   $.ajax({
+								   type: "POST",
+								   url: url,
+								   contentType: "application/json",
+								   data: JSON.stringify(data),
+								   success: function(data, status, $xhr) {
+									   localStorage.isjwt = $xhr.getResponseHeader("Authorization").replace('Bearer ', '');
+									   console.log("Login " + localStorage.isjwt);
+									   window.location.href = "/#!/home";
+								   },
+								   error: function($xhr) {
+									   clear_messages();
+									   delete localStorage.isjwt;
+									   if ($xhr.status >= 400 && $xhr.status < 500) {	// Invalid credentials
+										   $('#loginmsg').show();
+									   }
+								   }
+							   });
+						   },
+						   error: function($xhr) {
+							   clear_messages();
+							   if ($xhr.status >= 400 && $xhr.status < 500) {	// Invalid credentials
+								   $('#loginmsg').show();
+							   }
+						   }
+					   });
+				   }
+				});
 			});
 		</script>
 	</body>

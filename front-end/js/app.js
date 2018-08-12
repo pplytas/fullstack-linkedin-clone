@@ -54,7 +54,7 @@
             controller: 'postCtrl'
         })
 		.otherwise({
-	        templateUrl: '../templates/home.html'
+	        redirectTo: '/home'
 	    });
 		/* =========================================== */
 	})
