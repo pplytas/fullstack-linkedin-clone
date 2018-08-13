@@ -1,3 +1,20 @@
-<div>
-    HOME.HTML
+<div class="home pt-3">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-3">
+                <div class="card">
+                    <img class="avatar-picture-big mx-auto" data-ng-src="data:image/png;base64,{{tempUser.picture}}" data-err-src="../img/avatar-placeholder.png" alt="avatar">
+                    <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{tempUser.name + " " + tempUser.surname}}</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#!/profile" class="btn btn-primary">View Profile</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-9">
+
+            </div>
+        </div>
+    </div>
 </div>

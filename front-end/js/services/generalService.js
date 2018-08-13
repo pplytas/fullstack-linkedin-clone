@@ -158,7 +158,7 @@
 				console.log("Logout Failed");
 			});
         }
-        
+
         globalFunctionsFactory.postArticle = function(
             title,
             text,
