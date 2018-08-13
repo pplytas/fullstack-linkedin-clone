@@ -66,6 +66,11 @@
 		$rootScope.getUserDetails = globalFunctions.getUserDetails;
 		$rootScope.updateUser = globalFunctions.updateUser;
         $rootScope.logout = globalFunctions.logout;
+        $rootScope.getUserSimple = globalFunctions.getUserSimple;
+        $rootScope.postEducation = globalFunctions.postEducation;
+        $rootScope.postExperience = globalFunctions.postExperience;
+        $rootScope.postSkills = globalFunctions.postSkills;
+        $rootScope.searchAccounts = globalFunctions.searchAccounts;
         $rootScope.postArticle = globalFunctions.postArticle;
 
 		// $rootScope.user = {};
