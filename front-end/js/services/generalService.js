@@ -407,7 +407,7 @@
 			});
         }
 
-        globalFunctionsFactory.getUpvoted = function() {
+        globalFunctionsFactory.getFeed = function() {
             var endpoint = '/feed';
             var url = $rootScope.tediAPI + endpoint;
 

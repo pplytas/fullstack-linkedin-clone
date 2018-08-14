@@ -72,6 +72,11 @@
         $rootScope.postSkills = globalFunctions.postSkills;
         $rootScope.searchAccounts = globalFunctions.searchAccounts;
         $rootScope.postArticle = globalFunctions.postArticle;
+        $rootScope.postComment = globalFunctions.postComment;
+        $rootScope.upvote = globalFunctions.upvote;
+        $rootScope.getArticles = globalFunctions.getArticles;
+        $rootScope.getUpvoted = globalFunctions.getUpvoted;
+        $rootScope.getFeed = globalFunctions.getFeed;
 
 		// $rootScope.user = {};
 		// $rootScope.getUserDetails().then(function(result) {
