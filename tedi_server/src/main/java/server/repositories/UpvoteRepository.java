@@ -15,5 +15,7 @@ public interface UpvoteRepository extends JpaRepository<UpvoteEntity, Long> {
 	List<UpvoteEntity> findByUser(UserEntity user);
 	
 	List<UpvoteEntity> findByArticle(ArticleEntity article);
+	
+	UpvoteEntity findByArticleAndUser(ArticleEntity article, UserEntity user);
 
 }
