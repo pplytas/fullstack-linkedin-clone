@@ -310,6 +310,122 @@
 			});
         }
 
+        globalFunctionsFactory.postComment = function(
+            articleId,
+            text
+        ) {
+            var endpoint = '/article/comment';
+            var url = $rootScope.tediAPI + endpoint;
+            var newComment = {
+                "articleId": articleId,
+                "text": text
+            }
+
+            return $http({
+                method: "POST",
+                url: url,
+                headers: { 'Content-Type': 'application/json' },
+                data: newComment
+            }).then(function onSuccess(response) {		// Handle success
+				console.log(response);
+				console.log("Comment posted Successful");
+			}).catch(function onError(response) {		// Handle error
+				console.log(response);
+				console.log("Comment post Failed");
+			});
+        }
+
+        globalFunctionsFactory.upvote = function(
+            articleId
+        ) {
+            var endpoint = '/article/upvote';
+            var url = $rootScope.tediAPI + endpoint;
+            
+            return $http({
+                method: "POST",
+                url: url,
+                headers: { 'Content-Type': 'application/json' },
+                params: {'articleId': articleId}
+            }).then(function onSuccess(response) {		// Handle success
+				console.log(response);
+				console.log("Upvote successful");
+			}).catch(function onError(response) {		// Handle error
+				console.log(response);
+				console.log("Upvote failed");
+			});
+        }
+
+        globalFunctionsFactory.getArticles = function(
+            email = null
+        ) {
+            var endpoint = '/articles';
+            var url = $rootScope.tediAPI + endpoint;
+
+            if (email == null) {
+                email = "";
+            }
+
+            return $http({
+                method: "GET",
+                url: url,
+                headers: { 'Content-Type': 'application/json' },
+                params: {'email': email}
+            }).then(function onSuccess(response) {		// Handle success
+				console.log(response);
+                console.log("Article get successful");
+                return response.data;
+			}).catch(function onError(response) {		// Handle error
+				console.log(response);
+                console.log("Article get failed");
+                return response.data;
+			});
+        }
+
+        globalFunctionsFactory.getUpvoted = function(
+            email = null
+        ) {
+            var endpoint = '/upvoted';
+            var url = $rootScope.tediAPI + endpoint;
+
+            if (email == null) {
+                email = "";
+            }
+
+            return $http({
+                method: "GET",
+                url: url,
+                headers: { 'Content-Type': 'application/json' },
+                params: {'email': email}
+            }).then(function onSuccess(response) {		// Handle success
+				console.log(response);
+                console.log("Upvoted get successful");
+                return response.data;
+			}).catch(function onError(response) {		// Handle error
+				console.log(response);
+                console.log("Upvoted get failed");
+                return response.data;
+			});
+        }
+
+        globalFunctionsFactory.getUpvoted = function() {
+            var endpoint = '/feed';
+            var url = $rootScope.tediAPI + endpoint;
+
+            return $http({
+                method: "GET",
+                url: url,
+                headers: { 'Content-Type': 'application/json' },
+            }).then(function onSuccess(response) {		// Handle success
+				console.log(response);
+                console.log("Feed get successful");
+                return response.data;
+			}).catch(function onError(response) {		// Handle error
+				console.log(response);
+                console.log("Feed get failed");
+                return response.data;
+			});
+        }
+
 		return globalFunctionsFactory;
 	})
 
