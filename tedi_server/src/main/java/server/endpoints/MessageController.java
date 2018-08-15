@@ -1,5 +1,6 @@
 package server.endpoints;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,12 +80,16 @@ public class MessageController {
 		//I dont check for connected or not users, but can be easily implemented if needed
 		List<ChatEntity> messages = chatRepo.findBySenderAndReceiverInversibleOrderByIdDesc(currUser, otherUser);
 		ChatOutputModel output = new ChatOutputModel();
-		for (ChatEntity c : messages) {
-			ChatMessageOutputModel mOut = new ChatMessageOutputModel();
-			mOut.setMessage(c.getMessage());
-			mOut.setSender(c.getSender().getEmail());
-			mOut.setReceiver(c.getReceiver().getEmail());
-			output.addMessage(mOut);
+		if (messages != null) {
+			for (ChatEntity c : messages) {
+				ChatMessageOutputModel mOut = new ChatMessageOutputModel();
+				mOut.setMessage(c.getMessage());
+				mOut.setSender(c.getSender().getEmail());
+				mOut.setReceiver(c.getReceiver().getEmail());
+				output.addMessage(mOut);
+			}
+		} else {
+			output.setMessages(new ArrayList<>());
 		}
 		return new ResponseEntity<>(output, HttpStatus.OK);
 		

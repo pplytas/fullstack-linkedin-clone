@@ -604,6 +604,24 @@
 			});
         }
 
+        globalFunctionsFactory.getNotifications = function() {
+            var endpoint = '/notifications';
+            var url = $rootScope.tediAPI + endpoint;
+            return $http({
+                method: "GET",
+                url: url,
+                headers: { 'Content-Type': 'application/json' }
+            }).then(function onSuccess(response) {		// Handle success
+				console.log(response);
+                console.log("Notifications get successful");
+                return response.data;
+			}).catch(function onError(response) {		// Handle error
+				console.log(response);
+                console.log("Notifications get failed");
+                return response.data;
+			});
+        }
+
 		return globalFunctionsFactory;
 	})
 

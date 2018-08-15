@@ -8,7 +8,7 @@
 		jwtOptionsProvider.config({
 			tokenGetter: function(options) {
                 token = localStorage.isjwt;
-                //token = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJhdXRoIjoiUk9MRV9VU0VSIiwic3ViIjoiMTYiLCJleHAiOjE1MzQ4MDYyNjh9.Haa_Mta6R4iO9ThLcbimeFfJisba3a0qOWyQ2uh-qSR8Daftbeky0qcp_eudp9VLuD970IJ0pPF1DNTQFN3obw";
+                token = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJhdXRoIjoiUk9MRV9VU0VSIiwic3ViIjoiMTYiLCJleHAiOjE1MzQ4MDYyNjh9.Haa_Mta6R4iO9ThLcbimeFfJisba3a0qOWyQ2uh-qSR8Daftbeky0qcp_eudp9VLuD970IJ0pPF1DNTQFN3obw";
 				if (!token) {
 					window.location.href = "/login";
 				}
@@ -91,6 +91,7 @@
         $rootScope.connect = globalFunctions.connect;
         $rootScope.deleteConnection = globalFunctions.deleteConnection;
         $rootScope.getConnections = globalFunctions.getConnections;
+        $rootScope.getNotifications = globalFunctions.getNotifications;
 
 		// $rootScope.user = {};
 		// $rootScope.getUserDetails().then(function(result) {

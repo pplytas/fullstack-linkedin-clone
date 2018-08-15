@@ -9,7 +9,8 @@
             console.log(title);
             console.log(text);
 
-            $rootScope.postArticle(title, text);
+            //$rootScope.postArticle(title, text);
+            $rootScope.getNotifications();
         });
 	});
 })();

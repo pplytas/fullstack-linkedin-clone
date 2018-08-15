@@ -33,6 +33,9 @@ public class AdClassifier extends Classifier<AdEntity> {
 		
 		int totalDistance = 0;
 		Set<String> ad1Skills = new HashSet<>();
+		if (ad1.getSkills() == null || ad2.getSkills() == null) {
+			return 0;
+		}
 		for (SkillEntity s : ad1.getSkills()) {
 			ad1Skills.add(s.getName().toLowerCase());
 		}
