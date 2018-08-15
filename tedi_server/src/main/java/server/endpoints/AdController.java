@@ -60,18 +60,20 @@ public class AdController {
 		AdEntity newAd = new AdEntity();
 		newAd.setTitle(input.getTitle());
 		newAd.setDescription(input.getDescription());
-		for (SkillInputModel adskill : input.getSkills()) {
-			AdSkillEntity entity = new AdSkillEntity();
-			entity.setName(adskill.getName());
-			entity.setAd(newAd);
-			newAd.addSkill(entity);
+		if (input.getSkills() != null) {
+			for (SkillInputModel adskill : input.getSkills()) {
+				AdSkillEntity entity = new AdSkillEntity();
+				entity.setName(adskill.getName());
+				entity.setAd(newAd);
+				newAd.addSkill(entity);
+			}
 		}
 		newAd.setPublisher(currUser);
 		newAd.setPublishDate();
 		Categories category = adClass.classify(newAd, adRepo.findAll());
 		newAd.setCategories(category);
 		adRepo.save(newAd);
-		return new ResponseEntity<>("Ad published successfully", HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 		
 	}
 	

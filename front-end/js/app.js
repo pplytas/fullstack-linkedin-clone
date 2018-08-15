@@ -78,6 +78,20 @@
         $rootScope.postSkills = globalFunctions.postSkills;
         $rootScope.searchAccounts = globalFunctions.searchAccounts;
         $rootScope.postArticle = globalFunctions.postArticle;
+        $rootScope.postComment = globalFunctions.postComment;
+        $rootScope.upvote = globalFunctions.upvote;
+        $rootScope.getArticles = globalFunctions.getArticles;
+        $rootScope.getUpvoted = globalFunctions.getUpvoted;
+        $rootScope.getFeed = globalFunctions.getFeed;
+        $rootScope.sendMessage = globalFunctions.sendMessage;
+        $rootScope.getMessages = globalFunctions.getMessages;
+        $rootScope.publishAd = globalFunctions.publishAd;
+        $rootScope.getAds = globalFunctions.getAds;
+        $rootScope.getSuggestedAds = globalFunctions.getSuggestedAds;
+        $rootScope.connect = globalFunctions.connect;
+        $rootScope.deleteConnection = globalFunctions.deleteConnection;
+        $rootScope.getConnections = globalFunctions.getConnections;
+        $rootScope.getNotifications = globalFunctions.getNotifications;
 
 		// $rootScope.user = {};
 		// $rootScope.getUserDetails().then(function(result) {

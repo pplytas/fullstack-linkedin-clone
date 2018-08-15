@@ -32,6 +32,9 @@ public class UserClassifier extends Classifier<UserEntity> {
 		
 		int totalDistance = 0;
 		Set<String> user1Skills = new HashSet<>();
+		if (user1.getSkills() == null || user2.getSkills() == null) {
+			return totalDistance;
+		}
 		for (SkillEntity s : user1.getSkills()) {
 			user1Skills.add(s.getName().toLowerCase());
 		}
