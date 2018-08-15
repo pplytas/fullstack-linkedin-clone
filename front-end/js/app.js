@@ -34,7 +34,13 @@
   			}
 		})
 		.when("/home", {
-			templateUrl: '../templates/home.html'
+			templateUrl: '../templates/home.html',
+			controller: 'homeCtrl',
+			resolve: {
+				user: function($rootScope) {
+                    return $rootScope.getUserDetails();
+                }
+			}
 		})
 		.when("/profile", {
 			templateUrl: '../templates/view-profile.html',

@@ -52,6 +52,10 @@ public class ArticleEntity {
 				mappedBy = "article", orphanRemoval = true)
 	private List<UpvoteEntity> upvotes = new ArrayList<>();
 	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+			mappedBy = "referencedArticle", orphanRemoval = true)
+	private List<NotificationEntity> notifications = new ArrayList<>();
+	
 	@Column
 	private Categories category;
 	
@@ -87,6 +91,10 @@ public class ArticleEntity {
 	
 	public List<UpvoteEntity> getUpvotes() {
 		return upvotes;
+	}
+	
+	public List<NotificationEntity> getNotifications() {
+		return notifications;
 	}
 	
 	public Categories getCategories() {
@@ -135,6 +143,14 @@ public class ArticleEntity {
 	
 	public void addUpvote(UpvoteEntity upvote) {
 		this.upvotes.add(upvote);
+	}
+	
+	public void setNotifications(List<NotificationEntity> notifications) {
+		this.notifications = notifications;
+	}
+	
+	public void addNotification(NotificationEntity notification) {
+		this.notifications.add(notification);
 	}
 	
 	public void setCategories(Categories category) {
