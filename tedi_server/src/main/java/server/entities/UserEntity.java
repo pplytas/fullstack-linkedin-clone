@@ -97,11 +97,11 @@ public class UserEntity {
 	private List<AdEntity> ads = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
-			mappedBy = "user")
+			mappedBy = "user", orphanRemoval = true)
 	private List<NotificationEntity> notifications = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
-			mappedBy = "referencedUser")
+			mappedBy = "referencedUser", orphanRemoval = true)
 	private List<NotificationEntity> refNotifications = new ArrayList<>();
 	
 	private Categories category;

@@ -2,12 +2,8 @@ package server.endpoints;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +21,6 @@ import server.endpoints.inputmodels.ArticleInputModel;
 import server.endpoints.inputmodels.CommentInputModel;
 import server.endpoints.outputmodels.ArticleListOutputModel;
 import server.endpoints.outputmodels.ArticleOutputModel;
-import server.endpoints.outputmodels.CommentOutputModel;
-import server.endpoints.outputmodels.UpvoteOutputModel;
 import server.entities.ArticleEntity;
 import server.entities.CommentEntity;
 import server.entities.UpvoteEntity;
@@ -35,6 +29,7 @@ import server.repositories.ArticleRepository;
 import server.repositories.CommentRepository;
 import server.repositories.UpvoteRepository;
 import server.repositories.UserRepository;
+import server.services.ArticleService;
 import server.services.NotificationService;
 import server.utilities.StorageManager;
 
@@ -62,6 +57,9 @@ public class ArticleController {
 	@Autowired
 	private ArticleClassifier articleClass;
 
+	@Autowired
+	private ArticleService articleService;
+	
 	@Autowired
 	private NotificationService notificationService;
 	
@@ -159,27 +157,7 @@ public class ArticleController {
 		try {
 			ArticleListOutputModel output = new ArticleListOutputModel();
 			for (ArticleEntity a : articles) {
-				ArticleOutputModel outA = new ArticleOutputModel();
-				outA.setId(a.getId());
-				outA.setAuthor(a.getUser().getEmail());
-				outA.setTitle(a.getTitle());
-				outA.setText(a.getText());
-				outA.setFile(sm.getFile(a.getMediafile()));
-				outA.setDateTime(a.getDateTime());
-				List<CommentEntity> comments = commentRepo.findByArticleOrderByDateTimeDesc(a);
-				for (CommentEntity c : comments) {
-					CommentOutputModel cOut = new CommentOutputModel();
-					cOut.setText(c.getText());
-					cOut.setCommentator(c.getUser().getEmail());
-					cOut.setDateTime(c.getDateTime());
-					outA.addComment(cOut);
-				}
-				List<UpvoteEntity> upvotes = upvoteRepo.findByArticle(a);
-				for (UpvoteEntity u : upvotes) {
-					UpvoteOutputModel uOut = new UpvoteOutputModel();
-					uOut.setUpvoter(u.getUser().getEmail());
-					outA.addUpvote(uOut);
-				}
+				ArticleOutputModel outA = articleService.convertArticleToOutput(a);
 				output.addArticle(outA);
 			}
 			return new ResponseEntity<>(output, HttpStatus.OK);
@@ -195,27 +173,7 @@ public class ArticleController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		try {
-			ArticleOutputModel output = new ArticleOutputModel();
-			output.setId(article.getId());
-			output.setAuthor(article.getUser().getEmail());
-			output.setTitle(article.getTitle());
-			output.setText(article.getText());
-			output.setFile(sm.getFile(article.getMediafile()));
-			output.setDateTime(article.getDateTime());
-			List<CommentEntity> comments = commentRepo.findByArticleOrderByDateTimeDesc(article);
-			for (CommentEntity c : comments) {
-				CommentOutputModel cOut = new CommentOutputModel();
-				cOut.setText(c.getText());
-				cOut.setCommentator(c.getUser().getEmail());
-				cOut.setDateTime(c.getDateTime());
-				output.addComment(cOut);
-			}
-			List<UpvoteEntity> upvotes = upvoteRepo.findByArticle(article);
-			for (UpvoteEntity u : upvotes) {
-				UpvoteOutputModel uOut = new UpvoteOutputModel();
-				uOut.setUpvoter(u.getUser().getEmail());
-				output.addUpvote(uOut);
-			}
+			ArticleOutputModel output = articleService.convertArticleToOutput(article);
 			return new ResponseEntity<>(output, HttpStatus.OK);
 		} catch (IOException e) {
 			return new ResponseEntity<>("Could not load media file", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -244,27 +202,7 @@ public class ArticleController {
 		try {
 			ArticleListOutputModel output = new ArticleListOutputModel();
 			for (ArticleEntity a : articles) {
-				ArticleOutputModel outA = new ArticleOutputModel();
-				outA.setId(a.getId());
-				outA.setAuthor(refUser.getEmail());
-				outA.setTitle(a.getTitle());
-				outA.setText(a.getText());
-				outA.setFile(sm.getFile(a.getMediafile()));
-				outA.setDateTime(a.getDateTime());
-				List<CommentEntity> comments = commentRepo.findByArticleOrderByDateTimeDesc(a);
-				for (CommentEntity c : comments) {
-					CommentOutputModel cOut = new CommentOutputModel();
-					cOut.setText(c.getText());
-					cOut.setCommentator(c.getUser().getEmail());
-					cOut.setDateTime(c.getDateTime());
-					outA.addComment(cOut);
-				}
-				List<UpvoteEntity> upvotes = upvoteRepo.findByArticle(a);
-				for (UpvoteEntity u : upvotes) {
-					UpvoteOutputModel uOut = new UpvoteOutputModel();
-					uOut.setUpvoter(u.getUser().getEmail());
-					outA.addUpvote(uOut);
-				}
+				ArticleOutputModel outA = articleService.convertArticleToOutput(a);
 				output.addArticle(outA);
 			}
 			return new ResponseEntity<>(output, HttpStatus.OK);
@@ -279,31 +217,11 @@ public class ArticleController {
 	public ResponseEntity<Object> getFeed() {
 		
 		UserEntity currUser = secService.currentUser();
-		List<ArticleEntity> articles = getPersonalisedFeed(currUser);
+		List<ArticleEntity> articles = articleService.getPersonalisedFeed(currUser);
 		ArticleListOutputModel output = new ArticleListOutputModel();
 		try {
 			for (ArticleEntity a : articles) {
-				ArticleOutputModel outA = new ArticleOutputModel();
-				outA.setId(a.getId());
-				outA.setAuthor(a.getUser().getEmail());
-				outA.setTitle(a.getTitle());
-				outA.setText(a.getText());
-				outA.setFile(sm.getFile(a.getMediafile()));
-				outA.setDateTime(a.getDateTime());
-				List<CommentEntity> comments = commentRepo.findByArticleOrderByDateTimeDesc(a);
-				for (CommentEntity c : comments) {
-					CommentOutputModel cOut = new CommentOutputModel();
-					cOut.setText(c.getText());
-					cOut.setCommentator(c.getUser().getEmail());
-					cOut.setDateTime(c.getDateTime());
-					outA.addComment(cOut);
-				}
-				List<UpvoteEntity> upvotes = upvoteRepo.findByArticle(a);
-				for (UpvoteEntity u : upvotes) {
-					UpvoteOutputModel uOut = new UpvoteOutputModel();
-					uOut.setUpvoter(u.getUser().getEmail());
-					outA.addUpvote(uOut);
-				}
+				ArticleOutputModel outA = articleService.convertArticleToOutput(a);
 				output.addArticle(outA);
 			}
 			return new ResponseEntity<>(output, HttpStatus.OK);
@@ -311,106 +229,6 @@ public class ArticleController {
 			return new ResponseEntity<>("Could not load media file", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-	}
-	
-	//functions below help to manipulate the feed based on the categories
-	private List<ArticleEntity> getPersonalisedFeed(UserEntity currUser) {
-		List<ArticleEntity> articlesDefaultOrder = articleRepo.findFeedOrderByDateTimeDesc(currUser);
-		//the fact that we got the time ordered list above 
-		//guarantees unaffected order in the sublists created in the map when we split
-		Map<Categories, List<ArticleEntity>> articlesCategoryMap = splitByCategory(articlesDefaultOrder);
-		List<CommentEntity> comments = commentRepo.findByUser(currUser);
-		List<UpvoteEntity> upvotes = upvoteRepo.findByUser(currUser);
-		int totalCommentsAndUpvotes = comments.size() + upvotes.size();
-		if (totalCommentsAndUpvotes == 0) {
-			//avoid 1/0 division in reordering
-			return articlesDefaultOrder;
-		}
-		Map<Categories, Integer> preferenceMap = getCommentsAndUpvotesPreferenceMap(comments, upvotes);
-		List<ArticleEntity> articlesPersonalisedOrder = reorderFeedArticles(articlesCategoryMap, preferenceMap, totalCommentsAndUpvotes);
-		return articlesPersonalisedOrder;
-	}
-	
-	//split the articles in a map for O(1) search time
-	private Map<Categories, List<ArticleEntity>> splitByCategory(List<ArticleEntity> articles) {
-		Map<Categories, List<ArticleEntity>> articleMap = new HashMap<>();
-		for (ArticleEntity article : articles) {
-			putArticleInMap(article, articleMap);
-		}
-		return articleMap;
-	}
-	
-	private void putArticleInMap(ArticleEntity article, Map<Categories, List<ArticleEntity>> articleMap) {
-		if (articleMap.containsKey(article.getCategories())) {
-			articleMap.get(article.getCategories()).add(article);
-		}
-		else {
-			List<ArticleEntity> valueList = new ArrayList<>();
-			valueList.add(article);
-			articleMap.put(article.getCategories(), valueList);
-		}
-	}
-	
-	private List<ArticleEntity> reorderFeedArticles(Map<Categories, List<ArticleEntity>> articlesMap, Map<Categories, Integer> preferenceMap, int totalPreferenceValues) {
-		boolean remainingArticles = true;
-		List<ArticleEntity> reorderedList = new ArrayList<>();
-		while (remainingArticles) {
-			remainingArticles = false;
-			List<ArticleEntity> partialReorderedList = new ArrayList<>();
-			for (Categories category : articlesMap.keySet()) {
-				List<ArticleEntity> categoryList = articlesMap.get(category);
-				//get ratio of reordered articles per 10
-				//if some categories end, the others will take their place, just after more iterations
-				//categoryEntries is double to weight the 1 upvote case
-				double categoryEntries = preferenceMap.get(category) == null ? 0.5 : preferenceMap.get(category);
-				int articleLimit = (int)Math.floor((categoryEntries/totalPreferenceValues)*10);
-				for (int i=0; i<articleLimit; i++) {
-					if (!categoryList.isEmpty()) {
-						remainingArticles = true;
-						partialReorderedList.add(categoryList.remove(0));
-					} 
-					else {
-						break;
-					}
-				}
-			}
-			partialReorderedList = partialReorderedList.stream()
-			.sorted(Comparator.comparing(ArticleEntity::getDateTime).reversed())
-			.collect(Collectors.toList());
-			reorderedList.addAll(partialReorderedList);
-		}
-		return reorderedList;
-	}
-	
-	private Map<Categories, Integer> getCommentsAndUpvotesPreferenceMap(List<CommentEntity> comments, List<UpvoteEntity> upvotes) {
-		Map<Categories, Integer> preferenceMap = new HashMap<>();
-		countCommentsInCategories(comments, preferenceMap);
-		countUpvotesInCategories(upvotes, preferenceMap);
-		return preferenceMap;
-	}
-	
-	private void countCommentsInCategories(List<CommentEntity> comments, Map<Categories, Integer> map) {
-		for (CommentEntity comment : comments) {
-			if (map.containsKey(comment.getArticle().getCategories())) {
-				int previousValue = map.get(comment.getArticle().getCategories());
-				map.put(comment.getArticle().getCategories(), previousValue + 1);
-			}
-			else {
-				map.put(comment.getArticle().getCategories(), 1);
-			}
-		}
-	}
-	
-	private void countUpvotesInCategories(List<UpvoteEntity> upvotes, Map<Categories, Integer> map) {
-		for (UpvoteEntity upvote : upvotes) {
-			if (map.containsKey(upvote.getArticle().getCategories())) {
-				int previousValue = map.get(upvote.getArticle().getCategories());
-				map.put(upvote.getArticle().getCategories(), previousValue + 1);
-			}
-			else {
-				map.put(upvote.getArticle().getCategories(), 1);
-			}
-		}
 	}
 
 }

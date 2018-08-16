@@ -11,7 +11,9 @@ public class ArticleOutputModel {
 	private String title;
 	private String text;
 	private String file;
-	private String author; //this is email, perhaps change to name later
+	private String authorName;
+	private String authorSurname;
+	private String authorEmail; //this is email, perhaps change to name later
 	private List<CommentOutputModel> comments;
 	private List<UpvoteOutputModel> upvotes;
 	private String dateTime;
@@ -37,10 +39,18 @@ public class ArticleOutputModel {
 		return file;
 	}
 	
-	public String getAuthor() {
-		return author;
+	public String getAuthorName() {
+		return authorName;
 	}
-	
+
+	public String getAuthorSurname() {
+		return authorSurname;
+	}
+
+	public String getAuthorEmail() {
+		return authorEmail;
+	}
+
 	public List<CommentOutputModel> getComments() {
 		return comments;
 	}
@@ -69,8 +79,16 @@ public class ArticleOutputModel {
 		this.file = file;
 	}
 	
-	public void setAuthor(String author) {
-		this.author = author;
+	public void setAuthorName(String authorName) {
+		this.authorName = authorName;
+	}
+
+	public void setAuthorSurname(String authorSurname) {
+		this.authorSurname = authorSurname;
+	}
+
+	public void setAuthorEmail(String authorEmail) {
+		this.authorEmail = authorEmail;
 	}
 	
 	public void setComments(List<CommentOutputModel> comments) {
