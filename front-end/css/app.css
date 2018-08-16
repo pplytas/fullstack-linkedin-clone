@@ -1,0 +1,204 @@
+/* ------------------- GENERAL ------------------- */
+html,
+body {
+    margin:0;
+    padding:0;
+    height:100%;
+}
+
+body {
+    font-size: 100%;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #F7F7F7;
+}
+
+/* ------------------- WELCOME PAGE ------------------ */
+.welcome-img {
+    width: 100%;
+    height: 100vh;
+    margin: auto;
+}
+
+.welcome-text {
+    position: absolute;
+    top: 14%;
+}
+
+.welcome-text h1 {
+    color: #ffffff;
+}
+
+.welcome-text p {
+    color: #c1c1c1;
+}
+
+.welcome-text h5 {
+    color: #d1d1d1;
+}
+
+/* ------------------- LOGIN/REGISTER------------------ */
+#register .logo {
+	text-align: center;
+	padding: 30px 0;
+}
+
+#register .logo img {
+    width: 280px;
+}
+
+#register form {
+	background-color: #fff;
+	padding: 1.5rem;
+	-webkit-box-shadow: 0 0 10px 2px #1f1f1f;
+	box-shadow: 0 0 10px 2px #1f1f1f;
+}
+
+#register form legend {
+	text-align: center;
+	font-weight: 300;
+	color: #999999;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+#register form label {
+	color: #17a2b8;
+	text-transform: uppercase;
+	font-size: 0.9rem;
+}
+
+#register-form {
+    padding: 1.2rem !important;
+}
+
+.btn-light-blue {
+    color: #fff;
+    background-color: #007EC7;
+    border-color: #e1e1e1;
+}
+
+.sign-up-link-text {
+    font-size: 0.9rem;
+}
+
+#invalid-msg {
+    display: none;
+    font-size: 0.8rem;
+    padding: 0.54rem 0.6rem;
+    margin-bottom: 0;
+}
+
+#loading-spinner {
+    display: none;
+}
+
+.avatar-picture {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.avatar-picture-big {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+/* ------------------- APP BODY ------------------- */
+.app-body {
+    height: 100%;
+}
+
+/* ------------------- PLATFORM BODY ------------------- */
+.platform-body {
+    padding-top: 56px;
+    min-height: 100%;
+    position: relative;
+}
+
+/* ------------------- NAVBAR ------------------- */
+.navbar {
+    background-color: #283e4a;
+}
+
+.navbar-brand {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.header-logo {
+    width: 55px;
+}
+
+.loading {
+    margin-top: 200px;
+    text-align: center;
+}
+
+/* ------------------- MAIN VIEW ------------------- */
+.main-view {
+    /* padding-top: 24px; */
+    padding-bottom: 100px;
+}
+
+/* ------------------- VIEW PROFILE ------------------- */
+.profile-submenu .list-group-item {
+    border: currentColor;
+}
+
+.view-profile .active {
+    z-index: 2;
+    color: #000000;
+    background-color: #ffffff;
+    border-color: #ffffff;
+    border-bottom: 2px solid #517E96;
+}
+
+.profile-submenu {
+    flex-direction: row;
+}
+
+.profile-submenu .list-group-item:hover {
+    background-color: #ffffff;
+    border-bottom: 2px solid #517E96;
+}
+
+.list-group-item:last-child {
+    margin-bottom: -1px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/* ------------------- EDIT PROFILE ------------------- */
+.edit-profile .container {
+    margin-top: 80px;
+}
+
+.edit-profile form legend {
+    font-weight: 300;
+    font-size: 1.3rem;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.edit-profile form label {
+	color: #517E96;
+    font-weight: 700;
+	font-size: 0.9rem;
+}
+
+/* ------------------- FOOTER ------------------- */
+.main-footer {
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:24px;   /* Height of the footer */
+}
+
+.main-footer .container .row .col {
+    text-align: center;
+}
+
+.main-footer .container .row .col {
+    color: #606060;
+    font-weight: 300;
+}

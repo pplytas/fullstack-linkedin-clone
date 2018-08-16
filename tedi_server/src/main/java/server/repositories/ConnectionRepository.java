@@ -2,7 +2,10 @@ package server.repositories;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +27,8 @@ public interface ConnectionRepository extends JpaRepository<ConnectionEntity, Lo
 	
 	List<ConnectionEntity> findByConnectedAndIsPending(UserEntity u, Boolean isPending);
 	
+	@Transactional
+	@Modifying
 	@Query("DELETE FROM ConnectionEntity c WHERE "
 			+ "(user = ?1 AND connected = ?2) OR (user = ?2 AND connected = ?1)")
 	void deleteByUserAndConnectedInversible(UserEntity u, UserEntity c);

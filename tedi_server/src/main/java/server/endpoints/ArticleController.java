@@ -361,8 +361,10 @@ public class ArticleController {
 				List<ArticleEntity> categoryList = articlesMap.get(category);
 				//get ratio of reordered articles per 10
 				//if some categories end, the others will take their place, just after more iterations
-				int categoryEntries = preferenceMap.get(category) == null ? 1 : preferenceMap.get(category);
-				for (int i=0; i<(categoryEntries/totalPreferenceValues)*10; i++) {
+				//categoryEntries is double to weight the 1 upvote case
+				double categoryEntries = preferenceMap.get(category) == null ? 0.5 : preferenceMap.get(category);
+				int articleLimit = (int)Math.floor((categoryEntries/totalPreferenceValues)*10);
+				for (int i=0; i<articleLimit; i++) {
 					if (!categoryList.isEmpty()) {
 						remainingArticles = true;
 						partialReorderedList.add(categoryList.remove(0));
@@ -373,7 +375,7 @@ public class ArticleController {
 				}
 			}
 			partialReorderedList = partialReorderedList.stream()
-			.sorted(Comparator.comparing(ArticleEntity::getDateTime))
+			.sorted(Comparator.comparing(ArticleEntity::getDateTime).reversed())
 			.collect(Collectors.toList());
 			reorderedList.addAll(partialReorderedList);
 		}

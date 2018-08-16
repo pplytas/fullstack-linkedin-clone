@@ -37,7 +37,6 @@ public abstract class Classifier<T> {
 		List<Neighbor> neighbors = new ArrayList<>();
 		for (T dataitem : dataset) {
 			int distance = calculateDistance(nItem, dataitem);
-			System.out.println("Distance between " + ((ArticleEntity)dataitem).getTitle() + " and mine was " + distance);
 			neighbors = updateNeighbors(neighbors, getItemCategory(dataitem), distance);
 		}
 		
@@ -73,7 +72,7 @@ public abstract class Classifier<T> {
 			if (count.containsKey(n.getCategory())) {
 				count.put( n.getCategory(), count.get(n.getCategory())+1 );
 			}
-			else {
+			else if (n.getCategory() != null){
 				count.put( n.getCategory(), 1);
 			}	
 		}
