@@ -7,18 +7,28 @@ public class CommentOutputModel {
 	
 	private String text;
 	private String dateTime;
-	private String commentator; //this is email, maybe change to name later
+	private String commentatorName;
+	private String commentatorSurname;
+	private String commentatorEmail; //this is email, maybe change to name later
 	
 	public CommentOutputModel() {}
 
 	public String getText() {
 		return text;
 	}
-
-	public String getCommentator() {
-		return commentator;
-	}
 	
+	public String getCommentatorName() {
+		return commentatorName;
+	}
+
+	public String getCommentatorSurname() {
+		return commentatorSurname;
+	}
+
+	public String getCommentatorEmail() {
+		return commentatorEmail;
+	}
+
 	public String getDateTime() {
 		return dateTime;
 	}
@@ -27,8 +37,16 @@ public class CommentOutputModel {
 		this.text = text;
 	}
 
-	public void setCommentator(String commentator) {
-		this.commentator = commentator;
+	public void setCommentatorName(String commentatorName) {
+		this.commentatorName = commentatorName;
+	}
+
+	public void setCommentatorSurname(String commentatorSurname) {
+		this.commentatorSurname = commentatorSurname;
+	}
+
+	public void setCommentatorEmail(String commentatorEmail) {
+		this.commentatorEmail = commentatorEmail;
 	}
 	
 	public void setDateTime(Date dateTime) {
