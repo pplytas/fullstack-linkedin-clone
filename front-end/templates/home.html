@@ -1,19 +1,134 @@
 <div class="home pt-3">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-3">
-                <div class="card">
-                    <img class="avatar-picture-big mx-auto" data-ng-src="data:image/png;base64,{{tempUser.picture}}" data-err-src="../img/avatar-placeholder.png" alt="avatar">
-                    <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
-                    <div class="card-body text-center">
-                        <h5 class="card-title">{{tempUser.name + " " + tempUser.surname}}</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#!/profile" class="btn btn-primary">View Profile</a>
+            <div class="col-3 px-4">
+                <div class="card shadow-sm">
+                    <div class="container-fluid">
+                        <div class="row position-relative mb-3">
+                            <div class="avatar-backround border border-secondary w-100"></div>
+                            <div class="col pt-4 text-center">
+                                <a href="#!/profile" class="avatar-picture-big mx-auto">
+                                    <img class="avatar-picture-big border rounded-circle border-secondary" data-ng-src="data:image/png;base64,{{tempUser.picture}}" data-err-src="../img/avatar-placeholder.png" alt="Profile Picture">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center">
+                                <p class="font-weight-bold">{{ tempUser.name + " " + tempUser.surname }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="list-group list-group-flush info-card">
+                                    <p>Education</p>
+                                    <li ng-repeat="education in tempUser.education" class="list-group-item">
+                                        {{ education.organization }}
+                                    </li>
+                                    <hr/>
+                                    <p>Experience</p>
+                                    <li ng-repeat="experience in tempUser.experience" class="list-group-item">
+                                        {{ experience.company }}
+                                    </li>
+                                    <hr/>
+                                    <p>Skills</p>
+                                    <li ng-repeat="skill in tempUser.skills" class="list-group-item">
+                                        {{ skill.name }}
+                                    </li>
+                                    <hr/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-9">
+            <div class="col-5">
+                <div class="row">
+                    <div class="col">
+                        <div class="card py-3 shadow-sm">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col">
+                                        <form name="postForm">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <img class="avatar-post-sm border rounded-circle border-secondary" data-ng-src="data:image/png;base64,{{tempUser.picture}}" data-err-src="../img/avatar-placeholder.png" alt="Profile Picture">
+                                                        <p class="post-fullname my-0 ml-3 d-inline">{{ tempUser.name + " " + tempUser.surname }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <input ng-model="newPost.title" placeholder="Title" class="form-control" required type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <textarea ng-model="newPost.text" class="form-control" placeholder="Write your thoughts..." rows="2"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-0">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="image-upload d-inline text-center ml-2">
+                                                            <label class="m-0" for="image-input">
+                                                                <i class="fas fa-camera" style="cursor: pointer;"></i>
+                                                            </label>
+                                                            <input id="image-input" type="file" ng-model="postMediaImage" base-sixty-four-input style="display: none;">
+                                                        </div>
+                                                        <div class="video-upload d-inline text-center ml-3">
+                                                            <label class="m-0" for="video-input">
+                                                                <i class="fas fa-video" style="cursor: pointer;"></i>
+                                                            </label>
+                                                            <input id="video-input" type="file" ng-model="postMediaVideo" style="display: none;">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 offset-5 text-right">
+                                                        <button type="submit" class="btn btn-sm px-3" ng-disabled="!postForm.$dirty" style="background-color: #007ABA; color: #ffffff;">Post</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row mb-3">
+                    <div class="col">
+                        <div class="card py-3 shadow-sm">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col">
+                                        <img class="avatar-post-sm border rounded-circle border-secondary" data-ng-src="data:image/png;base64,{{tempUser.picture}}" data-err-src="../img/avatar-placeholder.png" alt="Profile Picture">
+                                        <p class="post-fullname my-0 ml-3 d-inline">{{ tempUser.name + " " + tempUser.surname }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <div class="card py-3 shadow-sm">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col">
 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
             </div>
         </div>
     </div>

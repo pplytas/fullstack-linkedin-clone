@@ -12,6 +12,10 @@ body {
     background-color: #F7F7F7;
 }
 
+::placeholder {
+    font-weight: 300;
+}
+
 /* ------------------- WELCOME PAGE ------------------ */
 .welcome-img {
     width: 100%;
@@ -100,7 +104,16 @@ body {
 .avatar-picture-big {
     width: 80px;
     height: 80px;
-    border-radius: 50%;
+}
+
+.avatar-post-sm {
+    width: 35px;
+    height: 35px;
+}
+
+.post-fullname {
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
 /* ------------------- APP BODY ------------------- */
@@ -140,6 +153,28 @@ body {
     padding-bottom: 100px;
 }
 
+/* ------------------- HOME ------------------- */
+.avatar-backround {
+    position: absolute;
+    top: 0;
+    height: 65%;
+    background: #007ABA;
+}
+
+.info-card p {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.info-card li {
+    font-size: 0.9rem;
+}
+
+.image-upload,
+.video-upload {
+    vertical-align: middle;
+}
+
 /* ------------------- VIEW PROFILE ------------------- */
 .profile-submenu .list-group-item {
     border: currentColor;
@@ -166,6 +201,16 @@ body {
     margin-bottom: -1px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+}
+
+.view-profile .form-control {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #17a2b8;
+}
+
+#profile-updated {
+    display: none;
 }
 
 /* ------------------- EDIT PROFILE ------------------- */

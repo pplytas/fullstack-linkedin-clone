@@ -26,66 +26,127 @@
     		                </div>
     		            </div>
     		            <div class="row">
-    		                <div class="col-md-6">
-    		                    <form>
-                                  <div class="form-group row">
-                                    <label for="email" class="col-4 col-form-label">Email</label>
-                                    <div class="col-8">
-                                      <input id="email" name="email" ng-model="tempUser.email" placeholder="Email" class="form-control here" required="required" type="text">
+    		                <div class="col-md-5">
+                                <form>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                Picture
+                                                <hr>
+                                                <img class="avatar-picture-big rounded-circle mx-auto" data-ng-src="data:image/png;base64,{{tempUser.picture}}" data-err-src="../img/avatar-placeholder.png" alt="avatar">
+                                            </div>
+                                            <div class="col-6">
+                                                Phone
+                                                <hr>
+                                                <input ng-model="tempUser.telNumber" placeholder="Phone" class="form-control" type="text">
+                                            </div>
+                                        </div>
                                     </div>
-                                  </div>
-                                  <div class="form-group row">
-                                    <label for="name" class="col-4 col-form-label">First Name</label>
-                                    <div class="col-8">
-                                      <input id="name" name="name" ng-model="tempUser.name" placeholder="First Name" class="form-control here" type="text">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                First Name
+                                                <hr>
+                                                <input ng-model="tempUser.name" placeholder="First Name" class="form-control" type="text">
+                                            </div>
+                                            <div class="col-6">
+                                                Last Name
+                                                <hr>
+                                                <input ng-model="tempUser.surname" placeholder="Last Name" class="form-control" type="text">
+                                            </div>
+                                        </div>
                                     </div>
-                                  </div>
-                                  <div class="form-group row">
-                                    <label for="lastname" class="col-4 col-form-label">Last Name</label>
-                                    <div class="col-8">
-                                      <input id="lastname" name="lastname" ng-model="tempUser.surname" placeholder="Last Name" class="form-control here" type="text">
-                                    </div>
-                                  </div>
-                                  <div class="form-group row">
-                                    <label for="phone" class="col-4 col-form-label">Phone</label>
-                                    <div class="col-8">
-                                      <input id="phone" name="phone" ng-model="tempUser.telNumber" placeholder="Phone" class="form-control here" type="text">
-                                    </div>
-                                  </div>
-                                  <div class="form-group row">
-                                    <label for="publicinfo" class="col-4 col-form-label">Public Info</label>
-                                    <div class="col-8">
-                                      <textarea id="publicinfo" name="publicinfo" cols="40" rows="4" class="form-control"></textarea>
-                                    </div>
-                                  </div>
                                 </form>
                             </div>
-                            <div class="col-md-6">
-                                <form>
-                                    <div class="form-group row">
-                                      <label for="oldpass" class="col-4 col-form-label">Old Password</label>
-                                      <div class="col-8">
-                                        <input id="oldpass" name="oldpass" placeholder="Old Password" class="form-control here" type="password"/>
-                                      </div>
+                            <div class="col-md-6 offset-1">
+                                <form name="proInfo" id="proInfo">
+                                    <div class="form-group mb-5">
+                                        <div class="row">
+                                            <div class="col-8">
+                                                Education
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <button type="button" class="btn btn-sm btn-info" ng-click="addEducation()"><i class="fas fa-plus"></i> Add</button>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="form-group" ng-repeat="education in tempUser.education">
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <input ng-model="education.organization" placeholder="Institute" class="form-control" type="text"/>
+                                                </div>
+                                                <div class="col-3">
+                                                    <input ng-model="education.start" placeholder="Start(YYYY-MM-DD)" class="form-control" type="text"/>
+                                                </div>
+                                                <div class="col-3">
+                                                    <input ng-model="education.finish" placeholder="End(YYYY-MM-DD)" class="form-control" type="text"/>
+                                                </div>
+                                                <div class="col-1 px-0">
+                                                    <button type="button" class="btn btn-secondary" ng-click="deleteEducation($index)"><i class="far fa-trash-alt"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-group row">
-                                      <label for="newpass" class="col-4 col-form-label">New Password</label>
-                                      <div class="col-8">
-                                        <input id="newpass" name="newpass" placeholder="New Password" class="form-control here" type="password"/>
-                                      </div>
+                                    <div class="form-group mb-5">
+                                        <div class="row">
+                                            <div class="col-8">
+                                                Experience
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <button type="button" class="btn btn-sm btn-info" ng-click="addExperience()"><i class="fas fa-plus"></i> Add</button>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="form-group" ng-repeat="experience in tempUser.experience">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <input ng-model="experience.company" placeholder="Company" class="form-control" type="text"/>
+                                                </div>
+                                                <div class="col-3">
+                                                    <input ng-model="experience.position" placeholder="Position" class="form-control" type="text"/>
+                                                </div>
+                                                <div class="col-2">
+                                                    <input ng-model="experience.start" placeholder="Start(YYYY-MM-DD)" class="form-control" type="text"/>
+                                                </div>
+                                                <div class="col-2">
+                                                    <input ng-model="experience.finish" placeholder="Finish(YYYY-MM-DD)" class="form-control" type="text"/>
+                                                </div>
+                                                <div class="col-1 px-0">
+                                                    <button type="button" class="btn btn-secondary" ng-click="deleteExperience($index)"><i class="far fa-trash-alt"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-group row">
-                                      <label for="retypenewpass" class="col-4 col-form-label">Retype Password</label>
-                                      <div class="col-8">
-                                        <input id="retypenewpass" name="retypenewpass" placeholder="Retype New Password" class="form-control here" type="password"/>
-                                      </div>
+                                    <div class="form-group mb-5">
+                                        <div class="row">
+                                            <div class="col-8">
+                                                Skills
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <button type="button" class="btn btn-sm btn-info" ng-click="addSkill()"><i class="fas fa-plus"></i> Add</button>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="form-group" ng-repeat="skill in tempUser.skills">
+                                            <div class="row">
+                                                <div class="col-11">
+                                                    <input ng-model="skill.name" placeholder="Skill name" class="form-control" required type="text"/>
+                                                </div>
+                                                <div class="col-1 px-0">
+                                                    <button type="button" class="btn btn-secondary" ng-click="deleteSkill($index)"><i class="far fa-trash-alt"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </form>
     		                </div>
     		            </div>
-                        <div class="form-group row justify-content-center mt-4">
-                          <div class="col-8 text-center">
-                            <button name="submit" type="submit" class="btn btn-info">Update My Profile</button>
+                        <div class="row mt-4">
+                          <div class="col-2 offset-5">
+                            <button type="submit" class="btn btn-info" ng-disabled="!proInfo.$dirty" ng-click="updateProInfo()">Update My Profile</button>
+                          </div>
+                          <div class="alert alert-success alert-block px-2 py-1 ml-1 mr-0 my-0" id="profile-updated" role="alert">
+                              Saved<i class="fas fa-check ml-2"></i>
                           </div>
                         </div>
     		        </div>
