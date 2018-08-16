@@ -39,7 +39,8 @@ public class AuthController {
 			String msg = "Can't register with empty password";
 			return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
 		}
-		if (input.getName() == null || input.getSurname() == null) {
+		if (input.getName() == null || input.getName().equals("") 
+			|| input.getSurname() == null || input.getSurname().equals("")) {
 			String msg = "Can't register with empty name or surname";
 			return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
 		}
