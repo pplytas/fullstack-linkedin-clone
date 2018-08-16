@@ -1,0 +1,96 @@
+<div class="view-profile">
+    <div class="container-fluid">
+    	<div class="row mb-4">
+    		<div class="col bg-white text-center">
+                <div class="row justify-content-center">
+                    <div class="col-6">
+                        <div class="list-group profile-submenu">
+                            <a href="#!/profile" class="list-group-item list-group-item-action active">My Details</a>
+                            <a href="#!/post" class="list-group-item list-group-item-action">My Posts</a>
+                            <a href="#" class="list-group-item list-group-item-action">New</a>
+                            <a href="#" class="list-group-item list-group-item-action">Comments</a>
+                            <a href="#" class="list-group-item list-group-item-action">Appearance</a>
+                        </div>
+                    </div>
+                </div>
+    		</div>
+        </div>
+        <div class="row">
+    		<div class="col">
+    		    <div class="card">
+    		        <div class="card-body">
+    		            <div class="row">
+    		                <div class="col-md-12">
+    		                    <h4>Your Profile</h4>
+    		                    <hr>
+    		                </div>
+    		            </div>
+    		            <div class="row">
+    		                <div class="col-md-6">
+    		                    <form>
+                                  <div class="form-group row">
+                                    <label for="email" class="col-4 col-form-label">Email</label>
+                                    <div class="col-8">
+                                      <input id="email" name="email" ng-model="tempUser.email" placeholder="Email" class="form-control here" required="required" type="text">
+                                    </div>
+                                  </div>
+                                  <div class="form-group row">
+                                    <label for="name" class="col-4 col-form-label">First Name</label>
+                                    <div class="col-8">
+                                      <input id="name" name="name" ng-model="tempUser.name" placeholder="First Name" class="form-control here" type="text">
+                                    </div>
+                                  </div>
+                                  <div class="form-group row">
+                                    <label for="lastname" class="col-4 col-form-label">Last Name</label>
+                                    <div class="col-8">
+                                      <input id="lastname" name="lastname" ng-model="tempUser.surname" placeholder="Last Name" class="form-control here" type="text">
+                                    </div>
+                                  </div>
+                                  <div class="form-group row">
+                                    <label for="phone" class="col-4 col-form-label">Phone</label>
+                                    <div class="col-8">
+                                      <input id="phone" name="phone" ng-model="tempUser.telNumber" placeholder="Phone" class="form-control here" type="text">
+                                    </div>
+                                  </div>
+                                  <div class="form-group row">
+                                    <label for="publicinfo" class="col-4 col-form-label">Public Info</label>
+                                    <div class="col-8">
+                                      <textarea id="publicinfo" name="publicinfo" cols="40" rows="4" class="form-control"></textarea>
+                                    </div>
+                                  </div>
+                                </form>
+                            </div>
+                            <div class="col-md-6">
+                                <form>
+                                    <div class="form-group row">
+                                      <label for="oldpass" class="col-4 col-form-label">Old Password</label>
+                                      <div class="col-8">
+                                        <input id="oldpass" name="oldpass" placeholder="Old Password" class="form-control here" type="password"/>
+                                      </div>
+                                    </div>
+                                    <div class="form-group row">
+                                      <label for="newpass" class="col-4 col-form-label">New Password</label>
+                                      <div class="col-8">
+                                        <input id="newpass" name="newpass" placeholder="New Password" class="form-control here" type="password"/>
+                                      </div>
+                                    </div>
+                                    <div class="form-group row">
+                                      <label for="retypenewpass" class="col-4 col-form-label">Retype Password</label>
+                                      <div class="col-8">
+                                        <input id="retypenewpass" name="retypenewpass" placeholder="Retype New Password" class="form-control here" type="password"/>
+                                      </div>
+                                    </div>
+                                </form>
+    		                </div>
+    		            </div>
+                        <div class="form-group row justify-content-center mt-4">
+                          <div class="col-8 text-center">
+                            <button name="submit" type="submit" class="btn btn-info">Update My Profile</button>
+                          </div>
+                        </div>
+    		        </div>
+    		    </div>
+    		</div>
+    	</div>
+    </div>
+</div>

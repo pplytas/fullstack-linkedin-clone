@@ -42,6 +42,8 @@ public class ConnectionController {
 	private NotificationService notificationService;
 
 	//add a new connection between active user and the one specified by the parameter
+	//returns 201 (created) if this creates a friend request
+	//returns 200 (ok) if this accepts a friend request
 	@PostMapping("/connect")
 	public ResponseEntity<Object> connect(@RequestParam String email) {
 		
@@ -61,29 +63,27 @@ public class ConnectionController {
 		}
 		if (connRepo.findByUserAndConnectedAndIsPending(currUser, connUser, false) != null ||
 				connRepo.findByUserAndConnectedAndIsPending(connUser, currUser, false) != null) {
-			return new ResponseEntity<>("User is already connected", HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
 		else if (connRepo.findByUserAndConnectedAndIsPending(connUser, currUser, true) != null) {
 			ConnectionEntity connection = connRepo.findByUserAndConnectedAndIsPending(connUser, currUser, true);
 			connection.setIsPending(false);
 			connRepo.save(connection);
-			String responseMessage = "Connection request from " + email + " accepted";
 			String notificationMessage = "Connection request accepted from ? ?";
 			notificationService.addNotification(connUser, currUser, notificationMessage);
 
-			return new ResponseEntity<>(responseMessage, HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		else if (connRepo.findByUserAndConnectedAndIsPending(currUser, connUser, true) != null) {
 			//can't resend pending request
-			return new ResponseEntity<>("Request already sent to user", HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
 		else {
 			ConnectionEntity connection = new ConnectionEntity(currUser, connUser, true);
 			connRepo.save(connection);
-			String responseMessage = "Connection request sent to " + email;
 			String notificationMessage = "Connection request sent from ? ?";
 			notificationService.addNotification(connUser, currUser, notificationMessage);
-			return new ResponseEntity<>(responseMessage, HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.CREATED);
 		}
 		
 	}

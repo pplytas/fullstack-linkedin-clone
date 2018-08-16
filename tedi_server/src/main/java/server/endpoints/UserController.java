@@ -137,13 +137,15 @@ public class UserController {
 		try {
 			List<EducationEntity> old = eduRepo.findByUser(currUser);
 			eduRepo.deleteAll(old);
-			for (EducationInputModel e : input.getEducations()) {
-				EducationEntity entity = new EducationEntity();
-				entity.setOrganization(e.getOrganization());
-				entity.setStart(e.getStartDate());
-				entity.setFinish(e.getFinishDate());
-				entity.setUser(currUser);
-				eduRepo.save(entity);
+			if (input.getEducations() != null) {
+				for (EducationInputModel e : input.getEducations()) {
+					EducationEntity entity = new EducationEntity();
+					entity.setOrganization(e.getOrganization());
+					entity.setStart(e.getStartDate());
+					entity.setFinish(e.getFinishDate());
+					entity.setUser(currUser);
+					eduRepo.save(entity);
+				}
 			}
 		} catch (ParseException e) {
 			return new ResponseEntity<>("Could not parse education data", HttpStatus.BAD_REQUEST);
@@ -161,14 +163,16 @@ public class UserController {
 		try {
 			List<ExperienceEntity> old = expRepo.findByUser(currUser);
 			expRepo.deleteAll(old);
-			for (ExperienceInputModel e : input.getExperiences()) {
-				ExperienceEntity entity = new ExperienceEntity();
-				entity.setCompany(e.getCompany());
-				entity.setPosition(e.getPosition());
-				entity.setStart(e.getStartDate());
-				entity.setFinish(e.getFinishDate());
-				entity.setUser(currUser);
-				expRepo.save(entity);
+			if (input.getExperiences() != null) {
+				for (ExperienceInputModel e : input.getExperiences()) {
+					ExperienceEntity entity = new ExperienceEntity();
+					entity.setCompany(e.getCompany());
+					entity.setPosition(e.getPosition());
+					entity.setStart(e.getStartDate());
+					entity.setFinish(e.getFinishDate());
+					entity.setUser(currUser);
+					expRepo.save(entity);
+				}
 			}
 		} catch (ParseException e) {
 			return new ResponseEntity<>("Could not parse education data", HttpStatus.BAD_REQUEST);
@@ -186,11 +190,13 @@ public class UserController {
 		currUser.setSkillsPublic(input.isPublic());
 		List<UserSkillEntity> old = skillRepo.findByUser(currUser);
 		skillRepo.deleteAll(old);
-		for (SkillInputModel s : input.getSkills()) {
-			UserSkillEntity entity = new UserSkillEntity();
-			entity.setName(s.getName());
-			entity.setUser(currUser);
-			skillRepo.save(entity);
+		if (input.getSkills() != null) {
+			for (SkillInputModel s : input.getSkills()) {
+				UserSkillEntity entity = new UserSkillEntity();
+				entity.setName(s.getName());
+				entity.setUser(currUser);
+				skillRepo.save(entity);
+			}
 		}
 		//avoid using admin users or self in classification
 		Categories newCategory = userClass.classify(currUser, userRepo.findByEmailNotAndRoleNotAdminOrIsNull(currUser.getEmail()));
