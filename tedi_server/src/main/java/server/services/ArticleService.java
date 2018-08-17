@@ -119,7 +119,7 @@ public class ArticleService {
 				//if some categories end, the others will take their place, just after more iterations
 				//categoryEntries is double to weight the 1 upvote case
 				double categoryEntries = preferenceMap.get(category) == null ? 0.5 : preferenceMap.get(category);
-				int articleLimit = (int)Math.floor((categoryEntries/totalPreferenceValues)*10) == 0 ? 
+				int articleLimit = (int)Math.floor((categoryEntries/totalPreferenceValues)*10) != 0 ? 
 						(int)Math.floor((categoryEntries/totalPreferenceValues)*10) : 1;
 				for (int i=0; i<articleLimit; i++) {
 					if (!categoryList.isEmpty()) {
