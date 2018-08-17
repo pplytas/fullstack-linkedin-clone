@@ -138,8 +138,6 @@ public class UserController {
 		UserEntity currUser = secService.currentUser();
 		currUser.setEducationPublic(input.isPublic());
 		try {
-			List<EducationEntity> old = eduRepo.findByUser(currUser);
-			eduRepo.deleteAll(old);
 			List<EducationEntity> newEducations = new ArrayList<>();
 			if (input.getEducations() != null) {
 				for (EducationInputModel e : input.getEducations()) {
@@ -155,6 +153,8 @@ public class UserController {
 					newEducations.add(entity);
 				}
 			}
+			List<EducationEntity> old = eduRepo.findByUser(currUser);
+			eduRepo.deleteAll(old);
 			eduRepo.saveAll(newEducations);
 		} catch (ParseException e) {
 			return new ResponseEntity<>("Could not parse education data", HttpStatus.BAD_REQUEST);
@@ -170,8 +170,6 @@ public class UserController {
 		UserEntity currUser = secService.currentUser();
 		currUser.setExperiencePublic(input.isPublic());
 		try {
-			List<ExperienceEntity> old = expRepo.findByUser(currUser);
-			expRepo.deleteAll(old);
 			List<ExperienceEntity> newExperiences = new ArrayList<>();
 			if (input.getExperiences() != null) {
 				for (ExperienceInputModel e : input.getExperiences()) {
@@ -189,6 +187,8 @@ public class UserController {
 					newExperiences.add(entity);
 				}
 			}
+			List<ExperienceEntity> old = expRepo.findByUser(currUser);
+			expRepo.deleteAll(old);
 			expRepo.saveAll(newExperiences);
 		} catch (ParseException e) {
 			return new ResponseEntity<>("Could not parse education data", HttpStatus.BAD_REQUEST);
@@ -295,7 +295,15 @@ public class UserController {
 					EducationOutputModel eOut = new EducationOutputModel();
 					eOut.setOrganization(e.getOrganization());
 					eOut.setStart(e.getStart());
-					eOut.setFinish(e.getFinish());
+					if (DateUtils.lessEqualThanCurrent(e.getStart()) && e.getFinish() == null) {
+						eOut.setFinish("Present");
+					}
+					else if (DateUtils.greaterEqualThanCurrent(e.getStart()) && e.getFinish() == null) {
+						eOut.setFinish("Unknown");
+					}
+					else {
+						eOut.setFinish(e.getFinish());
+					}
 					eduOut.add(eOut);
 				}
 			}
@@ -310,7 +318,15 @@ public class UserController {
 					xOut.setCompany(e.getCompany());
 					xOut.setPosition(e.getPosition());
 					xOut.setStart(e.getStart());
+					if (DateUtils.lessEqualThanCurrent(e.getStart()) && e.getFinish() == null) {
+						xOut.setFinish("Present");
+					}
+					else if (DateUtils.greaterEqualThanCurrent(e.getStart()) && e.getFinish() == null) {
+						xOut.setFinish("Unknown");
+					}
+					else {
 					xOut.setFinish(e.getFinish());
+					}
 					expOut.add(xOut);
 					if (DateUtils.lessEqualThanCurrent(e.getStart()) && DateUtils.greaterEqualThanCurrent(e.getFinish())) {
 						currentExpOut.add(xOut);

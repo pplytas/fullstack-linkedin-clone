@@ -31,8 +31,12 @@ public class EducationOutputModel {
 		if (start != null) {
 			this.start = new SimpleDateFormat("yyyy-MM-dd").format(start);
 		} else {
-			this.start = "";
+			this.start = "Unknown";
 		}
+	}
+	
+	public void setFinish(String finish) {
+		this.finish = finish;
 	}
 
 	public void setFinish(Date finish) {
