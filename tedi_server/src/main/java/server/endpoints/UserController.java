@@ -3,7 +3,9 @@ package server.endpoints;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -290,7 +292,7 @@ public class UserController {
 					eduOut.add(eOut);
 				}
 			}
-			output.setEducation(eduOut);
+			output.setEducation(eduOut.stream().sorted(Comparator.comparing(EducationOutputModel::getStart).reversed()).collect(Collectors.toList()));
 			
 			List<ExperienceOutputModel> expOut = new ArrayList<>();
 			if (user.isExperiencePublic() || viewPrivate) {
@@ -304,7 +306,7 @@ public class UserController {
 					expOut.add(xOut);
 				}
 			}
-			output.setExperience(expOut);
+			output.setExperience(expOut.stream().sorted(Comparator.comparing(ExperienceOutputModel::getStart).reversed()).collect(Collectors.toList()));
 			
 			List<SkillOutputModel> skillOut = new ArrayList<>();
 			if (user.isSkillsPublic() || viewPrivate) {
