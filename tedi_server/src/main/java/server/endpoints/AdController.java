@@ -56,12 +56,20 @@ public class AdController {
 	@PostMapping("/add")
 	public ResponseEntity<Object> publishAd(@RequestBody AdInputModel input) {
 		
+		if (input.getTitle() == null || input.getTitle().equals("")
+			|| input.getDescription() == null || input.getDescription().equals("")) {
+			return new ResponseEntity<>("Title and description can't be null or empty", HttpStatus.BAD_REQUEST);
+		}
+		
 		UserEntity currUser = secService.currentUser();
 		AdEntity newAd = new AdEntity();
 		newAd.setTitle(input.getTitle());
 		newAd.setDescription(input.getDescription());
 		if (input.getSkills() != null) {
 			for (SkillInputModel adskill : input.getSkills()) {
+				if (adskill.getName() == null) {
+					continue;
+				}
 				AdSkillEntity entity = new AdSkillEntity();
 				entity.setName(adskill.getName());
 				entity.setAd(newAd);

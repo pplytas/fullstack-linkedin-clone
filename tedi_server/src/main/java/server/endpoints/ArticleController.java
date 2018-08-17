@@ -69,6 +69,11 @@ public class ArticleController {
 	@PostMapping("/article/new")
 	public ResponseEntity<Object> addArticle(@RequestBody ArticleInputModel input) {
 		
+		if (input.getText() == null || input.getTitle() == null
+			|| input.getText().equals("") || input.getTitle().equals("")) {
+			return new ResponseEntity<>("Title and text can't be null or empty", HttpStatus.BAD_REQUEST);
+		}
+		
 		try {
 			UserEntity currentUser = secService.currentUser();
 			

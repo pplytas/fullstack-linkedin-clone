@@ -139,6 +139,9 @@ public class UserController {
 			eduRepo.deleteAll(old);
 			if (input.getEducations() != null) {
 				for (EducationInputModel e : input.getEducations()) {
+					if (e.getOrganization() == null || e.getOrganization().equals("")) {
+						continue;
+					}
 					EducationEntity entity = new EducationEntity();
 					entity.setOrganization(e.getOrganization());
 					entity.setStart(e.getStartDate());
@@ -165,6 +168,10 @@ public class UserController {
 			expRepo.deleteAll(old);
 			if (input.getExperiences() != null) {
 				for (ExperienceInputModel e : input.getExperiences()) {
+					if (e.getCompany() == null || e.getCompany().equals("")
+						|| e.getPosition() == null || e.getPosition().equals("")) {
+						continue;
+					}
 					ExperienceEntity entity = new ExperienceEntity();
 					entity.setCompany(e.getCompany());
 					entity.setPosition(e.getPosition());
@@ -192,6 +199,9 @@ public class UserController {
 		skillRepo.deleteAll(old);
 		if (input.getSkills() != null) {
 			for (SkillInputModel s : input.getSkills()) {
+				if (s.getName() == null || s.getName().equals("")) {
+					continue;
+				}
 				UserSkillEntity entity = new UserSkillEntity();
 				entity.setName(s.getName());
 				entity.setUser(currUser);
