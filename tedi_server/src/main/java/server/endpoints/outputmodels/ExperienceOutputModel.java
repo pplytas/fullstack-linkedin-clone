@@ -37,11 +37,19 @@ public class ExperienceOutputModel {
 	}
 
 	public void setStart(Date start) {
-		this.start = new SimpleDateFormat("yyyy-MM-dd").format(start);
+		if (start != null) {
+			this.start = new SimpleDateFormat("yyyy-MM-dd").format(start);
+		} else {
+			this.start = "";
+		}
 	}
 
 	public void setFinish(Date finish) {
-		this.finish = new SimpleDateFormat("yyyy-MM-dd").format(finish);
+		if (finish != null) {
+			this.finish = new SimpleDateFormat("yyyy-MM-dd").format(finish);
+		} else {
+			this.finish = "";
+		}
 	}
 
 }

@@ -49,6 +49,7 @@ import server.repositories.EducationRepository;
 import server.repositories.ExperienceRepository;
 import server.repositories.UserSkillRepository;
 import server.repositories.UserRepository;
+import server.utilities.DateUtils;
 import server.utilities.StorageManager;
 import server.utilities.Validator;
 
@@ -139,19 +140,22 @@ public class UserController {
 		try {
 			List<EducationEntity> old = eduRepo.findByUser(currUser);
 			eduRepo.deleteAll(old);
+			List<EducationEntity> newEducations = new ArrayList<>();
 			if (input.getEducations() != null) {
 				for (EducationInputModel e : input.getEducations()) {
-					if (e.getOrganization() == null || e.getOrganization().equals("")) {
-						continue;
+					if (e.getOrganization() == null || e.getOrganization().equals("")
+						|| e.getStartDate() == null) {
+						return new ResponseEntity<>("One or more necessary fields were null", HttpStatus.BAD_REQUEST);
 					}
 					EducationEntity entity = new EducationEntity();
 					entity.setOrganization(e.getOrganization());
 					entity.setStart(e.getStartDate());
 					entity.setFinish(e.getFinishDate());
 					entity.setUser(currUser);
-					eduRepo.save(entity);
+					newEducations.add(entity);
 				}
 			}
+			eduRepo.saveAll(newEducations);
 		} catch (ParseException e) {
 			return new ResponseEntity<>("Could not parse education data", HttpStatus.BAD_REQUEST);
 		}
@@ -168,11 +172,13 @@ public class UserController {
 		try {
 			List<ExperienceEntity> old = expRepo.findByUser(currUser);
 			expRepo.deleteAll(old);
+			List<ExperienceEntity> newExperiences = new ArrayList<>();
 			if (input.getExperiences() != null) {
 				for (ExperienceInputModel e : input.getExperiences()) {
 					if (e.getCompany() == null || e.getCompany().equals("")
-						|| e.getPosition() == null || e.getPosition().equals("")) {
-						continue;
+						|| e.getPosition() == null || e.getPosition().equals("")
+						|| e.getStartDate() == null) {
+						return new ResponseEntity<>("One or more necessary fields were null", HttpStatus.BAD_REQUEST);
 					}
 					ExperienceEntity entity = new ExperienceEntity();
 					entity.setCompany(e.getCompany());
@@ -180,9 +186,10 @@ public class UserController {
 					entity.setStart(e.getStartDate());
 					entity.setFinish(e.getFinishDate());
 					entity.setUser(currUser);
-					expRepo.save(entity);
+					newExperiences.add(entity);
 				}
 			}
+			expRepo.saveAll(newExperiences);
 		} catch (ParseException e) {
 			return new ResponseEntity<>("Could not parse education data", HttpStatus.BAD_REQUEST);
 		}
@@ -294,6 +301,7 @@ public class UserController {
 			}
 			output.setEducation(eduOut.stream().sorted(Comparator.comparing(EducationOutputModel::getStart).reversed()).collect(Collectors.toList()));
 			
+			List<ExperienceOutputModel> currentExpOut = new ArrayList<>();
 			List<ExperienceOutputModel> expOut = new ArrayList<>();
 			if (user.isExperiencePublic() || viewPrivate) {
 				List<ExperienceEntity> expList = user.getExperience();
@@ -304,8 +312,12 @@ public class UserController {
 					xOut.setStart(e.getStart());
 					xOut.setFinish(e.getFinish());
 					expOut.add(xOut);
+					if (DateUtils.lessEqualThanCurrent(e.getStart()) && DateUtils.greaterEqualThanCurrent(e.getFinish())) {
+						currentExpOut.add(xOut);
+					}
 				}
 			}
+			output.setCurrentExperience(currentExpOut);
 			output.setExperience(expOut.stream().sorted(Comparator.comparing(ExperienceOutputModel::getStart).reversed()).collect(Collectors.toList()));
 			
 			List<SkillOutputModel> skillOut = new ArrayList<>();
