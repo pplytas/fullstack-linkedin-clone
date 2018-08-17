@@ -25,11 +25,19 @@ public class EducationInputModel {
 	}
 	
 	public Date getStartDate() throws ParseException {
-		return new SimpleDateFormat("yyyy-MM-dd").parse(start);
+		if (start != null && !start.equals("")) {
+			return new SimpleDateFormat("yyyy-MM-dd").parse(start);
+		} else {
+			return null;
+		}
 	}
 
 	public Date getFinishDate() throws ParseException {
-		return new SimpleDateFormat("yyyy-MM-dd").parse(finish);
+		if (finish != null && !finish.equals("")) {
+			return new SimpleDateFormat("yyyy-MM-dd").parse(finish);
+		} else {
+			return null;
+		}
 	}
 	
 	public void setOrganization(String organization) {

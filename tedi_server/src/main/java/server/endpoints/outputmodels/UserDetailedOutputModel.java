@@ -10,6 +10,7 @@ public class UserDetailedOutputModel {
 	private String surname;
 	private String telNumber;
 	private String picture;
+	private List<ExperienceOutputModel> currentExperience = new ArrayList<>();
 	private List<EducationOutputModel> education = new ArrayList<>();
 	private List<ExperienceOutputModel> experience = new ArrayList<>();
 	private List<SkillOutputModel> skills = new ArrayList<>();
@@ -38,6 +39,10 @@ public class UserDetailedOutputModel {
 		return picture;
 	}
 
+	public List<ExperienceOutputModel> getCurrentExperience() {
+		return currentExperience;
+	}
+	
 	public List<EducationOutputModel> getEducation() {
 		return education;
 	}
@@ -78,6 +83,10 @@ public class UserDetailedOutputModel {
 		this.picture = picture;
 	}
 
+	public void setCurrentExperience(List<ExperienceOutputModel> currentExperience) {
+		this.currentExperience = currentExperience;
+	}
+	
 	public void setEducation(List<EducationOutputModel> education) {
 		this.education = education;
 	}
