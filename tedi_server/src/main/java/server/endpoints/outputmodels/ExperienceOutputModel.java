@@ -43,6 +43,10 @@ public class ExperienceOutputModel {
 			this.start = "";
 		}
 	}
+	
+	public void setFinish(String finish) {
+		this.finish = finish;
+	}
 
 	public void setFinish(Date finish) {
 		if (finish != null) {
