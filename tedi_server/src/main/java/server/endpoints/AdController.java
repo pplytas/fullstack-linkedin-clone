@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -170,9 +171,13 @@ public class AdController {
 		if (ad == null) {
 			return new ResponseEntity<>("No ad with id " + id, HttpStatus.NOT_FOUND);
 		}
+		if (adAppRepo.findByAdAndUser(ad, currUser) != null) {
+			return new ResponseEntity<>("Already applied for this ad", HttpStatus.CONFLICT);
+		}
 		AdApplicationEntity adApplication = new AdApplicationEntity();
 		adApplication.setAd(ad);
 		adApplication.setUser(currUser);
+		adApplication.setStatus(0);
 		adAppRepo.save(adApplication);
 		return new ResponseEntity<>(HttpStatus.OK);
 		
@@ -182,13 +187,15 @@ public class AdController {
 	public ResponseEntity<Object> getAdApplications(@RequestParam Long id) {
 		
 		AdEntity refAd = adRepo.findById(id).orElse(null);
-		if (refAd == null ) {
+		//if the ad is not of the current user, quietly reject
+		if (refAd == null || !refAd.getPublisher().getEmail().equals(secService.currentUser().getEmail())) {
 			return new ResponseEntity<>("No ad with id " + id, HttpStatus.NOT_FOUND);
 		}
-		List<AdApplicationEntity> adApplications = adAppRepo.getByAd(refAd);
+		List<AdApplicationEntity> adApplications = adAppRepo.findByAd(refAd);
 		List<AdApplicationOutputModel> output = new ArrayList<>();
 		for (AdApplicationEntity adApp : adApplications) {
 			AdApplicationOutputModel adAppOut = new AdApplicationOutputModel();
+			adAppOut.setId(adApp.getId());
 			AdOutputModel adOut = adService.adToOutputModel(adApp.getAd());
 			adAppOut.setAd(adOut);
 			try {
@@ -203,10 +210,41 @@ public class AdController {
 				.surname(adApp.getUser().getSurname())
 				.telNumber(adApp.getUser().getTelNumber()).build());
 			}
+			adAppOut.setStatus(adApp.getStatus());
 			output.add(adAppOut);
 		}
 		return new ResponseEntity<>(output, HttpStatus.OK);
 		
 	}
-
+	
+	@PutMapping("/application/accept")
+	public ResponseEntity<Object> acceptApplication(@RequestParam Long applicationId) {
+		
+		AdApplicationEntity refAdApp = adAppRepo.findById(applicationId).orElse(null);
+		//if the application is not for an ad of the current user, quietly reject
+		if (refAdApp == null || !refAdApp.getAd().getPublisher().getEmail().equals(secService.currentUser().getEmail())) {
+			return new ResponseEntity<>("No application with id " + applicationId, HttpStatus.NOT_FOUND);
+		}
+		if (refAdApp.getStatus() != 0) {
+			return new ResponseEntity<>("Only pending applications can be accepted", HttpStatus.BAD_REQUEST);
+		}
+		refAdApp.setStatus(1);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@PutMapping("/application/reject")
+	public ResponseEntity<Object> tejectApplication(@RequestParam Long applicationId) {
+		
+		AdApplicationEntity refAdApp = adAppRepo.findById(applicationId).orElse(null);
+		//if the application is not for an ad of the current user, quietly reject
+		if (refAdApp == null || !refAdApp.getAd().getPublisher().getEmail().equals(secService.currentUser().getEmail())) {
+			return new ResponseEntity<>("No application with id " + applicationId, HttpStatus.NOT_FOUND);
+		}
+		if (refAdApp.getStatus() != 0) {
+			return new ResponseEntity<>("Only pending applications can be rejected", HttpStatus.BAD_REQUEST);
+		}
+		refAdApp.setStatus(-1);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
 }

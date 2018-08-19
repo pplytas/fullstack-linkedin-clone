@@ -1,5 +1,6 @@
 package server.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,6 +26,9 @@ public class AdApplicationEntity {
 	@JoinColumn(name = "ad")
 	private AdEntity ad;
 
+	@Column
+	private Integer status; //0 pending, 1 accepted, -1 rejected
+	
 	public Long getId() {
 		return id;
 	}
@@ -35,6 +39,10 @@ public class AdApplicationEntity {
 
 	public AdEntity getAd() {
 		return ad;
+	}
+	
+	public Integer getStatus() {
+		return status;
 	}
 
 	public void setId(Long id) {
@@ -47,6 +55,10 @@ public class AdApplicationEntity {
 
 	public void setAd(AdEntity ad) {
 		this.ad = ad;
+	}
+	
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
 }
