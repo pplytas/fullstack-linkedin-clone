@@ -37,7 +37,6 @@ import server.endpoints.outputmodels.UserDetailedOutputModel;
 import server.endpoints.outputmodels.UserListOutputModel;
 import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.AdEntity;
-import server.entities.AdSkillEntity;
 import server.entities.ConnectionEntity;
 import server.entities.EducationEntity;
 import server.entities.ExperienceEntity;
@@ -48,6 +47,7 @@ import server.repositories.ConnectionRepository;
 import server.repositories.EducationRepository;
 import server.repositories.ExperienceRepository;
 import server.repositories.UserSkillRepository;
+import server.services.AdService;
 import server.services.UserEntityService;
 import server.repositories.UserRepository;
 import server.utilities.DateUtils;
@@ -91,6 +91,9 @@ public class UserController {
 	
 	@Autowired
 	private UserEntityService userEntityService;
+	
+	@Autowired
+	private AdService adService;
 	
 	//update current user credentials (only for users, not admins)
 	@PutMapping("/update")
@@ -365,20 +368,7 @@ public class UserController {
 			
 			List<AdOutputModel> adsOut = new ArrayList<>();
 			for (AdEntity ad : adRepo.findByPublisher(user)) {
-				AdOutputModel adOut = new AdOutputModel();
-				adOut.setId(ad.getId());
-				adOut.setTitle(ad.getTitle());
-				adOut.setDescription(ad.getDescription());
-				adOut.setPublisher(new UserOutputModel.UserOutputBuilder(user.getEmail())
-															.name(user.getName())
-															.surname(user.getSurname())
-															.telNumber(user.getTelNumber())
-															.picture(sm.getFile(user.getPicture())).build());
-				for (AdSkillEntity adskill : ad.getSkills()) {
-					SkillOutputModel sOut = new SkillOutputModel();
-					sOut.setName(adskill.getName());
-					adOut.addSkill(sOut);
-				}
+				AdOutputModel adOut = adService.adToOutputModel(ad);
 				adsOut.add(adOut);
 			}
 			output.setAds(adsOut);

@@ -31,6 +31,7 @@ import server.entities.UserSkillEntity;
 import server.entities.UserEntity;
 import server.repositories.ConnectionRepository;
 import server.repositories.UserRepository;
+import server.services.AdService;
 import server.utilities.StorageManager;
 import server.utilities.Validator;
 
@@ -46,6 +47,9 @@ public class AdminController {
 	
 	@Autowired
 	private ConnectionRepository connRepo;
+	
+	@Autowired
+	private AdService adService;
 	
 	//todo add search parameters(?)
 	@GetMapping("/userlist")
@@ -158,28 +162,7 @@ public class AdminController {
 			
 			List<AdOutputModel> adsOut = new ArrayList<>();
 			for (AdEntity ad : user.getAds()) {
-				AdOutputModel adOut = new AdOutputModel();
-				adOut.setId(ad.getId());
-				adOut.setTitle(ad.getTitle());
-				adOut.setDescription(ad.getDescription());
-				try {
-					adOut.setPublisher(new UserOutputModel.UserOutputBuilder(user.getEmail())
-																.name(user.getName())
-																.surname(user.getSurname())
-																.telNumber(user.getTelNumber())
-																.picture(sm.getFile(user.getPicture())).build());
-				} catch (IOException e) {
-					adOut.setPublisher(new UserOutputModel.UserOutputBuilder(user.getEmail())
-							.name(user.getName())
-							.surname(user.getSurname())
-							.telNumber(user.getTelNumber())
-							.picture(null).build());
-				}
-				for (AdSkillEntity adskill : ad.getSkills()) {
-					SkillOutputModel sOut = new SkillOutputModel();
-					sOut.setName(adskill.getName());
-					adOut.addSkill(sOut);
-				}
+				AdOutputModel adOut = adService.adToOutputModel(ad);
 				adsOut.add(adOut);
 			}
 			output.setAds(adsOut);

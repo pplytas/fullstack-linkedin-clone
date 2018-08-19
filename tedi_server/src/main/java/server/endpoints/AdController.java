@@ -1,6 +1,7 @@
 package server.endpoints;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +19,20 @@ import server.classification.AdClassifier;
 import server.classification.Categories;
 import server.endpoints.inputmodels.AdInputModel;
 import server.endpoints.inputmodels.SkillInputModel;
+import server.endpoints.outputmodels.AdApplicationOutputModel;
 import server.endpoints.outputmodels.AdListOutputModel;
 import server.endpoints.outputmodels.AdOutputModel;
 import server.endpoints.outputmodels.SkillOutputModel;
 import server.endpoints.outputmodels.UserOutputModel;
+import server.entities.AdApplicationEntity;
 import server.entities.AdEntity;
 import server.entities.AdSkillEntity;
 import server.entities.UserEntity;
+import server.repositories.AdApplicationRepository;
 import server.repositories.AdRepository;
 import server.repositories.ConnectionRepository;
 import server.repositories.UserRepository;
+import server.services.AdService;
 import server.utilities.StorageManager;
 import server.utilities.Validator;
 
@@ -51,7 +56,13 @@ public class AdController {
 	private ConnectionRepository connRepo;
 	
 	@Autowired
+	private AdApplicationRepository adAppRepo;
+	
+	@Autowired
 	private AdClassifier adClass;
+	
+	@Autowired
+	private AdService adService;
 	
 	@PostMapping("/add")
 	public ResponseEntity<Object> publishAd(@RequestBody AdInputModel input) {
@@ -136,38 +147,65 @@ public class AdController {
 		//this is so that the final list has the ads sorted from newest to oldest
 		List<AdEntity> suggestedAds = adRepo.findByCategoryAndPublisherIsNotNullOrderByPublishDateDesc(currUser.getCategory());
 		AdListOutputModel output = new AdListOutputModel();
-		try {
-			for (AdEntity ad : suggestedAds) {
-				//ignore ads by same user
-				if (ad.getPublisher() == currUser) continue;
-				AdOutputModel adOut = new AdOutputModel();
-				adOut.setId(ad.getId());
-				adOut.setTitle(ad.getTitle());
-				adOut.setDescription(ad.getDescription());
-				adOut.setPublisher(new UserOutputModel.UserOutputBuilder(ad.getPublisher().getEmail())
-															.name(ad.getPublisher().getName())
-															.surname(ad.getPublisher().getSurname())
-															.telNumber(ad.getPublisher().getTelNumber())
-															.picture(sm.getFile(ad.getPublisher().getPicture())).build());
-				adOut.setPublishDate(ad.getPublishDate());
-				for (AdSkillEntity adskill : ad.getSkills()) {
-					SkillOutputModel sOut = new SkillOutputModel();
-					sOut.setName(adskill.getName());
-					adOut.addSkill(sOut);
-				}
-				if (connRepo.findByUserAndConnectedInversibleAndIsPending(currUser, ad.getPublisher(), false) != null) {
-					System.out.println("IN FOR " + ad.getPublisher().getEmail());
-					output.addAdByConn(adOut);
-				}
-				else {
-					System.out.println("OUT FOR " + ad.getPublisher().getEmail());
-					output.addAd(adOut);
-				}
+		for (AdEntity ad : suggestedAds) {
+			//ignore ads by same user
+			if (ad.getPublisher() == currUser) continue;
+			AdOutputModel adOut = adService.adToOutputModel(ad);
+			if (connRepo.findByUserAndConnectedInversibleAndIsPending(currUser, ad.getPublisher(), false) != null) {
+				output.addAdByConn(adOut);
 			}
-			return new ResponseEntity<>(output, HttpStatus.OK);
-		} catch (IOException e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			else {
+				output.addAd(adOut);
+			}
 		}
+		return new ResponseEntity<>(output, HttpStatus.OK);
+		
+	}
+	
+	@PostMapping("/apply")
+	public ResponseEntity<Object> applyForAd(@RequestParam Long id) {
+		
+		UserEntity currUser = secService.currentUser();
+		AdEntity ad = adRepo.findById(id).orElse(null);
+		if (ad == null) {
+			return new ResponseEntity<>("No ad with id " + id, HttpStatus.NOT_FOUND);
+		}
+		AdApplicationEntity adApplication = new AdApplicationEntity();
+		adApplication.setAd(ad);
+		adApplication.setUser(currUser);
+		adAppRepo.save(adApplication);
+		return new ResponseEntity<>(HttpStatus.OK);
+		
+	}
+	
+	@GetMapping("/applications")
+	public ResponseEntity<Object> getAdApplications(@RequestParam Long id) {
+		
+		AdEntity refAd = adRepo.findById(id).orElse(null);
+		if (refAd == null ) {
+			return new ResponseEntity<>("No ad with id " + id, HttpStatus.NOT_FOUND);
+		}
+		List<AdApplicationEntity> adApplications = adAppRepo.getByAd(refAd);
+		List<AdApplicationOutputModel> output = new ArrayList<>();
+		for (AdApplicationEntity adApp : adApplications) {
+			AdApplicationOutputModel adAppOut = new AdApplicationOutputModel();
+			AdOutputModel adOut = adService.adToOutputModel(adApp.getAd());
+			adAppOut.setAd(adOut);
+			try {
+				adAppOut.setUser(new UserOutputModel.UserOutputBuilder(adApp.getUser().getEmail())
+															.name(adApp.getUser().getName())
+															.surname(adApp.getUser().getSurname())
+															.telNumber(adApp.getUser().getTelNumber())
+															.picture(sm.getFile(adApp.getUser().getPicture())).build());
+			} catch (IOException e) {
+				adAppOut.setUser(new UserOutputModel.UserOutputBuilder(adApp.getUser().getEmail())
+				.name(adApp.getUser().getName())
+				.surname(adApp.getUser().getSurname())
+				.telNumber(adApp.getUser().getTelNumber()).build());
+			}
+			output.add(adAppOut);
+		}
+		return new ResponseEntity<>(output, HttpStatus.OK);
 		
 	}
 
