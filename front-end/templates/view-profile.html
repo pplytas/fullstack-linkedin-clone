@@ -75,10 +75,10 @@
                                                 <div class="col-5">
                                                     <input ng-model="education.organization" placeholder="Institute" class="form-control" type="text"/>
                                                 </div>
-                                                <div class="col-3">
+                                                <div class="col-3 pl-0">
                                                     <input ng-model="education.start" placeholder="Start(YYYY-MM-DD)" class="form-control" type="text"/>
                                                 </div>
-                                                <div class="col-3">
+                                                <div class="col-3 pl-0">
                                                     <input ng-model="education.finish" placeholder="End(YYYY-MM-DD)" class="form-control" type="text"/>
                                                 </div>
                                                 <div class="col-1 px-0">
@@ -102,13 +102,13 @@
                                                 <div class="col-4">
                                                     <input ng-model="experience.company" placeholder="Company" class="form-control" type="text"/>
                                                 </div>
-                                                <div class="col-3">
+                                                <div class="col-3 pl-0">
                                                     <input ng-model="experience.position" placeholder="Position" class="form-control" type="text"/>
                                                 </div>
-                                                <div class="col-2">
+                                                <div class="col-2 pl-0">
                                                     <input ng-model="experience.start" placeholder="Start(YYYY-MM-DD)" class="form-control" type="text"/>
                                                 </div>
-                                                <div class="col-2">
+                                                <div class="col-2 pl-0">
                                                     <input ng-model="experience.finish" placeholder="Finish(YYYY-MM-DD)" class="form-control" type="text"/>
                                                 </div>
                                                 <div class="col-1 px-0">
@@ -142,11 +142,14 @@
     		                </div>
     		            </div>
                         <div class="row mt-4">
-                          <div class="col-2 offset-5">
+                          <div class="col-3 offset-5">
                             <button type="submit" class="btn btn-info" ng-disabled="!proInfo.$dirty" ng-click="updateProInfo()">Update My Profile</button>
                           </div>
-                          <div class="alert alert-success alert-block px-2 py-1 ml-1 mr-0 my-0" id="profile-updated" role="alert">
+                          <div class="alert alert-success alert-block px-2 py-1 mr-0 my-0" id="profile-updated" role="alert">
                               Saved<i class="fas fa-check ml-2"></i>
+                          </div>
+                          <div class="alert alert-danger alert-block px-2 py-1 mr-0 my-0" id="profile-update-error" role="alert">
+                              Error<i class="fas fa-times ml-2"></i>
                           </div>
                         </div>
     		        </div>

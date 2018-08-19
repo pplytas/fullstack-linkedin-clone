@@ -16,6 +16,14 @@ body {
     font-weight: 300;
 }
 
+.font-s-09 {
+    font-size: 0.9rem;
+}
+
+.font-s-08 {
+    font-size: 0.8rem;
+}
+
 /* ------------------- WELCOME PAGE ------------------ */
 .welcome-img {
     width: 100%;
@@ -107,8 +115,8 @@ body {
 }
 
 .avatar-post-sm {
-    width: 35px;
-    height: 35px;
+    width: 32px;
+    height: 32px;
 }
 
 .post-fullname {
@@ -167,12 +175,20 @@ body {
 }
 
 .info-card li {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 .image-upload,
 .video-upload {
     vertical-align: middle;
+}
+
+.article-title {
+    font-size: 0.8rem;
+}
+
+.article-text {
+    font-size: 0.9rem;
 }
 
 /* ------------------- VIEW PROFILE ------------------- */
@@ -205,11 +221,12 @@ body {
 
 .view-profile .form-control {
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: #17a2b8;
 }
 
-#profile-updated {
+#profile-updated,
+#profile-update-error {
     display: none;
 }
 

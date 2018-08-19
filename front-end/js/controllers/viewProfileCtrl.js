@@ -2,7 +2,6 @@
 	angular.module('tediApp')
 	.controller('viewProfileCtrl', function($scope, user, globalFunctions) {
 		window.scrollTo(0, 0);
-		$("#profile-updated")
         $scope.tempUser = angular.copy(user);
 
 		$scope.addEducation = function() {
@@ -50,11 +49,29 @@
 		}
 
 		$scope.updateProInfo = function() {
-			globalFunctions.postEducation($scope.tempUser.education);
-			globalFunctions.postExperience($scope.tempUser.experience);
-			globalFunctions.postSkills($scope.tempUser.skills).then(function onSuccess() {
+			$("#profile-update-error").hide();
+			$("#profile-updated").hide();
+			globalFunctions.postEducation(angular.copy($scope.tempUser.education))
+			.then(function() {
+				return globalFunctions.postExperience(angular.copy($scope.tempUser.experience));
+			})
+			.then(function() {
+				return globalFunctions.postSkills($scope.tempUser.skills);
+			})
+			.then(function() {
 				$("#profile-updated").show();
-				setTimeout(function() { $("#profile-updated").hide(); }, 6000);
+				//setTimeout(function() { $("#profile-updated").hide(); }, 6000);
+				globalFunctions.getUserDetails().then(function(response) {
+					user = response.data;
+					$scope.tempUser = angular.copy(user);
+				});
+			})
+			.catch(function(response) {		// Handle error
+				globalFunctions.getUserDetails().then(function(response) {
+					user = response.data;
+					$scope.tempUser = angular.copy(user);
+				});
+				$("#profile-update-error").show();
 			});
 		}
 

@@ -123,7 +123,7 @@
 			var endpoint = '/user/details';
 			var url = $rootScope.tediAPI + endpoint;
             var responseData;
-            
+
             if (email == null) {
                 email = "";
             }
@@ -133,14 +133,6 @@
 				url: url,
 				headers: { 'Content-Type': 'application/json' },
 				params: {'email': email}
-			}).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-				console.log("Details Successful");
-				return response.data;
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-				console.log("Details Failed");
-				return response.data;
 			});
 		}
 
@@ -170,17 +162,9 @@
 				url: url,
                 headers: { 'Content-Type': 'application/json' },
                 params: {'email': email}
-			}).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-				console.log("Simple view Successful");
-				return response.data;
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-				console.log("Simple view Failed");
-				return response.data;
 			});
         }
-        
+
         globalFunctionsFactory.postEducation = function(
             educationList = null,
             //educationList contains elements with fields:
@@ -189,6 +173,12 @@
         ) {
             var endpoint = '/user/education';
             var url = $rootScope.tediAPI + endpoint;
+			for (var i in educationList) {
+				if(educationList[i].finish == "Unknown" || educationList[i].finish == "Present") {
+					educationList[i].finish = "";
+				}
+			}
+
             var educationWrapper = {
                 "educations": educationList,
                 "isPublic": isPublic
@@ -199,12 +189,6 @@
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
                 data: educationWrapper
-            }).then(function onSuccess(response) {
-                console.log(response);
-                console.log("Education post successful");
-            }).catch(function onError(response) {
-                console.log(response);
-                console.log("Education post failed");
             });
         }
 
@@ -216,6 +200,12 @@
         ) {
             var endpoint = '/user/experience';
             var url = $rootScope.tediAPI + endpoint;
+			for (var i in experienceList) {
+				if(experienceList[i].finish == "Unknown" || experienceList[i].finish == "Present" ) {
+					experienceList[i].finish = "";
+				}
+			}
+
             var experienceWrapper = {
                 "experiences": experienceList,
                 "isPublic": isPublic
@@ -226,12 +216,6 @@
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
                 data: experienceWrapper
-            }).then(function onSuccess(response) {
-                console.log(response);
-                console.log("Experience post successful");
-            }).catch(function onError(response) {
-                console.log(response);
-                console.log("Experience post failed");
             });
         }
 
@@ -252,12 +236,6 @@
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
                 data: skillsWrapper
-            }).then(function onSuccess(response) {
-                console.log(response);
-                console.log("Skills post successful");
-            }).catch(function onError(response) {
-                console.log(response);
-                console.log("Skills post failed");
             });
         }
 
@@ -266,7 +244,7 @@
         ) {
             var endpoint = '/user/search/simple';
             var url = $rootScope.tediAPI + endpoint;
-            
+
             return $http({
 				method: "GET",
 				url: url,
@@ -340,7 +318,7 @@
         ) {
             var endpoint = '/article/upvote';
             var url = $rootScope.tediAPI + endpoint;
-            
+
             return $http({
                 method: "POST",
                 url: url,
@@ -415,15 +393,7 @@
                 method: "GET",
                 url: url,
                 headers: { 'Content-Type': 'application/json' }
-            }).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-                console.log("Feed get successful");
-                return response.data;
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-                console.log("Feed get failed");
-                return response.data;
-			});
+            });
         }
 
         globalFunctionsFactory.sendMessage = function(

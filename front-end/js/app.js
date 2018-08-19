@@ -37,7 +37,9 @@
 			controller: 'homeCtrl',
 			resolve: {
 				user: function($rootScope) {
-                    return $rootScope.getUserDetails();
+                    return $rootScope.getUserDetails().then(function(response) {
+                    	return response.data;
+                    });
                 }
 			}
 		})
@@ -46,7 +48,9 @@
 			controller: 'viewProfileCtrl',
 			resolve: {
 				user: function($rootScope) {
-                    return $rootScope.getUserDetails();
+                    return $rootScope.getUserDetails().then(function(response) {
+                    	return response.data;
+                    });
                 }
 			}
         })
@@ -99,6 +103,11 @@
 		// 	$rootScope.user.phoneNum = result.telNumber;
 		// 	$rootScope.user.picture = result.picture;
         // });
+
+		$('a.nav-link, a.dropdown-item').click(function() {
+		    $('.navbar-nav').find('li.nav-item.active').removeClass('active');
+		    $(this).parents('li.nav-item').addClass('active');
+		});
 	});
 
 })();
