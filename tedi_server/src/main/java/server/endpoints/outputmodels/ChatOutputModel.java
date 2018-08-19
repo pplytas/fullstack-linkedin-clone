@@ -5,6 +5,7 @@ import java.util.List;
 
 public class ChatOutputModel {
 
+	private UserOutputModel chattingUser;
 	private List<ChatMessageOutputModel> messages;
 	
 	public ChatOutputModel() {
@@ -15,12 +16,20 @@ public class ChatOutputModel {
 		return messages;
 	}
 
+	public UserOutputModel getChattingUser() {
+		return chattingUser;
+	}
+	
 	public void setMessages(List<ChatMessageOutputModel> messages) {
 		this.messages = messages;
 	}
 	
 	public void addMessage(ChatMessageOutputModel message) {
 		this.messages.add(message);
+	}
+	
+	public void setChattingUser(UserOutputModel chattingUser) {
+		this.chattingUser = chattingUser;
 	}
 	
 }
