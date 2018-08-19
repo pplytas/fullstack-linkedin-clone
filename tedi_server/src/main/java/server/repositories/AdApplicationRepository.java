@@ -7,10 +7,13 @@ import org.springframework.stereotype.Repository;
 
 import server.entities.AdApplicationEntity;
 import server.entities.AdEntity;
+import server.entities.UserEntity;
 
 @Repository
 public interface AdApplicationRepository extends JpaRepository<AdApplicationEntity, Long> {
 	
-	List<AdApplicationEntity> getByAd(AdEntity ad);
+	List<AdApplicationEntity> findByAd(AdEntity ad);
 
+	AdApplicationEntity findByAdAndUser(AdEntity ad, UserEntity user);
+	
 }
