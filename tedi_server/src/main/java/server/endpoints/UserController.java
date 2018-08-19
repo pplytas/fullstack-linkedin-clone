@@ -48,6 +48,7 @@ import server.repositories.ConnectionRepository;
 import server.repositories.EducationRepository;
 import server.repositories.ExperienceRepository;
 import server.repositories.UserSkillRepository;
+import server.services.UserEntityService;
 import server.repositories.UserRepository;
 import server.utilities.DateUtils;
 import server.utilities.StorageManager;
@@ -87,6 +88,9 @@ public class UserController {
 	
 	@Autowired
 	private UserClassifier userClass;
+	
+	@Autowired
+	private UserEntityService userEntityService;
 	
 	//update current user credentials (only for users, not admins)
 	@PutMapping("/update")
@@ -281,13 +285,7 @@ public class UserController {
 			output.setPicture(sm.getFile(user.getPicture()));
 			
 			//check if the user we are getting details for is connected to us
-			boolean viewPrivate = false;
-			if (user.equals(secService.currentUser()) ||
-				connRepo.findByUserAndConnectedAndIsPending(secService.currentUser(), user, false) != null ||
-				connRepo.findByUserAndConnectedAndIsPending(user, secService.currentUser(), false) != null) {
-				viewPrivate = true;
-			}
-			
+			boolean viewPrivate = userEntityService.getPublicVisibilityStatus(user);
 			List<EducationOutputModel> eduOut = new ArrayList<>();
 			if (user.isEducationPublic() || viewPrivate) {
 				List<EducationEntity> eduList = user.getEducation();
@@ -325,7 +323,7 @@ public class UserController {
 						xOut.setFinish("Unknown");
 					}
 					else {
-					xOut.setFinish(e.getFinish());
+						xOut.setFinish(e.getFinish());
 					}
 					expOut.add(xOut);
 					if (DateUtils.lessEqualThanCurrent(e.getStart()) && DateUtils.greaterEqualThanCurrent(e.getFinish())) {
