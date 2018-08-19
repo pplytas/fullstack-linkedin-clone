@@ -39,12 +39,18 @@ public class ArticleService {
 	@Autowired
 	private UpvoteRepository upvoteRepo;
 	
+	@Autowired
+	private UserEntityService userEntityService;
+	
 	public ArticleOutputModel convertArticleToOutput(ArticleEntity article) throws IOException {
+		UserEntity user = article.getUser();
 		ArticleOutputModel output = new ArticleOutputModel();
 		output.setId(article.getId());
-		output.setAuthorName(article.getUser().getName());
-		output.setAuthorSurname(article.getUser().getSurname());
-		output.setAuthorEmail(article.getUser().getEmail());
+		output.setAuthorName(user.getName());
+		output.setAuthorSurname(user.getSurname());
+		output.setAuthorPicture(sm.getFile(user.getPicture()));
+		output.setCurrentExperience(userEntityService.getCurrentExperienceList(user));
+		output.setAuthorEmail(user.getEmail());
 		output.setTitle(article.getTitle());
 		output.setText(article.getText());
 		output.setFile(sm.getFile(article.getMediafile()));
@@ -55,6 +61,8 @@ public class ArticleService {
 			cOut.setText(c.getText());
 			cOut.setCommentatorName(c.getUser().getName());
 			cOut.setCommentatorSurname(c.getUser().getSurname());
+			cOut.setCommentatorPicture(sm.getFile(c.getUser().getPicture()));
+			cOut.setCommentatorCurrentExperience(userEntityService.getCurrentExperienceList(c.getUser()));
 			cOut.setCommentatorEmail(c.getUser().getEmail());
 			cOut.setDateTime(c.getDateTime());
 			output.addComment(cOut);
@@ -64,6 +72,8 @@ public class ArticleService {
 			UpvoteOutputModel uOut = new UpvoteOutputModel();
 			uOut.setUpvoterName(u.getUser().getName());
 			uOut.setUpvoterSurname(u.getUser().getSurname());
+			uOut.setUpvoterPicture(sm.getFile(u.getUser().getPicture()));
+			uOut.setUpvoterCurrentExperience(userEntityService.getCurrentExperienceList(u.getUser()));
 			uOut.setUpvoterEmail(u.getUser().getEmail());
 			output.addUpvote(uOut);
 		}

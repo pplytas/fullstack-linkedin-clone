@@ -13,12 +13,15 @@ public class ArticleOutputModel {
 	private String file;
 	private String authorName;
 	private String authorSurname;
-	private String authorEmail; //this is email, perhaps change to name later
+	private String authorPicture;
+	private List<ExperienceOutputModel> currentExperience;
+	private String authorEmail;
 	private List<CommentOutputModel> comments;
 	private List<UpvoteOutputModel> upvotes;
 	private String dateTime;
 	
 	public ArticleOutputModel() {
+		currentExperience = new ArrayList<>();
 		comments = new ArrayList<>();
 		upvotes = new ArrayList<>();
 	}
@@ -47,6 +50,14 @@ public class ArticleOutputModel {
 		return authorSurname;
 	}
 
+	public String getAuthorPicture() {
+		return authorPicture;
+	}
+	
+	public List<ExperienceOutputModel> getCurrentExperience() {
+		return currentExperience;
+	}
+	
 	public String getAuthorEmail() {
 		return authorEmail;
 	}
@@ -86,7 +97,19 @@ public class ArticleOutputModel {
 	public void setAuthorSurname(String authorSurname) {
 		this.authorSurname = authorSurname;
 	}
+	
+	public void setAuthorPicture(String authorPicture) {
+		this.authorPicture = authorPicture;
+	}
 
+	public void setCurrentExperience(List<ExperienceOutputModel> currentExperience) {
+		this.currentExperience = currentExperience;
+	}
+	
+	public void addCurrentExperience(ExperienceOutputModel currentExperience) {
+		this.currentExperience.add(currentExperience);
+	}
+	
 	public void setAuthorEmail(String authorEmail) {
 		this.authorEmail = authorEmail;
 	}
