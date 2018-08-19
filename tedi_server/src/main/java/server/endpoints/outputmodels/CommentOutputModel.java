@@ -1,7 +1,9 @@
 package server.endpoints.outputmodels;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class CommentOutputModel {
 	
@@ -9,9 +11,13 @@ public class CommentOutputModel {
 	private String dateTime;
 	private String commentatorName;
 	private String commentatorSurname;
+	private String commentatorPicture;
+	private List<ExperienceOutputModel> commentatorCurrentExperience;
 	private String commentatorEmail; //this is email, maybe change to name later
 	
-	public CommentOutputModel() {}
+	public CommentOutputModel() {
+		commentatorCurrentExperience = new ArrayList<>();
+	}
 
 	public String getText() {
 		return text;
@@ -23,6 +29,14 @@ public class CommentOutputModel {
 
 	public String getCommentatorSurname() {
 		return commentatorSurname;
+	}
+	
+	public String getCommentatorPicture() {
+		return commentatorPicture;
+	}
+	
+	public List<ExperienceOutputModel> getCommentatorCurrentExperience() {
+		return commentatorCurrentExperience;
 	}
 
 	public String getCommentatorEmail() {
@@ -45,6 +59,14 @@ public class CommentOutputModel {
 		this.commentatorSurname = commentatorSurname;
 	}
 
+	public void setCommentatorPicture(String commentatorPicture) {
+		this.commentatorPicture = commentatorPicture;
+	}
+	
+	public void setCommentatorCurrentExperience(List<ExperienceOutputModel> commentatorCurrentExperience) {
+		this.commentatorCurrentExperience = commentatorCurrentExperience;
+	}
+	
 	public void setCommentatorEmail(String commentatorEmail) {
 		this.commentatorEmail = commentatorEmail;
 	}
