@@ -286,66 +286,16 @@ public class UserController {
 			output.setSurname(user.getSurname());
 			output.setTelNumber(user.getTelNumber());
 			output.setPicture(sm.getFile(user.getPicture()));
-			
-			//check if the user we are getting details for is connected to us
-			boolean viewPrivate = userEntityService.getPublicVisibilityStatus(user);
-			List<EducationOutputModel> eduOut = new ArrayList<>();
-			if (user.isEducationPublic() || viewPrivate) {
-				List<EducationEntity> eduList = user.getEducation();
-				for (EducationEntity e : eduList) {
-					EducationOutputModel eOut = new EducationOutputModel();
-					eOut.setOrganization(e.getOrganization());
-					eOut.setStart(e.getStart());
-					if (DateUtils.lessEqualThanCurrent(e.getStart()) && e.getFinish() == null) {
-						eOut.setFinish("Present");
-					}
-					else if (DateUtils.greaterEqualThanCurrent(e.getStart()) && e.getFinish() == null) {
-						eOut.setFinish("Unknown");
-					}
-					else {
-						eOut.setFinish(e.getFinish());
-					}
-					eduOut.add(eOut);
-				}
-			}
+
+			List<EducationOutputModel> eduOut = userEntityService.getEducationList(user);
 			output.setEducation(eduOut.stream().sorted(Comparator.comparing(EducationOutputModel::getStart).reversed()).collect(Collectors.toList()));
 			
-			List<ExperienceOutputModel> currentExpOut = new ArrayList<>();
-			List<ExperienceOutputModel> expOut = new ArrayList<>();
-			if (user.isExperiencePublic() || viewPrivate) {
-				List<ExperienceEntity> expList = user.getExperience();
-				for (ExperienceEntity e : expList) {
-					ExperienceOutputModel xOut = new ExperienceOutputModel();
-					xOut.setCompany(e.getCompany());
-					xOut.setPosition(e.getPosition());
-					xOut.setStart(e.getStart());
-					if (DateUtils.lessEqualThanCurrent(e.getStart()) && e.getFinish() == null) {
-						xOut.setFinish("Present");
-					}
-					else if (DateUtils.greaterEqualThanCurrent(e.getStart()) && e.getFinish() == null) {
-						xOut.setFinish("Unknown");
-					}
-					else {
-						xOut.setFinish(e.getFinish());
-					}
-					expOut.add(xOut);
-					if (DateUtils.lessEqualThanCurrent(e.getStart()) && DateUtils.greaterEqualThanCurrent(e.getFinish())) {
-						currentExpOut.add(xOut);
-					}
-				}
-			}
+			List<ExperienceOutputModel> currentExpOut = userEntityService.getCurrentExperienceList(user);
+			List<ExperienceOutputModel> expOut = userEntityService.getExperienceList(user);
 			output.setCurrentExperience(currentExpOut);
 			output.setExperience(expOut.stream().sorted(Comparator.comparing(ExperienceOutputModel::getStart).reversed()).collect(Collectors.toList()));
 			
-			List<SkillOutputModel> skillOut = new ArrayList<>();
-			if (user.isSkillsPublic() || viewPrivate) {
-				List<UserSkillEntity> skillList = user.getSkills();
-				for (UserSkillEntity s : skillList) {
-					SkillOutputModel sOut = new SkillOutputModel();
-					sOut.setName(s.getName());
-					skillOut.add(sOut);
-				}
-			}
+			List<SkillOutputModel> skillOut = userEntityService.getSkillList(user);
 			output.setSkills(skillOut);
 			
 			List<UserOutputModel> connOut = new ArrayList<>();

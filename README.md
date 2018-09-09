@@ -5,3 +5,5 @@ The application contains 2 types of users, normal access users that can be creat
 
 To build, you need to have MYSQL service running and maven installed. Project requires Java 8.
 Port, name and credentials for database can be found in application.properties. Build server using "mvn clean install" inside the tedi_server folder. Run the server using "mvn spring-boot:run" in the same folder path.
+
+Architecture-wise, the server has controller classes which contain the endpoints and state the i/o models for each of them. Most of the logic is propagated from the controllers to the service layer. Communication with the database happens through repository interfaces and entity classes. Utilities package contains helping static functions for our application.
