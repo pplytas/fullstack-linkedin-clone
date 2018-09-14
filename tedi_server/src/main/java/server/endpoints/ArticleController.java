@@ -143,18 +143,18 @@ public class ArticleController {
 	//gets a list of articles for a given user
 	//or for the active user, if no parameter is specified
 	@GetMapping("/articles")
-	public ResponseEntity<Object> getArticles(@RequestParam(defaultValue = "") String email) {
+	public ResponseEntity<Object> getArticles(@RequestParam(required = false) Long id) {
 		
 		UserEntity refUser;
-		if (email.equals("")) {
+		if (id == null) {
 			refUser = secService.currentUser();
 		}
 		else {
-			refUser = userRepo.findByEmail(email);
+			refUser = userRepo.findById(id).orElse(null);
 		}
 		
 		if (refUser == null) {
-			return new ResponseEntity<>("No user with specified email found", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("No user with specified id found", HttpStatus.BAD_REQUEST);
 		}
 		
 		//this instead of refUser.getArticles() because we want to sort
@@ -188,16 +188,20 @@ public class ArticleController {
 	//gets a list of upvoted articles for a given user
 	//or for the active user, if no parameter is specified
 	@GetMapping("/upvoted")
-	public ResponseEntity<Object> upvotes(@RequestParam(defaultValue = "") String email) {
+	public ResponseEntity<Object> upvotes(@RequestParam(required = false) Long id) {
 		
 		UserEntity refUser;
-		if (email.equals("")) {
+		if (id == null) {
 			refUser = secService.currentUser();
 		}
 		else {
-			refUser = userRepo.findByEmail(email);
+			refUser = userRepo.findById(id).orElse(null);
 		}
-		
+
+		if (refUser == null) {
+			return new ResponseEntity<>("No user with specified id found", HttpStatus.BAD_REQUEST);
+		}
+
 		List<UpvoteEntity> upvoted = upvoteRepo.findByUser(refUser);
 		List<ArticleEntity> articles = new ArrayList<>();
 		for (UpvoteEntity u : upvoted) {

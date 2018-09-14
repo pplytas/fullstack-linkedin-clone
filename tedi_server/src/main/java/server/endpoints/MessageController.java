@@ -70,17 +70,17 @@ public class MessageController {
 		
 	}
 	
-	//gets the messages between current user and user specified by email
+	//gets the messages between current user and user specified by id
 	@GetMapping("/messages")
-	public ResponseEntity<Object> messages(@RequestParam String email) {
+	public ResponseEntity<Object> messages(@RequestParam Long id) {
 		
 		UserEntity currUser = secService.currentUser();
-		UserEntity otherUser = userRepo.findByEmail(email);
+		UserEntity otherUser = userRepo.findById(id).orElse(null);
 		if (otherUser == null) {
-			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("Not existing user with such id", HttpStatus.NOT_FOUND);
 		}
 		if (!Validator.validateUserAuth(otherUser)) {
-			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("Not existing user with such id", HttpStatus.NOT_FOUND);
 		}
 		//I dont check for connected or not users, but can be easily implemented if needed
 		List<ChatEntity> messages = chatRepo.findBySenderAndReceiverInversibleOrderByIdDesc(currUser, otherUser);
@@ -97,7 +97,7 @@ public class MessageController {
 		List<ChatOutputModel> output = new ArrayList<>();
 		for (ConnectionEntity conn : connections) {
 			List<ChatEntity> messages = chatRepo.findBySenderAndReceiverInversibleOrderByIdDesc(conn.getUser(), conn.getConnected());
-			ChatOutputModel chatOutput = new ChatOutputModel();
+			ChatOutputModel chatOutput;
 			if (conn.getUser().getEmail().equals(currUser.getEmail())) {
 				chatOutput = messageService.messagesToChatOutput(conn.getConnected(), messages);
 			}

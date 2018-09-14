@@ -2,7 +2,7 @@ package server.endpoints.outputmodels;
 
 public class UserOutputModel {
 	
-	private String email;
+	private Long id;
 	private String name;
 	private String surname;
 	private String telNumber;
@@ -11,15 +11,15 @@ public class UserOutputModel {
 	public UserOutputModel() {}
 	
 	public UserOutputModel(UserOutputBuilder builder) {
-		this.email = builder.email;
+		this.id = builder.id;
 		this.name = builder.name;
 		this.surname = builder.surname;
 		this.telNumber = builder.telNumber;
 		this.picture = builder.picture;
 	}
 
-	public String getEmail() {
-		return email;
+	public Long getId() {
+		return id;
 	}
 
 	public String getName() {
@@ -38,8 +38,8 @@ public class UserOutputModel {
 		return picture;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public void setName(String name) {
@@ -59,14 +59,14 @@ public class UserOutputModel {
 	}
 	
 	public static class UserOutputBuilder {
-		private final String email;
+		private final Long id;
 		private String name;
 		private String surname;
 		private String telNumber;
 		private String picture;
 		
-		public UserOutputBuilder(String email) {
-			this.email = email;
+		public UserOutputBuilder(Long id) {
+			this.id = id;
 		}
 		
 		public UserOutputBuilder name(String name) {

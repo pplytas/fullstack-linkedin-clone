@@ -235,21 +235,21 @@ public class UserController {
 	//gets info for a given user
 	//or for the active user, if no parameter is specified
 	@GetMapping(value="/simple")
-	public ResponseEntity<Object> getAccount(@RequestParam(defaultValue = "") String email) {
+	public ResponseEntity<Object> getAccount(@RequestParam(required = false) Long id) {
 		
 		try {
 			UserEntity user;
 			
-			if (email.equals(""))
+			if (id == null)
 				user = secService.currentUser();
 			else
-				user = userRepo.findByEmail(email);
+				user = userRepo.findById(id).orElse(null);
 			
 			if (user == null)
-				return new ResponseEntity<>("No active user found", HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>("Not existing user with such id", HttpStatus.NOT_FOUND);
 
 			return new ResponseEntity<>(
-					new UserOutputModel.UserOutputBuilder(user.getEmail())
+					new UserOutputModel.UserOutputBuilder(user.getId())
 														.name(user.getName())
 														.surname(user.getSurname())
 														.telNumber(user.getTelNumber())
@@ -264,24 +264,24 @@ public class UserController {
 	//gets detailed info for a given user
 	//or for the active user, if no parameter is specified
 	@GetMapping(value = "/details")
-	public ResponseEntity<Object> getAccountDetails(@RequestParam(defaultValue = "") String email) {
+	public ResponseEntity<Object> getAccountDetails(@RequestParam(required = false) Long id) {
 		
 		try {
 			UserEntity user;
-			if (email.equals(""))
+			if (id == null)
 				user = secService.currentUser();
 			else
-				user = userRepo.findByEmail(email);
+				user = userRepo.findById(id).orElse(null);
 			
 			if (user == null)
-				return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>("Not existing user with such id", HttpStatus.NOT_FOUND);
 			
 			if (!Validator.validateUserAuth(user)) {
-				return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>("Not existing user with such id", HttpStatus.NOT_FOUND);
 			}
 			
 			UserDetailedOutputModel output = new UserDetailedOutputModel();
-			output.setEmail(user.getEmail());
+			output.setId(user.getId());
 			output.setName(user.getName());
 			output.setSurname(user.getSurname());
 			output.setTelNumber(user.getTelNumber());
@@ -307,7 +307,7 @@ public class UserController {
 				else {
 					u = c.getConnected();
 				}
-				UserOutputModel uOut = new UserOutputModel.UserOutputBuilder(u.getEmail())
+				UserOutputModel uOut = new UserOutputModel.UserOutputBuilder(u.getId())
 						.name(u.getName())
 						.surname(u.getSurname())
 						.telNumber(u.getTelNumber())
@@ -351,7 +351,7 @@ public class UserController {
 		try {
 			for (UserEntity user : results) {
 				if (Validator.validateUserAuth(user)) {
-					output.addUser(new UserOutputModel.UserOutputBuilder(user.getEmail())
+					output.addUser(new UserOutputModel.UserOutputBuilder(user.getId())
 																	.name(user.getName())
 																	.surname(user.getSurname())
 																	.telNumber(user.getTelNumber())

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class UserDetailedOutputModel {
 	
-	private String email;
+	private Long id;
 	private String name;
 	private String surname;
 	private String telNumber;
@@ -19,8 +19,8 @@ public class UserDetailedOutputModel {
 	
 	public UserDetailedOutputModel() {}
 
-	public String getEmail() {
-		return email;
+	public Long getId() {
+		return id;
 	}
 
 	public String getName() {
@@ -63,8 +63,8 @@ public class UserDetailedOutputModel {
 		return ads;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public void setName(String name) {

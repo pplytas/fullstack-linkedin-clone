@@ -50,7 +50,7 @@ public class ArticleService {
 		output.setAuthorSurname(user.getSurname());
 		output.setAuthorPicture(sm.getFile(user.getPicture()));
 		output.setCurrentExperience(userEntityService.getCurrentExperienceList(user));
-		output.setAuthorEmail(user.getEmail());
+		output.setAuthorId(user.getId());
 		output.setTitle(article.getTitle());
 		output.setText(article.getText());
 		output.setFile(sm.getFile(article.getMediafile()));
@@ -63,7 +63,7 @@ public class ArticleService {
 			cOut.setCommentatorSurname(c.getUser().getSurname());
 			cOut.setCommentatorPicture(sm.getFile(c.getUser().getPicture()));
 			cOut.setCommentatorCurrentExperience(userEntityService.getCurrentExperienceList(c.getUser()));
-			cOut.setCommentatorEmail(c.getUser().getEmail());
+			cOut.setCommentatorId(c.getUser().getId());
 			cOut.setDateTime(c.getDateTime());
 			output.addComment(cOut);
 		}
@@ -74,7 +74,7 @@ public class ArticleService {
 			uOut.setUpvoterSurname(u.getUser().getSurname());
 			uOut.setUpvoterPicture(sm.getFile(u.getUser().getPicture()));
 			uOut.setUpvoterCurrentExperience(userEntityService.getCurrentExperienceList(u.getUser()));
-			uOut.setUpvoterEmail(u.getUser().getEmail());
+			uOut.setUpvoterId(u.getUser().getId());
 			output.addUpvote(uOut);
 		}
 		return output;

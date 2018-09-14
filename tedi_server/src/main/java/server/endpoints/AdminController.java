@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import server.endpoints.inputmodels.EmailListInputModel;
+import server.endpoints.inputmodels.IdListInputModel;
 import server.endpoints.outputmodels.AdOutputModel;
 import server.endpoints.outputmodels.EducationOutputModel;
 import server.endpoints.outputmodels.ExperienceOutputModel;
@@ -23,7 +23,6 @@ import server.endpoints.outputmodels.UserDetailedOutputModel;
 import server.endpoints.outputmodels.UserListOutputModel;
 import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.AdEntity;
-import server.entities.AdSkillEntity;
 import server.entities.ConnectionEntity;
 import server.entities.EducationEntity;
 import server.entities.ExperienceEntity;
@@ -60,7 +59,7 @@ public class AdminController {
 		for (UserEntity u : allUsers) {
 			try {
 				output.addUser(new UserOutputModel.
-									UserOutputBuilder(u.getEmail())
+									UserOutputBuilder(u.getId())
 													.name(u.getName())
 													.surname(u.getSurname())
 													.telNumber(u.getTelNumber())
@@ -76,12 +75,12 @@ public class AdminController {
 	//made it post because 1. it writes data in the server side (creates an xml file)
 	//					   2. we need a requestbody
 	@PostMapping("/export")
-	public ResponseEntity<Resource> exportUsers(@RequestBody EmailListInputModel input) {
+	public ResponseEntity<Resource> exportUsers(@RequestBody IdListInputModel input) {
 		
 		List<UserDetailedOutputModel> details = new ArrayList<>();
-		for (String email : input.getEmails()) {
+		for (Long id : input.getIds()) {
 			
-			UserEntity user = userRepo.findByEmail(email);
+			UserEntity user = userRepo.findById(id).orElse(null);
 			
 			//ignore bad email input
 			if (user == null)
@@ -91,7 +90,7 @@ public class AdminController {
 			}
 			
 			UserDetailedOutputModel output = new UserDetailedOutputModel();
-			output.setEmail(user.getEmail());
+			output.setId(user.getId());
 			output.setName(user.getName());
 			output.setSurname(user.getSurname());
 			output.setTelNumber(user.getTelNumber());
@@ -144,13 +143,13 @@ public class AdminController {
 				}
 				UserOutputModel uOut;
 				try {
-					uOut = new UserOutputModel.UserOutputBuilder(u.getEmail())
+					uOut = new UserOutputModel.UserOutputBuilder(u.getId())
 							.name(u.getName())
 							.surname(u.getSurname())
 							.telNumber(u.getTelNumber())
 							.picture(sm.getFile(u.getPicture())).build();
 				} catch (IOException e) {
-					uOut = new UserOutputModel.UserOutputBuilder(u.getEmail())
+					uOut = new UserOutputModel.UserOutputBuilder(u.getId())
 							.name(u.getName())
 							.surname(u.getSurname())
 							.telNumber(u.getTelNumber())
