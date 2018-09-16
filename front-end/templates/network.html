@@ -1,0 +1,47 @@
+<div class="network pt-3">
+    <div class="container-fluid">
+        <div class="row px-5 mt-3 mb-4">
+            <div class="col-6 px-2 text-center">
+                <form class="input-group">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-info" type="button" ng-click="showMyConnections()">Show my connections</button>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Search all users" ng-model="query" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-info" type="submit" ng-click="searchUsers(query)">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row px-5">
+            <div class="col-2 px-2 py-1" ng-repeat="connection in displayingConnections">
+                <div class="card py-2 user-card">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col text-center px-2">
+                                <a href="#!/profile/{{ connection.email }}" class="avatar-network-md mx-auto">
+                                    <img class="avatar-network-md border rounded-circle border-secondary" data-ng-src="{{connection.picture && 'data:image/png;base64,'}}{{connection.picture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col text-center px-2">
+                                <p class="font-s-09 font-weight-bold mb-0">{{ connection.name + " " + connection.surname }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center px-2">
+                                <p class="font-s-08 text-secondary font-weight-light mb-0">CEO Software Engineer at Alpha Bank</p>
+                            </div>
+                        </div>
+                        <div class="row w-100 py-2 row-btn">
+                            <div class="col text-center px-2">
+                                <a class="btn btn-outline-info" href="#!/profile/{{ connection.email }}">View</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

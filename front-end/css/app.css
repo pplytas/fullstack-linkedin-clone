@@ -12,8 +12,16 @@ body {
     background-color: #F7F7F7;
 }
 
+* {
+    box-shadow: none !important;
+}
+
 ::placeholder {
     font-weight: 300;
+}
+
+.font-s-11 {
+    font-size: 1.1rem;
 }
 
 .font-s-09 {
@@ -189,6 +197,36 @@ body {
 
 .article-text {
     font-size: 0.9rem;
+}
+
+/* ------------------- NETWORK ------------------- */
+.avatar-network-md {
+    width: 70px;
+    height: 70px;
+}
+
+.row-btn {
+    position: absolute;
+    bottom: 0;
+}
+
+.network .user-card {
+    height: 14rem;
+}
+
+/* ------------------- NOTIFICATIONS ------------------- */
+.notifications .avatar-network-md {
+    width: 70px;
+    height: 70px;
+}
+
+.notifications .row-btn {
+    position: absolute;
+    bottom: 0;
+}
+
+.notifications .user-card {
+    height: 14rem;
 }
 
 /* ------------------- VIEW PROFILE ------------------- */

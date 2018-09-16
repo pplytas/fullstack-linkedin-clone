@@ -1,0 +1,83 @@
+<div class="notifications pt-3">
+    <div class="container-fluid">
+        <div class="row px-5 mb-3 justify-content-center">
+            <div class="col-3 px-2">
+                <div class="card p-2" style="border: 2px solid #17a2b8;">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col text-center font-s-11" style="color: #17a2b8;">
+                                Pending Requests
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row px-5 mb-3 justify-content-center">
+            <div class="col-2 px-2 py-1" ng-repeat="(connectionIndex, connection) in pendingConnections">
+                <div class="card py-2 user-card">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col text-center px-2">
+                                <a href="#!/profile/{{ connection.email }}" class="avatar-network-md mx-auto">
+                                    <img class="avatar-network-md border rounded-circle border-secondary" data-ng-src="{{connection.picture && 'data:image/png;base64,'}}{{connection.picture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col text-center px-2">
+                                <p class="font-s-09 font-weight-bold mb-0">{{ connection.name + " " + connection.surname }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center px-2">
+                                <p class="font-s-08 text-secondary font-weight-light mb-0">CEO Software Engineer at Alpha Bank</p>
+                            </div>
+                        </div>
+                        <div class="row w-100 py-2 row-btn">
+                            <div class="col text-center">
+                                <button class="btn btn-success" ng-click="accept(connectionIndex)">Accept</button>
+                                <button class="btn btn-outline-danger" ng-click="delete()">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row px-5 mb-4 justify-content-center">
+            <div class="col-3 px-2">
+                <div class="card p-2" style="border: 2px solid #17a2b8;">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col text-center font-s-11" style="color: #17a2b8;">
+                                Notifications
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row px-5">
+            <div class="col px-2">
+
+                <div class="row mb-3" ng-repeat="notification in notifications">
+                    <div class="col-2 font-s-08 text-right pt-3">
+                        {{ notification.dateTime }}
+                    </div>
+                    <div class="col-9">
+                        <div class="card p-4">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col">
+                                        {{ notification.message }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

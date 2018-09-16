@@ -2,8 +2,12 @@
 
 	var app = angular.module("tediApp", [
 	 	"ngRoute",
-		"angular-jwt"])
-	.config(function($httpProvider, $routeProvider, jwtOptionsProvider) {
+		"angular-jwt",
+		'angular-loading-bar'])
+	.config(function($httpProvider, $routeProvider, jwtOptionsProvider, cfpLoadingBarProvider) {
+		/* ================= Loading Spinner ================= */
+		cfpLoadingBarProvider.includeSpinner = false;
+
 		/* ================= Authendication JWT ================= */
 		jwtOptionsProvider.config({
 			tokenGetter: function(options) {
@@ -27,8 +31,9 @@
 		})
 		.when("/logout", {
 			template: "",
-			controller: function() {
+			controller: function(globalFunctions) {
 				delete localStorage.isjwt;
+				globalFunctions.logout();
 				window.location.href = "/login";
   			}
 		})
@@ -36,32 +41,98 @@
 			templateUrl: '../templates/home.html',
 			controller: 'homeCtrl',
 			resolve: {
-				user: function($rootScope) {
-                    return $rootScope.getUserDetails().then(function(response) {
+				user: function(globalFunctions) {
+                    return globalFunctions.getUserDetails().then(function(response) {
                     	return response.data;
                     });
                 }
+			}
+		})
+		.when("/network", {
+			templateUrl: '../templates/network.html',
+			controller: 'networkCtrl',
+			resolve: {
+				user: function(globalFunctions) {
+                    return globalFunctions.getUserDetails().then(function(response) {
+                    	return response.data;
+                    });
+                }
+			}
+		})
+		.when("/conversations", {
+			templateUrl: '../templates/conversations.html',
+			controller: 'conversationsCtrl'
+			// resolve: {
+			//
+			// }
+		})
+		.when("/notifications", {
+			templateUrl: '../templates/notifications.html',
+			controller: 'notificationsCtrl',
+			resolve: {
+				notifications: function(globalFunctions) {
+					return globalFunctions.getNotifications().then(function(response) {
+						return response.data.notificationOutputModelList;
+					});
+				},
+				pendingConnections: function(globalFunctions) {
+					return globalFunctions.getConnections("pending").then(function(response) {
+						return response.data.users;
+					});
+				}
 			}
 		})
 		.when("/profile", {
 			templateUrl: '../templates/view-profile.html',
 			controller: 'viewProfileCtrl',
 			resolve: {
-				user: function($rootScope) {
-                    return $rootScope.getUserDetails().then(function(response) {
+				user: function(globalFunctions) {
+                    return globalFunctions.getUserDetails().then(function(response) {
                     	return response.data;
                     });
                 }
+			}
+        })
+		.when("/profile/:EMAIL", {
+			templateUrl: '../templates/user-profile.html',
+			controller: 'userProfileCtrl',
+			resolve: {
+				user: function(globalFunctions, $route) {
+                    return globalFunctions.getUserDetails($route.current.params.EMAIL).then(function(response) {
+                    	return response.data;
+                    });
+                },
+				isConnected: function(globalFunctions, $route) {
+					return globalFunctions.getConnections().then(function(response) {
+						return response.data.users.some(function(user) {
+							return user.email === $route.current.params.EMAIL;
+						});
+                    });
+				},
+				isSent: function(globalFunctions, $route) {
+					return globalFunctions.getConnections("sent").then(function(response) {
+						return response.data.users.some(function(user) {
+							return user.email === $route.current.params.EMAIL;
+						});
+                    });
+				},
+				isPending: function(globalFunctions, $route) {
+					return globalFunctions.getConnections("pending").then(function(response) {
+						return response.data.users.some(function(user) {
+							return user.email === $route.current.params.EMAIL;
+						});
+                    });
+				}
 			}
         })
 		.when("/edit", {
 			templateUrl: '../templates/edit-profile.html',
 			controller: 'editProfileCtrl'
         })
-        .when("/post", {
-            templateUrl: '../templates/post.html',
-            controller: 'postCtrl'
-        })
+        // .when("/posts", {
+        //     templateUrl: '../templates/posts.html',
+        //     controller: 'postsCtrl'
+        // })
 		.otherwise({
 	        redirectTo: '/home'
 	    });
@@ -69,45 +140,6 @@
 	})
 	.run(function ($rootScope, globalFunctions) {
 		globalFunctions.init_app();
-        $rootScope.login = globalFunctions.login;
-		$rootScope.registerUser = globalFunctions.registerUser;
-		$rootScope.getUserList = globalFunctions.getUserList;
-		$rootScope.getUserDetails = globalFunctions.getUserDetails;
-		$rootScope.updateUser = globalFunctions.updateUser;
-        $rootScope.logout = globalFunctions.logout;
-        $rootScope.getUserSimple = globalFunctions.getUserSimple;
-        $rootScope.postEducation = globalFunctions.postEducation;
-        $rootScope.postExperience = globalFunctions.postExperience;
-        $rootScope.postSkills = globalFunctions.postSkills;
-        $rootScope.searchAccounts = globalFunctions.searchAccounts;
-        $rootScope.postArticle = globalFunctions.postArticle;
-        $rootScope.postComment = globalFunctions.postComment;
-        $rootScope.upvote = globalFunctions.upvote;
-        $rootScope.getArticles = globalFunctions.getArticles;
-        $rootScope.getUpvoted = globalFunctions.getUpvoted;
-        $rootScope.getFeed = globalFunctions.getFeed;
-        $rootScope.sendMessage = globalFunctions.sendMessage;
-        $rootScope.getMessages = globalFunctions.getMessages;
-        $rootScope.publishAd = globalFunctions.publishAd;
-        $rootScope.getAds = globalFunctions.getAds;
-        $rootScope.getSuggestedAds = globalFunctions.getSuggestedAds;
-        $rootScope.connect = globalFunctions.connect;
-        $rootScope.deleteConnection = globalFunctions.deleteConnection;
-        $rootScope.getConnections = globalFunctions.getConnections;
-        $rootScope.getNotifications = globalFunctions.getNotifications;
-		// $rootScope.user = {};
-		// $rootScope.getUserDetails().then(function(result) {
-		// 	$rootScope.user.email = result.email;
-		// 	$rootScope.user.firstName = result.name;
-		// 	$rootScope.user.lastName = result.surname;
-		// 	$rootScope.user.phoneNum = result.telNumber;
-		// 	$rootScope.user.picture = result.picture;
-        // });
-
-		$('a.nav-link, a.dropdown-item').click(function() {
-		    $('.navbar-nav').find('li.nav-item.active').removeClass('active');
-		    $(this).parents('li.nav-item').addClass('active');
-		});
 	});
 
 })();

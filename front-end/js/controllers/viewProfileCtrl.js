@@ -2,6 +2,7 @@
 	angular.module('tediApp')
 	.controller('viewProfileCtrl', function($scope, user, globalFunctions) {
 		window.scrollTo(0, 0);
+		$scope.changeActiveLink("profile-link");
         $scope.tempUser = angular.copy(user);
 
 		$scope.addEducation = function() {

@@ -6,6 +6,13 @@
 
 		globalFunctionsFactory.init_app = function(){
 			$rootScope.tediAPI = 'https://localhost:8443';
+
+			$rootScope.changeActiveLink = function(id) {
+				if (document.getElementsByClassName("nav-item active")[0]) {
+					document.getElementsByClassName("nav-item active")[0].classList.remove("active");
+				}
+				document.getElementById(id).classList.add("active");
+			}
 		}
 
 		globalFunctionsFactory.login = function(inputEmail, inputPassword) {
@@ -110,12 +117,6 @@
 				url: url,
 				headers: { 'Content-Type': 'application/json' },
                 data: newUser
-			}).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-				console.log("Update Successful");
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-				console.log("Update Failed");
 			});
 		}
 
@@ -240,7 +241,7 @@
         }
 
         globalFunctionsFactory.searchAccounts = function(
-            query = null
+            queryString = null
         ) {
             var endpoint = '/user/search/simple';
             var url = $rootScope.tediAPI + endpoint;
@@ -249,15 +250,7 @@
 				method: "GET",
 				url: url,
                 headers: { 'Content-Type': 'application/json' },
-                params: {'query': query}
-			}).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-				console.log("Search Successful");
-				return response.data;
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-				console.log("Search Failed");
-				return response.data;
+                params: {'query': queryString}
 			});
         }
 
@@ -406,18 +399,13 @@
                 "message": message,
                 "email": email
             }
+
             return $http({
                 method: "POST",
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
                 data: message
-            }).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-                console.log("Message sending successful");
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-                console.log("Message sending failed");
-			});
+            });
         }
 
         globalFunctionsFactory.getMessages = function(
@@ -431,15 +419,7 @@
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
                 params: {'email': email}
-            }).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-                console.log("Messages retrieval successful");
-                return response.data
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-                console.log("Messages retrieval failed");
-                return response.data
-			});
+            });
         }
 
         globalFunctionsFactory.publishAd = function(
@@ -461,13 +441,7 @@
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
                 data: newAd
-            }).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-                console.log("Ad post successful");
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-                console.log("Ad post failed");
-			});
+            });
         }
 
         globalFunctionsFactory.getAds = function(
@@ -481,15 +455,7 @@
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
                 params: {'email': email}
-            }).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-                console.log("Ads retrieval successful");
-                return response.data
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-                console.log("Ads retrieval failed");
-                return response.data
-			});
+            });
         }
 
         globalFunctionsFactory.getSuggestedAds = function() {
@@ -500,15 +466,7 @@
                 method: "GET",
                 url: url,
                 headers: { 'Content-Type': 'application/json' }
-            }).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-                console.log("Suggested ads retrieval successful");
-                return response.data
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-                console.log("Suggested ads retrieval failed");
-                return response.data
-			});
+            });
         }
 
         globalFunctionsFactory.connect = function(
@@ -522,15 +480,7 @@
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
                 params: {'email': email}
-            }).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-                console.log("Connection request successful");
-                return response.data
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-                console.log("Connection request failed");
-                return response.data
-			});
+            });
         }
 
         globalFunctionsFactory.deleteConnection = function(
@@ -544,13 +494,7 @@
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
                 params: {'email': email}
-            }).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-                console.log("Connection delete successful");
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-                console.log("Connection delete failed");
-			});
+            });
         }
 
         globalFunctionsFactory.getConnections = function(
@@ -558,38 +502,24 @@
         ) {
             var endpoint = '/connections';
             var url = $rootScope.tediAPI + endpoint;
+
             return $http({
                 method: "GET",
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
                 params: {'type': type}
-            }).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-                console.log("Connections get successful");
-                return response.data;
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-                console.log("Connections get failed");
-                return response.data;
-			});
+            });
         }
 
         globalFunctionsFactory.getNotifications = function() {
             var endpoint = '/notifications';
             var url = $rootScope.tediAPI + endpoint;
+
             return $http({
                 method: "GET",
                 url: url,
                 headers: { 'Content-Type': 'application/json' }
-            }).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-                console.log("Notifications get successful");
-                return response.data;
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-                console.log("Notifications get failed");
-                return response.data;
-			});
+            });
         }
 
 		return globalFunctionsFactory;

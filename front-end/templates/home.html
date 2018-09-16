@@ -1,14 +1,14 @@
 <div class="home pt-3">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-3 px-4 mx-4">
+        <div class="row justify-content-center">
+            <div class="col-3">
                 <div class="card shadow-sm">
                     <div class="container-fluid">
                         <div class="row position-relative mb-2">
                             <div class="avatar-backround border border-secondary w-100"></div>
                             <div class="col pt-4 text-center">
                                 <a href="#!/profile" class="avatar-picture-big mx-auto">
-                                    <img class="avatar-picture-big border rounded-circle border-secondary" src="../img/avatar-placeholder.png" data-ng-src="data:image/png;base64,{{tempUser.picture}}" alt="Profile Picture">
+                                    <img class="avatar-picture-big border rounded-circle border-secondary" data-ng-src="{{tempUser.picture && 'data:image/png;base64,'}}{{tempUser.picture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
                                 </a>
                             </div>
                         </div>
@@ -48,7 +48,73 @@
                     </div>
                 </div>
             </div>
-            <div class="col-5">
+            <div class="col-5 mx-3">
+                <div class="row mb-4 justify-content-center">
+                    <div class="col">
+                        <div class="card p-2" style="border: 2px solid #17a2b8;">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col text-center font-s-11" style="color: #17a2b8;">
+                                        Feed
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="!feedLoaded" class="row pt-4 justify-content-center">
+                    <div class="col text-center">
+                        <i class="fas fa-circle-notch fa-5x fa-spin text-info"></i>
+                    </div>
+                </div>
+                <div class="row mb-3" ng-repeat="article in feed.articles">
+                    <div class="col">
+                        <div class="card pt-3 shadow-sm">
+                            <div class="container-fluid">
+                                <div class="row mb-4">
+                                    <div class="col">
+                                        <a href="#!/profile/{{ article.authorEmail }}" class="avatar-post-sm mx-auto d-inline-block">
+                                            <img class="avatar-post-sm border rounded-circle border-secondary" data-ng-src="{{article.authorPicture && 'data:image/png;base64,'}}{{article.authorPicture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
+                                        </a>
+                                        <p class="post-fullname my-0 ml-2 d-inline">{{ article.authorName + " " + article.authorSurname }}</p>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col pl-4">
+                                        <div class="row">
+                                            <div class="col">
+                                                <p class="article-title font-weight-bold">{{ article.title }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <p class="article-text">{{ article.text }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row border-top bg-light">
+                                    <div class="col-6">
+                                        <button class="btn btn-sm btn-light rounded-0 font-s-08 text-secondary">
+                                            <i class="far fa-thumbs-up"></i> Upvote
+                                        </button>
+                                        <button class="btn btn-sm btn-light rounded-0 font-s-08 text-secondary">
+                                            <i class="far fa-comment"></i> Comment
+                                        </button>
+                                    </div>
+                                    <div class="col-3 py-1 font-s-08 text-secondary text-right">
+                                        {{ article.upvotes.length }} - Upvotes
+                                    </div>
+                                    <div class="col-3 py-1 font-s-08 text-secondary text-right">
+                                        {{ article.upvotes.length }} - Comments
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
                 <div class="row">
                     <div class="col">
                         <div class="card py-3 shadow-sm">
@@ -59,7 +125,7 @@
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <img class="avatar-post-sm border rounded-circle border-secondary" src="../img/avatar-placeholder.png" data-ng-src="data:image/png;base64,{{tempUser.picture}}" alt="Profile Picture">
+                                                        <img class="avatar-post-sm border rounded-circle border-secondary" data-ng-src="{{tempUser.picture && 'data:image/png;base64,'}}{{tempUser.picture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
                                                         <p class="post-fullname my-0 ml-2 d-inline">{{ tempUser.name + " " + tempUser.surname }}</p>
                                                     </div>
                                                 </div>
@@ -74,7 +140,7 @@
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <textarea ng-model="newArticle.text" class="form-control" placeholder="Write your thoughts..." required rows="2"></textarea>
+                                                        <textarea ng-model="newArticle.text" class="form-control" placeholder="Write your thoughts..." required rows="4"></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -94,7 +160,7 @@
                                                             <input id="video-input" type="file" ng-model="postMediaVideo" style="display: none;">
                                                         </div>
                                                     </div>
-                                                    <div class="col-3 offset-5 text-right">
+                                                    <div class="col-4 offset-4 text-right">
                                                         <button type="submit" class="btn btn-sm px-3" ng-disabled="!postForm.$dirty" ng-click="postNewArticle()" style="background-color: #007ABA; color: #ffffff;">Post</button>
                                                     </div>
                                                 </div>
@@ -106,37 +172,6 @@
                         </div>
                     </div>
                 </div>
-                <hr>
-                <div class="row mb-3" ng-repeat="article in feed.articles">
-                    <div class="col">
-                        <div class="card py-3 shadow-sm">
-                            <div class="container-fluid">
-                                <div class="row mb-4">
-                                    <div class="col">
-                                        <img class="avatar-post-sm border rounded-circle border-secondary" src="../img/avatar-placeholder.png" data-ng-src="data:image/png;base64,{{article.authorPicture}}" alt="Profile Picture">
-                                        <p class="post-fullname my-0 ml-2 d-inline">{{ article.authorName + " " + article.authorSurname }}</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col pl-4">
-                                        <div class="row">
-                                            <div class="col">
-                                                <p class="article-title font-weight-bold">{{ article.title }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <p class="article-text">{{ article.text }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
             </div>
         </div>
     </div>
