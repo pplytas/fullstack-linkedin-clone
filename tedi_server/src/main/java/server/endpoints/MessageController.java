@@ -17,10 +17,12 @@ import server.endpoints.inputmodels.ChatMessageInputModel;
 import server.endpoints.outputmodels.ChatMessageOutputModel;
 import server.endpoints.outputmodels.ChatOutputModel;
 import server.entities.ChatEntity;
+import server.entities.ConnectionEntity;
 import server.entities.UserEntity;
 import server.repositories.ChatRepository;
 import server.repositories.ConnectionRepository;
 import server.repositories.UserRepository;
+import server.services.MessageService;
 import server.utilities.Validator;
 
 @RestController
@@ -37,6 +39,9 @@ public class MessageController {
 	
 	@Autowired
 	private ChatRepository chatRepo;
+	
+	@Autowired
+	private MessageService messageService;
 
 	@PostMapping("/message")
 	public ResponseEntity<Object> message(@RequestBody ChatMessageInputModel input) {
@@ -79,17 +84,27 @@ public class MessageController {
 		}
 		//I dont check for connected or not users, but can be easily implemented if needed
 		List<ChatEntity> messages = chatRepo.findBySenderAndReceiverInversibleOrderByIdDesc(currUser, otherUser);
-		ChatOutputModel output = new ChatOutputModel();
-		if (messages != null) {
-			for (ChatEntity c : messages) {
-				ChatMessageOutputModel mOut = new ChatMessageOutputModel();
-				mOut.setMessage(c.getMessage());
-				mOut.setSender(c.getSender().getEmail());
-				mOut.setReceiver(c.getReceiver().getEmail());
-				output.addMessage(mOut);
+		ChatOutputModel output = messageService.messagesToChatOutput(otherUser, messages);
+		return new ResponseEntity<>(output, HttpStatus.OK);
+		
+	}
+	
+	@GetMapping("/messages/all")
+	public ResponseEntity<Object> allMessages() {
+		
+		UserEntity currUser = secService.currentUser();
+		List<ConnectionEntity> connections = connRepo.findByUserInversibleAndIsPending(currUser, false);
+		List<ChatOutputModel> output = new ArrayList<>();
+		for (ConnectionEntity conn : connections) {
+			List<ChatEntity> messages = chatRepo.findBySenderAndReceiverInversibleOrderByIdDesc(conn.getUser(), conn.getConnected());
+			ChatOutputModel chatOutput = new ChatOutputModel();
+			if (conn.getUser().getEmail().equals(currUser.getEmail())) {
+				chatOutput = messageService.messagesToChatOutput(conn.getConnected(), messages);
 			}
-		} else {
-			output.setMessages(new ArrayList<>());
+			else {
+				chatOutput = messageService.messagesToChatOutput(conn.getUser(), messages);
+			}
+			output.add(chatOutput);
 		}
 		return new ResponseEntity<>(output, HttpStatus.OK);
 		

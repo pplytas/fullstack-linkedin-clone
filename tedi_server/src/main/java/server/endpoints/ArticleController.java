@@ -78,7 +78,7 @@ public class ArticleController {
 			ArticleEntity article = new ArticleEntity();
 			article.setTitle(input.getTitle());
 			article.setText(input.getText());
-			article.setMediafile(sm.storeFile(input.getFile()));
+			article.setMediafile(sm.storeFile(input.getMedia()));
 			article.setUser(currentUser);
 			article.setDateTime();
 			Categories category = articleClass.classify(article, articleRepo.findAll());
@@ -132,7 +132,11 @@ public class ArticleController {
 			upvoteRepo.save(upvote);
 			String notificationMessage = "? ? upvoted your post";
 			notificationService.addNotification(refArticle.getUser(), currUser, refArticle, notificationMessage);
-			return new ResponseEntity<>(HttpStatus.OK);
+			try {
+				return new ResponseEntity<>(articleService.convertUpvoteToOutput(upvote), HttpStatus.OK);
+			} catch (IOException e) {
+				return new ResponseEntity<>("Could not return saved upvote", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
 		}
 		else {
 			return new ResponseEntity<>("Could not find specified article", HttpStatus.NOT_FOUND);

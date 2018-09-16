@@ -98,6 +98,10 @@ public class UserEntity {
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
 			mappedBy = "user", orphanRemoval = true)
+	private List<AdApplicationEntity> adApplications = new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+			mappedBy = "user", orphanRemoval = true)
 	private List<NotificationEntity> notifications = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
@@ -211,6 +215,10 @@ public class UserEntity {
 	
 	public List<AdEntity> getAds() {
 		return ads;
+	}
+	
+	public List<AdApplicationEntity> getAdApplications() {
+		return adApplications;
 	}
 	
 	public List<NotificationEntity> getNotifications() {
@@ -355,6 +363,14 @@ public class UserEntity {
 	
 	public void addAd(AdEntity ad) {
 		this.ads.add(ad);
+	}
+	
+	public void setAdApplications(List<AdApplicationEntity> adApplications) {
+		this.adApplications = adApplications;
+	}
+	
+	public void addAdApplication(AdApplicationEntity adApplication) {
+		this.adApplications.add(adApplication);
 	}
 	
 	public void setNotifications(List<NotificationEntity> notifications) {

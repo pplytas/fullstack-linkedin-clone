@@ -7,9 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import server.auth.SecurityService;
+import server.endpoints.outputmodels.EducationOutputModel;
 import server.endpoints.outputmodels.ExperienceOutputModel;
+import server.endpoints.outputmodels.SkillOutputModel;
+import server.entities.EducationEntity;
 import server.entities.ExperienceEntity;
 import server.entities.UserEntity;
+import server.entities.UserSkillEntity;
 import server.repositories.ConnectionRepository;
 import server.utilities.DateUtils;
 
@@ -82,6 +86,44 @@ public class UserEntityService {
 			}
 		}
 		return expOut;
+	}
+
+	public List<EducationOutputModel> getEducationList(UserEntity user) {
+		List<EducationOutputModel> eduOut = new ArrayList<>();
+		boolean viewPrivate = getPublicVisibilityStatus(user);
+		if (user.isEducationPublic() || viewPrivate) {
+			List<EducationEntity> eduList = user.getEducation();
+			for (EducationEntity e : eduList) {
+				EducationOutputModel eOut = new EducationOutputModel();
+				eOut.setOrganization(e.getOrganization());
+				eOut.setStart(e.getStart());
+				if (DateUtils.lessEqualThanCurrent(e.getStart()) && e.getFinish() == null) {
+					eOut.setFinish("Present");
+				}
+				else if (DateUtils.greaterEqualThanCurrent(e.getStart()) && e.getFinish() == null) {
+					eOut.setFinish("Unknown");
+				}
+				else {
+					eOut.setFinish(e.getFinish());
+				}
+				eduOut.add(eOut);
+			}
+		}
+		return eduOut;
+	}
+
+	public List<SkillOutputModel> getSkillList(UserEntity user) {
+		List<SkillOutputModel> skillOut = new ArrayList<>();
+		boolean viewPrivate = getPublicVisibilityStatus(user);
+		if (user.isSkillsPublic() || viewPrivate) {
+			List<UserSkillEntity> skillList = user.getSkills();
+			for (UserSkillEntity s : skillList) {
+				SkillOutputModel sOut = new SkillOutputModel();
+				sOut.setName(s.getName());
+				skillOut.add(sOut);
+			}
+		}
+		return skillOut;
 	}
 
 }
