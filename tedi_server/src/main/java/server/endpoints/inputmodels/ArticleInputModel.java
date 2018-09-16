@@ -4,7 +4,7 @@ public class ArticleInputModel {
 	
 	private String title;
 	private String text;
-	private String file;
+	private String media;
 	
 	public ArticleInputModel() {}
 
@@ -16,8 +16,8 @@ public class ArticleInputModel {
 		return text;
 	}
 
-	public String getFile() {
-		return file;
+	public String getMedia() {
+		return media;
 	}
 
 	public void setTitle(String title) {
@@ -28,8 +28,8 @@ public class ArticleInputModel {
 		this.text = text;
 	}
 
-	public void setFile(String file) {
-		this.file = file;
+	public void setMedia(String media) {
+		this.media = media;
 	}
 	
 }

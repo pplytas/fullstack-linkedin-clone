@@ -53,7 +53,7 @@ public class ArticleService {
 		output.setAuthorEmail(user.getEmail());
 		output.setTitle(article.getTitle());
 		output.setText(article.getText());
-		output.setFile(sm.getFile(article.getMediafile()));
+		output.setMedia(sm.getFile(article.getMediafile()));
 		output.setDateTime(article.getDateTime());
 		List<CommentEntity> comments = commentRepo.findByArticleOrderByDateTimeDesc(article);
 		for (CommentEntity c : comments) {

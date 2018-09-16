@@ -78,7 +78,7 @@ public class ArticleController {
 			ArticleEntity article = new ArticleEntity();
 			article.setTitle(input.getTitle());
 			article.setText(input.getText());
-			article.setMediafile(sm.storeFile(input.getFile()));
+			article.setMediafile(sm.storeFile(input.getMedia()));
 			article.setUser(currentUser);
 			article.setDateTime();
 			Categories category = articleClass.classify(article, articleRepo.findAll());
