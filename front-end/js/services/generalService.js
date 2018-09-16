@@ -29,15 +29,6 @@
 				url: url,
                 headers: { 'Content-Type': 'application/json' },
                 data: data
-			}).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-				localStorage.isjwt = response.headers("Authorization").replace('Bearer ', '');
-				console.log(localStorage.isjwt);
-				console.log("Login Successful");
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-				console.log(response.headers("Authorization"));
-				console.log("Login Failed");
 			});
 		}
 
@@ -49,12 +40,6 @@
 				method: "GET",
 				url: url,
                 headers: { 'Content-Type': 'application/json' }
-			}).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-				console.log("UserList Successful");
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-				console.log("UserList Failed");
 			});
         }
 
@@ -83,12 +68,6 @@
 				url: url,
 				headers: { 'Content-Type': 'application/json' },
 				data: newUser
-			}).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-				console.log("Register Successful");
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-				console.log("Register Failed");
 			});
 		}
 
@@ -146,9 +125,6 @@
 				url: url
 			}).then(function onSuccess(response) {		// Handle success
 				delete localStorage.isjwt;
-				console.log("Logout Successful");
-			}).catch(function onError(response) {		// Handle error
-				console.log("Logout Failed");
 			});
         }
 
@@ -272,12 +248,6 @@
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
 				data: newArticle
-			}).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-				console.log("Article posted Successful");
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-				console.log("Article post Failed");
 			});
         }
 
@@ -297,13 +267,7 @@
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
                 data: newComment
-            }).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-				console.log("Comment posted Successful");
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-				console.log("Comment post Failed");
-			});
+            });
         }
 
         globalFunctionsFactory.upvote = function(
@@ -317,13 +281,7 @@
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
                 params: {'articleId': articleId}
-            }).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-				console.log("Upvote successful");
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-				console.log("Upvote failed");
-			});
+            });
         }
 
         globalFunctionsFactory.getArticles = function(
@@ -341,15 +299,7 @@
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
                 params: {'email': email}
-            }).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-                console.log("Article get successful");
-                return response.data;
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-                console.log("Article get failed");
-                return response.data;
-			});
+            });
         }
 
         globalFunctionsFactory.getUpvoted = function(
@@ -367,15 +317,7 @@
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
                 params: {'email': email}
-            }).then(function onSuccess(response) {		// Handle success
-				console.log(response);
-                console.log("Upvoted get successful");
-                return response.data;
-			}).catch(function onError(response) {		// Handle error
-				console.log(response);
-                console.log("Upvoted get failed");
-                return response.data;
-			});
+            });
         }
 
         globalFunctionsFactory.getFeed = function() {

@@ -80,22 +80,27 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <div class="col pl-4">
-                                        <div class="row">
-                                            <div class="col">
-                                                <p class="article-title font-weight-bold">{{ article.title }}</p>
+                                    <div class="col">
+                                        <div class="row justify-content-center mb-2">
+                                            <div class="col-11">
+                                                <p class="article-title mb-0">{{ article.title }}</p>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <p class="article-text">{{ article.text }}</p>
+                                        <div class="row justify-content-center mb-2">
+                                            <div class="col-11">
+                                                <p class="article-text mb-0">{{ article.text }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row py-3 justify-content-center" ng-if="article.media">
+                                            <div class="col-11">
+                                                <img class="mw-100 border border-primary" data-ng-src="data:image/png;base64,{{article.media}}" alt="Article Image">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row border-top bg-light">
                                     <div class="col-6">
-                                        <button class="btn btn-sm btn-light rounded-0 font-s-08 text-secondary">
+                                        <button class="btn btn-sm btn-light rounded-0 font-s-08 text-secondary" ng-click="upvote(article.id, $index)">
                                             <i class="far fa-thumbs-up"></i> Upvote
                                         </button>
                                         <button class="btn btn-sm btn-light rounded-0 font-s-08 text-secondary">
@@ -106,7 +111,7 @@
                                         {{ article.upvotes.length }} - Upvotes
                                     </div>
                                     <div class="col-3 py-1 font-s-08 text-secondary text-right">
-                                        {{ article.upvotes.length }} - Comments
+                                        {{ article.comments.length }} - Comments
                                     </div>
                                 </div>
                             </div>
@@ -151,13 +156,13 @@
                                                             <label class="m-0" for="image-input">
                                                                 <i class="fas fa-camera" style="cursor: pointer;"></i>
                                                             </label>
-                                                            <input id="image-input" type="file" ng-model="postMediaImage" base-sixty-four-input style="display: none;">
+                                                            <input id="image-input" type="file" ng-model="newArticleImage" base-sixty-four-input style="display: none;">
                                                         </div>
                                                         <div class="video-upload d-inline text-center ml-3">
                                                             <label class="m-0" for="video-input">
                                                                 <i class="fas fa-video" style="cursor: pointer;"></i>
                                                             </label>
-                                                            <input id="video-input" type="file" ng-model="postMediaVideo" style="display: none;">
+                                                            <input id="video-input" type="file" ng-model="newArticle.media.videos" style="display: none;">
                                                         </div>
                                                     </div>
                                                     <div class="col-4 offset-4 text-right">
@@ -166,6 +171,15 @@
                                                 </div>
                                             </div>
                                         </form>
+                                    </div>
+                                </div>
+                                <div class="row mt-3" ng-if="newArticleImage">
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col-6" ng-click="removeNewArticleImage()">
+                                                <img class="mw-100 border border-primary" data-ng-src="data:{{newArticleImage.filetype}};base64,{{newArticleImage.base64}}" alt="New Article Image">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

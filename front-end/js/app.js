@@ -3,7 +3,8 @@
 	var app = angular.module("tediApp", [
 	 	"ngRoute",
 		"angular-jwt",
-		'angular-loading-bar'])
+		"naif.base64",
+		"angular-loading-bar"])
 	.config(function($httpProvider, $routeProvider, jwtOptionsProvider, cfpLoadingBarProvider) {
 		/* ================= Loading Spinner ================= */
 		cfpLoadingBarProvider.includeSpinner = false;
