@@ -69,15 +69,19 @@ public class ArticleService {
 		}
 		List<UpvoteEntity> upvotes = upvoteRepo.findByArticle(article);
 		for (UpvoteEntity u : upvotes) {
-			UpvoteOutputModel uOut = new UpvoteOutputModel();
-			uOut.setUpvoterName(u.getUser().getName());
-			uOut.setUpvoterSurname(u.getUser().getSurname());
-			uOut.setUpvoterPicture(sm.getFile(u.getUser().getPicture()));
-			uOut.setUpvoterCurrentExperience(userEntityService.getCurrentExperienceList(u.getUser()));
-			uOut.setUpvoterEmail(u.getUser().getEmail());
-			output.addUpvote(uOut);
+			convertUpvoteToOutput(u);
 		}
 		return output;
+	}
+
+	public UpvoteOutputModel convertUpvoteToOutput(UpvoteEntity upvote) throws IOException {
+		UpvoteOutputModel uOut = new UpvoteOutputModel();
+		uOut.setUpvoterName(upvote.getUser().getName());
+		uOut.setUpvoterSurname(upvote.getUser().getSurname());
+		uOut.setUpvoterPicture(sm.getFile(upvote.getUser().getPicture()));
+		uOut.setUpvoterCurrentExperience(userEntityService.getCurrentExperienceList(upvote.getUser()));
+		uOut.setUpvoterEmail(upvote.getUser().getEmail());
+		return uOut;
 	}
 	
 	public List<ArticleEntity> getPersonalisedFeed(UserEntity currUser) {
