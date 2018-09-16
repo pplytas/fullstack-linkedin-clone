@@ -108,7 +108,11 @@ public class ArticleController {
 			commentRepo.save(comment);
 			String notificationMessage = "? ? commented on your post";
 			notificationService.addNotification(refArticle.getUser(), currUser, refArticle, notificationMessage);
-			return new ResponseEntity<>(HttpStatus.OK);
+			try {
+				return new ResponseEntity<>(articleService.convertCommentToOutput(comment), HttpStatus.OK);
+			} catch (IOException e) {
+				return new ResponseEntity<>("Could not return saved comment", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
 		}
 		else {
 			return new ResponseEntity<>("Could not find specified article", HttpStatus.NOT_FOUND);

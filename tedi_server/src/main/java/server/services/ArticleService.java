@@ -57,19 +57,11 @@ public class ArticleService {
 		output.setDateTime(article.getDateTime());
 		List<CommentEntity> comments = commentRepo.findByArticleOrderByDateTimeDesc(article);
 		for (CommentEntity c : comments) {
-			CommentOutputModel cOut = new CommentOutputModel();
-			cOut.setText(c.getText());
-			cOut.setCommentatorName(c.getUser().getName());
-			cOut.setCommentatorSurname(c.getUser().getSurname());
-			cOut.setCommentatorPicture(sm.getFile(c.getUser().getPicture()));
-			cOut.setCommentatorCurrentExperience(userEntityService.getCurrentExperienceList(c.getUser()));
-			cOut.setCommentatorId(c.getUser().getId());
-			cOut.setDateTime(c.getDateTime());
-			output.addComment(cOut);
+			output.addComment(convertCommentToOutput(c));
 		}
 		List<UpvoteEntity> upvotes = upvoteRepo.findByArticle(article);
 		for (UpvoteEntity u : upvotes) {
-			convertUpvoteToOutput(u);
+			output.addUpvote(convertUpvoteToOutput(u));
 		}
 		return output;
 	}
@@ -83,7 +75,19 @@ public class ArticleService {
 		uOut.setUpvoterId(upvote.getUser().getId());
 		return uOut;
 	}
-	
+
+	public CommentOutputModel convertCommentToOutput(CommentEntity comment) throws IOException {
+		CommentOutputModel cOut = new CommentOutputModel();
+		cOut.setText(comment.getText());
+		cOut.setCommentatorName(comment.getUser().getName());
+		cOut.setCommentatorSurname(comment.getUser().getSurname());
+		cOut.setCommentatorPicture(sm.getFile(comment.getUser().getPicture()));
+		cOut.setCommentatorCurrentExperience(userEntityService.getCurrentExperienceList(comment.getUser()));
+		cOut.setCommentatorId(comment.getUser().getId());
+		cOut.setDateTime(comment.getDateTime());
+		return cOut;
+	}
+
 	public List<ArticleEntity> getPersonalisedFeed(UserEntity currUser) {
 		List<ArticleEntity> articlesDefaultOrder = articleRepo.findFeedOrderByDateTimeDesc(currUser);
 		//the fact that we got the time ordered list above 
