@@ -10,7 +10,7 @@ public class ArticleOutputModel {
 	private Long id;
 	private String title;
 	private String text;
-	private String file;
+	private String media;
 	private String authorName;
 	private String authorSurname;
 	private String authorPicture;
@@ -38,8 +38,8 @@ public class ArticleOutputModel {
 		return text;
 	}
 
-	public String getFile() {
-		return file;
+	public String getMedia() {
+		return media;
 	}
 	
 	public String getAuthorName() {
@@ -86,8 +86,8 @@ public class ArticleOutputModel {
 		this.text = text;
 	}
 
-	public void setFile(String file) {
-		this.file = file;
+	public void setMedia(String media) {
+		this.media = media;
 	}
 	
 	public void setAuthorName(String authorName) {
