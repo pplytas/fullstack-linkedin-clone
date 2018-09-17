@@ -15,7 +15,7 @@ public class ArticleOutputModel {
 	private String authorSurname;
 	private String authorPicture;
 	private List<ExperienceOutputModel> currentExperience;
-	private String authorEmail;
+	private Long authorId;
 	private List<CommentOutputModel> comments;
 	private List<UpvoteOutputModel> upvotes;
 	private String dateTime;
@@ -58,8 +58,8 @@ public class ArticleOutputModel {
 		return currentExperience;
 	}
 	
-	public String getAuthorEmail() {
-		return authorEmail;
+	public Long getAuthorId() {
+		return authorId;
 	}
 
 	public List<CommentOutputModel> getComments() {
@@ -110,8 +110,8 @@ public class ArticleOutputModel {
 		this.currentExperience.add(currentExperience);
 	}
 	
-	public void setAuthorEmail(String authorEmail) {
-		this.authorEmail = authorEmail;
+	public void setAuthorId(Long authorId) {
+		this.authorId = authorId;
 	}
 	
 	public void setComments(List<CommentOutputModel> comments) {

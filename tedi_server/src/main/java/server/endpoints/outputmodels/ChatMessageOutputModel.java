@@ -4,8 +4,8 @@ public class ChatMessageOutputModel {
 	
 	//here we can easily add a timestamp if needed
 	private String message;
-	private String sender; //defined by email
-	private String receiver; //defined by email
+	private Long sender; //defined by id
+	private Long receiver; //defined by id
 	
 	public ChatMessageOutputModel() {}
 
@@ -13,11 +13,11 @@ public class ChatMessageOutputModel {
 		return message;
 	}
 
-	public String getSender() {
+	public Long getSender() {
 		return sender;
 	}
 
-	public String getReceiver() {
+	public Long getReceiver() {
 		return receiver;
 	}
 
@@ -25,11 +25,11 @@ public class ChatMessageOutputModel {
 		this.message = message;
 	}
 
-	public void setSender(String sender) {
+	public void setSender(Long sender) {
 		this.sender = sender;
 	}
 
-	public void setReceiver(String receiver) {
+	public void setReceiver(Long receiver) {
 		this.receiver = receiver;
 	}
 

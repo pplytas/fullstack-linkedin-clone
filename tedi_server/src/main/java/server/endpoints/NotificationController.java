@@ -35,7 +35,7 @@ public class NotificationController {
 		for (NotificationEntity notification : notifications) {
 			NotificationOutputModel nOut = new NotificationOutputModel();
 			nOut.setMessage(notificationService.refreshMessage(notification));
-			nOut.setRefUserEmail(notification.getReferencedUser().getEmail());
+			nOut.setRefUserId(notification.getReferencedUser().getId());
 			if (notification.getReferencedArticle() != null) {
 				nOut.setRefArticleId(notification.getReferencedArticle().getId());
 			}

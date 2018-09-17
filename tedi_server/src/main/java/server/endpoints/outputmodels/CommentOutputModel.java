@@ -13,7 +13,7 @@ public class CommentOutputModel {
 	private String commentatorSurname;
 	private String commentatorPicture;
 	private List<ExperienceOutputModel> commentatorCurrentExperience;
-	private String commentatorEmail; //this is email, maybe change to name later
+	private Long commentatorId;
 	
 	public CommentOutputModel() {
 		commentatorCurrentExperience = new ArrayList<>();
@@ -39,8 +39,8 @@ public class CommentOutputModel {
 		return commentatorCurrentExperience;
 	}
 
-	public String getCommentatorEmail() {
-		return commentatorEmail;
+	public Long getCommentatorId() {
+		return commentatorId;
 	}
 
 	public String getDateTime() {
@@ -67,8 +67,8 @@ public class CommentOutputModel {
 		this.commentatorCurrentExperience = commentatorCurrentExperience;
 	}
 	
-	public void setCommentatorEmail(String commentatorEmail) {
-		this.commentatorEmail = commentatorEmail;
+	public void setCommentatorId(Long commentatorId) {
+		this.commentatorId = commentatorId;
 	}
 	
 	public void setDateTime(Date dateTime) {

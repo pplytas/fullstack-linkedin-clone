@@ -45,17 +45,17 @@ public class ConnectionController {
 	//returns 201 (created) if this creates a friend request
 	//returns 200 (ok) if this accepts a friend request
 	@PostMapping("/connect")
-	public ResponseEntity<Object> connect(@RequestParam String email) {
+	public ResponseEntity<Object> connect(@RequestParam Long id) {
 		
 		UserEntity currUser = secService.currentUser();
-		UserEntity connUser = userRepo.findByEmail(email);
+		UserEntity connUser = userRepo.findById(id).orElse(null);
 		if (connUser == null) {
-			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("Not existing user with such id", HttpStatus.NOT_FOUND);
 		}
 		//if the user we are trying to connect is admin, quietly reject with "not existing user" error
 		//has to be done in separate if because connUser.getRoles() can throw NullPointerException
 		if (!Validator.validateUserAuth(connUser)) {
-			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("Not existing user with such id", HttpStatus.NOT_FOUND);
 		}
 		//cant make yourself a connected person to you
 		if (currUser.getId() == connUser.getId()) {
@@ -91,12 +91,12 @@ public class ConnectionController {
 	//this can be used to delete connections or to reject connection requests
 	//if needed, we can split the 2 functionalities later
 	@DeleteMapping("/connection/delete")
-	public ResponseEntity<Object> deleteConnection(@RequestParam String email) {
+	public ResponseEntity<Object> deleteConnection(@RequestParam Long id) {
 		
 		UserEntity currUser = secService.currentUser();
-		UserEntity connUser = userRepo.findByEmail(email);
+		UserEntity connUser = userRepo.findById(id).orElse(null);
 		if (connUser == null) {
-			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("Not existing user with such id", HttpStatus.NOT_FOUND);
 		}
 		connRepo.deleteByUserAndConnectedInversible(currUser, connUser);
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -132,7 +132,7 @@ public class ConnectionController {
 				else {
 					u = c.getUser();
 				}
-				output.addUser(new UserOutputModel.UserOutputBuilder(u.getEmail())
+				output.addUser(new UserOutputModel.UserOutputBuilder(u.getId())
 													.name(u.getName())
 													.surname(u.getSurname())
 													.telNumber(u.getTelNumber())

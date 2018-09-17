@@ -100,14 +100,14 @@ public class AdController {
 	//gets a user's ads
 	//or my ads if no parameter specified
 	@GetMapping("/ofuser")
-	public ResponseEntity<Object> getUserAds(@RequestParam(defaultValue = "") String email) {
+	public ResponseEntity<Object> getUserAds(@RequestParam(required = false) Long id) {
 		
 		UserEntity user;
-		if (email.equals("")) {
+		if (id == null) {
 			user = secService.currentUser();
 		}
 		else {
-			user = userRepo.findByEmail(email);
+			user = userRepo.findById(id).orElse(null);
 			if (user == null || !Validator.validateUserAuth(user)) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
@@ -120,7 +120,7 @@ public class AdController {
 				adOut.setId(ad.getId());
 				adOut.setTitle(ad.getTitle());
 				adOut.setDescription(ad.getDescription());
-				adOut.setPublisher(new UserOutputModel.UserOutputBuilder(user.getEmail())
+				adOut.setPublisher(new UserOutputModel.UserOutputBuilder(user.getId())
 															.name(user.getName())
 															.surname(user.getSurname())
 															.telNumber(user.getTelNumber())
@@ -199,13 +199,13 @@ public class AdController {
 			AdOutputModel adOut = adService.adToOutputModel(adApp.getAd());
 			adAppOut.setAd(adOut);
 			try {
-				adAppOut.setUser(new UserOutputModel.UserOutputBuilder(adApp.getUser().getEmail())
+				adAppOut.setUser(new UserOutputModel.UserOutputBuilder(adApp.getUser().getId())
 															.name(adApp.getUser().getName())
 															.surname(adApp.getUser().getSurname())
 															.telNumber(adApp.getUser().getTelNumber())
 															.picture(sm.getFile(adApp.getUser().getPicture())).build());
 			} catch (IOException e) {
-				adAppOut.setUser(new UserOutputModel.UserOutputBuilder(adApp.getUser().getEmail())
+				adAppOut.setUser(new UserOutputModel.UserOutputBuilder(adApp.getUser().getId())
 				.name(adApp.getUser().getName())
 				.surname(adApp.getUser().getSurname())
 				.telNumber(adApp.getUser().getTelNumber()).build());

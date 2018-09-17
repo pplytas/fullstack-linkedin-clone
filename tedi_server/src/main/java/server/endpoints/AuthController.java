@@ -55,7 +55,7 @@ public class AuthController {
 												.telNumber(input.getTelNumber())
 												.picture(sm.storeFile(input.getPicture())).build();
 			userService.save(user);
-			return new ResponseEntity<>(new UserOutputModel.UserOutputBuilder(user.getEmail())
+			return new ResponseEntity<>(new UserOutputModel.UserOutputBuilder(user.getId())
 																			.name(user.getName())
 																			.surname(user.getSurname())
 																			.telNumber(user.getTelNumber())
