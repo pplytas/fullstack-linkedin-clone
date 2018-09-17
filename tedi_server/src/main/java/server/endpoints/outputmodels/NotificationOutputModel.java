@@ -6,7 +6,7 @@ import java.util.Date;
 public class NotificationOutputModel {
 
 	private String message;
-	private String refUserEmail;
+	private Long refUserId;
 	private Long refArticleId;
 	private String dateTime;
 	private Boolean seen;
@@ -21,8 +21,8 @@ public class NotificationOutputModel {
 		this.message = message;
 	}
 
-	public String getRefUserEmail() {
-		return refUserEmail;
+	public Long getRefUserId() {
+		return refUserId;
 	}
 	
 	public String getDateTime() {
@@ -33,8 +33,8 @@ public class NotificationOutputModel {
 		return seen;
 	}
 
-	public void setRefUserEmail(String refUserEmail) {
-		this.refUserEmail = refUserEmail;
+	public void setRefUserId(Long refUserId) {
+		this.refUserId = refUserId;
 	}
 
 	public Long getRefArticleId() {

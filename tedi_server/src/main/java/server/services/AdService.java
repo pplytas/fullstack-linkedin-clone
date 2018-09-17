@@ -24,13 +24,13 @@ public class AdService {
 		adOut.setTitle(ad.getTitle());
 		adOut.setDescription(ad.getDescription());
 		try {
-			adOut.setPublisher(new UserOutputModel.UserOutputBuilder(ad.getPublisher().getEmail())
+			adOut.setPublisher(new UserOutputModel.UserOutputBuilder(ad.getPublisher().getId())
 													.name(ad.getPublisher().getName())
 													.surname(ad.getPublisher().getSurname())
 													.telNumber(ad.getPublisher().getTelNumber())
 													.picture(sm.getFile(ad.getPublisher().getPicture())).build());
 		} catch (IOException e) {
-			adOut.setPublisher(new UserOutputModel.UserOutputBuilder(ad.getPublisher().getEmail())
+			adOut.setPublisher(new UserOutputModel.UserOutputBuilder(ad.getPublisher().getId())
 					.name(ad.getPublisher().getName())
 					.surname(ad.getPublisher().getSurname())
 					.telNumber(ad.getPublisher().getTelNumber()).build());

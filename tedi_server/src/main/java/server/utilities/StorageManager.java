@@ -64,7 +64,7 @@ public class StorageManager {
 			
 			Element user = doc.createElement("user");
 			root.appendChild(user);
-			user.setAttribute("email", u.getEmail());
+			user.setAttribute("id", u.getId().toString());
 			
 			Element name = doc.createElement("name");
 			if (u.getName()!=null)
@@ -144,8 +144,8 @@ public class StorageManager {
 			Element connected = doc.createElement("connected");
 			for (UserOutputModel c : u.getConnected()) {
 				
-				Element connectedEmail = doc.createElement("email");
-				connectedEmail.appendChild(doc.createTextNode(c.getEmail()));
+				Element connectedEmail = doc.createElement("id");
+				connectedEmail.appendChild(doc.createTextNode(c.getId().toString()));
 				connected.appendChild(connectedEmail);
 				
 			}

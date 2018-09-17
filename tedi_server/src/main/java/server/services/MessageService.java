@@ -23,13 +23,13 @@ public class MessageService {
 	public ChatOutputModel messagesToChatOutput(UserEntity chattingUser, List<ChatEntity> messages) {
 		ChatOutputModel output = new ChatOutputModel();
 		try {
-		output.setChattingUser(new UserOutputModel.UserOutputBuilder(chattingUser.getEmail())
+		output.setChattingUser(new UserOutputModel.UserOutputBuilder(chattingUser.getId())
 																	.name(chattingUser.getName())
 																	.surname(chattingUser.getSurname())
 																	.telNumber(chattingUser.getTelNumber())
 																	.picture(sm.getFile(chattingUser.getPicture())).build());
 		} catch (IOException e) {
-			output.setChattingUser(new UserOutputModel.UserOutputBuilder(chattingUser.getEmail())
+			output.setChattingUser(new UserOutputModel.UserOutputBuilder(chattingUser.getId())
 					.name(chattingUser.getName())
 					.surname(chattingUser.getSurname())
 					.telNumber(chattingUser.getTelNumber()).build());
@@ -38,8 +38,8 @@ public class MessageService {
 			for (ChatEntity c : messages) {
 				ChatMessageOutputModel mOut = new ChatMessageOutputModel();
 				mOut.setMessage(c.getMessage());
-				mOut.setSender(c.getSender().getEmail());
-				mOut.setReceiver(c.getReceiver().getEmail());
+				mOut.setSender(c.getSender().getId());
+				mOut.setReceiver(c.getReceiver().getId());
 				output.addMessage(mOut);
 			}
 		} else {

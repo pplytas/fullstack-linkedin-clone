@@ -8,7 +8,7 @@ public class UpvoteOutputModel {
 	private String upvoterSurname;
 	private String upvoterPicture;
 	private List<ExperienceOutputModel> upvoterCurrentExperience;
-	private String upvoterEmail; //currently email, may change to name later on
+	private Long upvoterId;
 	
 	public UpvoteOutputModel() {}
 
@@ -28,8 +28,8 @@ public class UpvoteOutputModel {
 		return upvoterCurrentExperience;
 	}
 
-	public String getUpvoterEmail() {
-		return upvoterEmail;
+	public Long getUpvoterId() {
+		return upvoterId;
 	}
 
 	public void setUpvoterName(String upvoterName) {
@@ -52,8 +52,8 @@ public class UpvoteOutputModel {
 		this.upvoterCurrentExperience.add(upvoterCurrentExperience);
 	}
 
-	public void setUpvoterEmail(String upvoterEmail) {
-		this.upvoterEmail = upvoterEmail;
+	public void setUpvoterId(Long upvoterId) {
+		this.upvoterId = upvoterId;
 	}
 
 }
