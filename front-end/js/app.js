@@ -62,10 +62,14 @@
 		})
 		.when("/conversations", {
 			templateUrl: '../templates/conversations.html',
-			controller: 'conversationsCtrl'
-			// resolve: {
-			//
-			// }
+			controller: 'conversationsCtrl',
+			resolve: {
+				user: function(globalFunctions) {
+					return globalFunctions.getUserDetails().then(function(response) {
+						return response.data;
+					});
+				}
+			}
 		})
 		.when("/notifications", {
 			templateUrl: '../templates/notifications.html',
@@ -94,33 +98,36 @@
                 }
 			}
         })
-		.when("/profile/:EMAIL", {
+		.when("/profile/:ID", {
 			templateUrl: '../templates/user-profile.html',
 			controller: 'userProfileCtrl',
 			resolve: {
 				user: function(globalFunctions, $route) {
-                    return globalFunctions.getUserDetails($route.current.params.EMAIL).then(function(response) {
+                    return globalFunctions.getUserDetails($route.current.params.ID).then(function(response) {
                     	return response.data;
                     });
                 },
 				isConnected: function(globalFunctions, $route) {
 					return globalFunctions.getConnections().then(function(response) {
+						console.log(response.data);
 						return response.data.users.some(function(user) {
-							return user.email === $route.current.params.EMAIL;
+							return user.id == $route.current.params.ID;
 						});
                     });
 				},
 				isSent: function(globalFunctions, $route) {
 					return globalFunctions.getConnections("sent").then(function(response) {
+						console.log(response.data);
 						return response.data.users.some(function(user) {
-							return user.email === $route.current.params.EMAIL;
+							return user.id == $route.current.params.ID;
 						});
                     });
 				},
 				isPending: function(globalFunctions, $route) {
 					return globalFunctions.getConnections("pending").then(function(response) {
+						console.log(response.data);
 						return response.data.users.some(function(user) {
-							return user.email === $route.current.params.EMAIL;
+							return user.id == $route.current.params.ID;
 						});
                     });
 				}

@@ -18,15 +18,15 @@
         console.log($scope.pendingConnections);
 
 		$scope.acceptPendingRequest = function(connectionIndex) {
-			console.log($scope.pendingConnections[connectionIndex].email);
-			globalFunctions.connect($scope.pendingConnections[connectionIndex].email).then(function() {
+			console.log($scope.pendingConnections[connectionIndex].id);
+			globalFunctions.connect($scope.pendingConnections[connectionIndex].id).then(function() {
 				$scope.pendingConnections.splice(connectionIndex, 1);
 			})
 		};
 
 		$scope.deletePendingRequest = function(connectionIndex) {
-			console.log($scope.pendingConnections[connectionIndex].email);
-			globalFunctions.deleteConnection($scope.pendingConnections[connectionIndex].email).then(function() {
+			console.log($scope.pendingConnections[connectionIndex].id);
+			globalFunctions.deleteConnection($scope.pendingConnections[connectionIndex].id).then(function() {
 				$scope.pendingConnections.splice(connectionIndex, 1);
 			})
 		};

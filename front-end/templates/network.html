@@ -19,7 +19,7 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col text-center px-2">
-                                <a href="#!/profile/{{ connection.email }}" class="avatar-network-md mx-auto">
+                                <a href="#!/profile/{{ connection.id }}" class="avatar-network-md mx-auto">
                                     <img class="avatar-network-md border rounded-circle border-secondary" data-ng-src="{{connection.picture && 'data:image/png;base64,'}}{{connection.picture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
                                 </a>
                             </div>
@@ -36,7 +36,7 @@
                         </div>
                         <div class="row w-100 py-2 row-btn">
                             <div class="col text-center px-2">
-                                <a class="btn btn-outline-info" href="#!/profile/{{ connection.email }}">View</a>
+                                <a class="btn btn-outline-info" href="#!/profile/{{ connection.id }}">View</a>
                             </div>
                         </div>
                     </div>

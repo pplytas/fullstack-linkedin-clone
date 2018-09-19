@@ -23,10 +23,11 @@
                         <div class="row mb-4">
                             <div class="col text-center">
                                 <button ng-if="!isConnected && !isSent && !isPending" class="btn btn-info" ng-click="connect()">Connect</button>
-                                <button ng-if="isPending" class="btn btn-success" ng-click="accept()">Accept</button>
+                                <button ng-if="isPending" class="btn btn-success" ng-click="acceptConnection()">Accept</button>
+                                <button ng-if="isPending" class="btn btn-outline-danger" ng-click="deleteConnection()">Delete</button>
                                 <button ng-if="isConnected" class="btn btn-outline-info" disabled>Connected</button>
                                 <button ng-if="isSent" class="btn btn-outline-success" disabled>Pending</button>
-                                <button ng-if="!isConnected" class="btn btn-outline-info" disabled>Message</button>
+                                <button ng-if="!isConnected && !isPending" class="btn btn-outline-info" disabled>Message</button>
                                 <button ng-if="isConnected" class="btn btn-info">Message</button>
                             </div>
                         </div>

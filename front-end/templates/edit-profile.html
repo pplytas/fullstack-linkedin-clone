@@ -2,21 +2,24 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xs-8 col-sm-6 col-md-5">
-                <form class="login-form" method="post">
-
+                <form class="login-form">
                     <legend>Edit your login credentials</legend>
-
                     <div class="form-group">
-                        <label for="email">New Email</label>
-                        <input type="text" id="email" name="_email" value="" required="required" class="form-control"/>
+                        <label>New Email</label>
+                        <input type="text" placeholder="New email" ng-model="newEmail" class="form-control" ng-required="!newPassword && !confirmPassword"/>
                     </div>
-
                     <div class="form-group">
-                        <label for="password">New Password</label>
-                        <input type="password" id="password" name="_password" required="required" class="form-control"/>
+                        <label>New Password</label>
+                        <input type="password" placeholder="New password" ng-model="newPassword" class="form-control" ng-required="confirmPassword"/>
                     </div>
-
-                    <input type="submit" id="_submit" name="_submit" value="SAVE" class="btn btn-info btn-block"/>
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" placeholder="Retype new password" ng-model="confirmPassword" class="form-control" ng-required="newPassword"/>
+                    </div>
+                    <button type="submit" class="btn btn-info btn-block" ng-click="updateLoginInfo()">Update</button>
+                    <div class="alert alert-success px-2 py-1 mt-3 text-center" role="alert" ng-if="newLoginInfoSaved">
+                        Saved<i class="fas fa-check ml-2"></i>
+                    </div>
                 </form>
             </div>
         </div>

@@ -73,7 +73,7 @@
                             <div class="container-fluid">
                                 <div class="row mb-4">
                                     <div class="col">
-                                        <a href="#!/profile/{{ article.authorEmail }}" class="avatar-post-sm mx-auto d-inline-block">
+                                        <a href="#!/profile/{{ article.authorId }}" class="avatar-post-sm mx-auto d-inline-block">
                                             <img class="avatar-post-sm border rounded-circle border-secondary" data-ng-src="{{article.authorPicture && 'data:image/png;base64,'}}{{article.authorPicture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
                                         </a>
                                         <p class="post-fullname my-0 ml-2 d-inline">{{ article.authorName + " " + article.authorSurname }}</p>
@@ -165,7 +165,7 @@
                                                             <input id="video-input" type="file" ng-model="newArticle.media.videos" style="display: none;">
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 offset-4 text-right">
+                                                    <div class="col-8 text-right">
                                                         <button type="submit" class="btn btn-sm px-3" ng-disabled="!postForm.$dirty" ng-click="postNewArticle()" style="background-color: #007ABA; color: #ffffff;">Post</button>
                                                     </div>
                                                 </div>

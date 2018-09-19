@@ -1,11 +1,28 @@
 <div class="conversations pt-3">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-2" style="background: blue;">
-
+            <div class="col-2 px-0">
+                <div class="card h-85vh">
+                    <div class="container-fluid" style="overflow-y: overlay;">
+                        <div class="row border-bottom hover-darken" ng-repeat="connectedUser in tempUser.connected" ng-click="getMessages(connectedUser.id)">
+                            <div class="col py-3">
+                                <img class="avatar-post-sm border rounded-circle border-secondary" data-ng-src="{{connectedUser.picture && 'data:image/png;base64,'}}{{connectedUser.picture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
+                                <div class="font-s-08 pl-2 d-inline"> {{ connectedUser.name + " " + connectedUser.surname }} </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-10" style="background: yellow; height: 500px;">
-
+            <div class="col-10 px-0">
+                <div class="card h-85vh">
+                    <div class="container-fluid">
+                        <div class="row" ng-repeat="message in displayedConversation.messages">
+                            <div class="col py-3">
+                                {{ message.message }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

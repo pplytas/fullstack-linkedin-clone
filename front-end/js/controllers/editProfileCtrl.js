@@ -3,12 +3,18 @@
 	.controller('editProfileCtrl', function($scope, globalFunctions) {
 		$scope.changeActiveLink("settings-link");
 
-        $('#_submit').click(function(e) {
-               e.preventDefault();
-               var email = $('#email').val();
-               var password = $('#password').val();
+		$scope.newEmail = null;
+		$scope.newPassword = null;
+		$scope.newLoginInfoSaved = false;
 
-               globalFunctions.updateUser(email, password);
-         });
+		$scope.updateLoginInfo = function() {
+			$scope.newLoginInfoSaved = false;
+			if (($scope.newPassword && $scope.confirmPassword && ($scope.newPassword === $scope.confirmPassword)) ||
+				($scope.newEmail && !$scope.newPassword && !$scope.confirmPassword)) {
+				globalFunctions.updateUser($scope.newEmail, $scope.newPassword).then(function(response) {
+					$scope.newLoginInfoSaved = true;
+				});
+			}
+		}
 	});
 })();

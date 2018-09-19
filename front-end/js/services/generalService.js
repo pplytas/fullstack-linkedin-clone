@@ -83,8 +83,8 @@
 			var url = $rootScope.tediAPI + endpoint;
 
 			var newUser = {
-				"email": email,
-				"password": password,
+				"email": ((email === "") ? (null) : (email)),
+				"password": ((password === "") ? (null) : (password)),
 				"name": name,
 				"surname": surname,
 				"telNumber": telNumber,
@@ -99,20 +99,20 @@
 			});
 		}
 
-		globalFunctionsFactory.getUserDetails = function(email = null) {
+		globalFunctionsFactory.getUserDetails = function(id = null) {
 			var endpoint = '/user/details';
 			var url = $rootScope.tediAPI + endpoint;
             var responseData;
 
-            if (email == null) {
-                email = "";
+            if (id == null) {
+                id = "";
             }
 
 			return $http({
 				method: "GET",
 				url: url,
 				headers: { 'Content-Type': 'application/json' },
-				params: {'email': email}
+				params: {'id': id}
 			});
 		}
 
@@ -128,17 +128,17 @@
 			});
         }
 
-        globalFunctionsFactory.getUserSimple = function(email = null) {
+        globalFunctionsFactory.getUserSimple = function(id = null) {
             var endpoint = '/user/simple';
             var url = $rootScope.tediAPI + endpoint;
-            if (email == null) {
-                email = "";
+            if (id == null) {
+                id = "";
             }
             return $http({
 				method: "GET",
 				url: url,
                 headers: { 'Content-Type': 'application/json' },
-                params: {'email': email}
+                params: {'id': id}
 			});
         }
 
@@ -285,38 +285,38 @@
         }
 
         globalFunctionsFactory.getArticles = function(
-            email = null
+            id = null
         ) {
             var endpoint = '/articles';
             var url = $rootScope.tediAPI + endpoint;
 
-            if (email == null) {
-                email = "";
+            if (id == null) {
+                id = "";
             }
 
             return $http({
                 method: "GET",
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
-                params: {'email': email}
+                params: {'id': id}
             });
         }
 
         globalFunctionsFactory.getUpvoted = function(
-            email = null
+            id = null
         ) {
             var endpoint = '/upvoted';
             var url = $rootScope.tediAPI + endpoint;
 
-            if (email == null) {
-                email = "";
+            if (id == null) {
+                id = "";
             }
 
             return $http({
                 method: "GET",
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
-                params: {'email': email}
+                params: {'id': id}
             });
         }
 
@@ -333,13 +333,13 @@
 
         globalFunctionsFactory.sendMessage = function(
             message,
-            email
+            id
         ) {
             var endpoint = '/message';
             var url = $rootScope.tediAPI + endpoint;
             var message = {
                 "message": message,
-                "email": email
+                "id": id
             }
 
             return $http({
@@ -351,7 +351,7 @@
         }
 
         globalFunctionsFactory.getMessages = function(
-            email
+            id
         ) {
             var endpoint = '/messages';
             var url = $rootScope.tediAPI + endpoint;
@@ -360,7 +360,18 @@
                 method: "GET",
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
-                params: {'email': email}
+                params: {'id': id}
+            });
+        }
+
+		globalFunctionsFactory.getAllMessages = function() {
+            var endpoint = '/messages/all';
+            var url = $rootScope.tediAPI + endpoint;
+
+            return $http({
+                method: "GET",
+                url: url,
+                headers: { 'Content-Type': 'application/json' }
             });
         }
 
@@ -387,7 +398,7 @@
         }
 
         globalFunctionsFactory.getAds = function(
-            email
+            id
         ) {
             var endpoint = '/ads/ofuser';
             var url = $rootScope.tediAPI + endpoint;
@@ -396,7 +407,7 @@
                 method: "GET",
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
-                params: {'email': email}
+                params: {'id': id}
             });
         }
 
@@ -412,7 +423,7 @@
         }
 
         globalFunctionsFactory.connect = function(
-            email
+            id
         ) {
             var endpoint = '/connect';
             var url = $rootScope.tediAPI + endpoint;
@@ -421,12 +432,12 @@
                 method: "POST",
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
-                params: {'email': email}
+                params: {'id': id}
             });
         }
 
         globalFunctionsFactory.deleteConnection = function(
-            email
+            id
         ) {
             var endpoint = '/connection/delete';
             var url = $rootScope.tediAPI + endpoint;
@@ -435,7 +446,7 @@
                 method: "DELETE",
                 url: url,
                 headers: { 'Content-Type': 'application/json' },
-                params: {'email': email}
+                params: {'id': id}
             });
         }
 

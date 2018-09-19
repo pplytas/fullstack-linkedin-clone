@@ -9,18 +9,35 @@
 		$scope.isSent = isSent;
 		$scope.isPending = isPending;
 
+		console.log($scope.tempUser);
+		console.log($scope.isConnected);
+		console.log($scope.isSent);
+		console.log($scope.isPending);
+
 		$scope.connect = function() {
-			globalFunctions.connect($scope.tempUser.email)
+			globalFunctions.connect($scope.tempUser.id)
 			.then(function(response) {
+				$scope.isConnected = false;
 				$scope.isSent = true;
+				$scope.isPending = false;
 			});
 		};
 
-		$scope.accept = function() {
-			globalFunctions.connect($scope.tempUser.email)
+		$scope.acceptConnection = function() {
+			globalFunctions.connect($scope.tempUser.id)
 			.then(function(response) {
 				$scope.isPending = false;
+				$scope.isSent = false;
 				$scope.isConnected = true;
+			});
+		};
+
+		$scope.deleteConnection = function() {
+			globalFunctions.deleteConnection($scope.tempUser.id)
+			.then(function(response) {
+				$scope.isPending = false;
+				$scope.isSent = false;
+				$scope.isConnected = false;
 			});
 		};
 	});
