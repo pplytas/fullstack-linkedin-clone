@@ -1,20 +1,11 @@
 package server.endpoints;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import server.auth.SecurityService;
 import server.endpoints.inputmodels.ChatMessageInputModel;
-import server.endpoints.outputmodels.ChatMessageOutputModel;
 import server.endpoints.outputmodels.ChatOutputModel;
 import server.entities.ChatEntity;
 import server.entities.ConnectionEntity;
@@ -24,6 +15,9 @@ import server.repositories.ConnectionRepository;
 import server.repositories.UserRepository;
 import server.services.MessageService;
 import server.utilities.Validator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class MessageController {
@@ -47,7 +41,7 @@ public class MessageController {
 	public ResponseEntity<Object> message(@RequestBody ChatMessageInputModel input) {
 		
 		UserEntity currUser = secService.currentUser();
-		UserEntity otherUser = userRepo.findByEmail(input.getEmail());
+		UserEntity otherUser = userRepo.findById(input.getId()).orElse(null);
 		
 		if (otherUser == null) {
 			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
