@@ -1,21 +1,14 @@
 package server.endpoints;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import server.auth.SecurityService;
 import server.endpoints.inputmodels.ChatMessageInputModel;
-import server.endpoints.outputmodels.ChatMessageOutputModel;
+import server.endpoints.outputmodels.ChatListOutputModel;
 import server.endpoints.outputmodels.ChatOutputModel;
+import server.endpoints.outputmodels.LastChatOpenedOutputModel;
 import server.entities.ChatEntity;
 import server.entities.ConnectionEntity;
 import server.entities.UserEntity;
@@ -24,6 +17,9 @@ import server.repositories.ConnectionRepository;
 import server.repositories.UserRepository;
 import server.services.MessageService;
 import server.utilities.Validator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class MessageController {
@@ -43,16 +39,41 @@ public class MessageController {
 	@Autowired
 	private MessageService messageService;
 
+	@GetMapping("/messages/lastuser")
+	public ResponseEntity<Object> getLastChatOpenedUserId() {
+
+		UserEntity currUser = secService.currentUser();
+		LastChatOpenedOutputModel lastChatOpenedOutputModel = new LastChatOpenedOutputModel();
+		lastChatOpenedOutputModel.setId(currUser.getLastChatOpenedUserId());
+		return new ResponseEntity<>(lastChatOpenedOutputModel, HttpStatus.OK);
+
+	}
+
+	@PutMapping("/messages/lastuser")
+	public ResponseEntity<Object> updateLastChatOpenedUserId(@RequestParam Long id) {
+
+		UserEntity currUser = secService.currentUser();
+		UserEntity chatUser = userRepo.findById(id).orElse(null);
+		if (chatUser == null) {
+			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
+		} else if (chatUser.getId().equals(currUser.getId())) {
+			return new ResponseEntity<>("Can't message self", HttpStatus.BAD_REQUEST);
+		}
+		currUser.setLastChatOpenedUserId(id);
+		userRepo.save(currUser);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
 	@PostMapping("/message")
 	public ResponseEntity<Object> message(@RequestBody ChatMessageInputModel input) {
 		
 		UserEntity currUser = secService.currentUser();
-		UserEntity otherUser = userRepo.findByEmail(input.getEmail());
+		UserEntity otherUser = userRepo.findById(input.getId()).orElse(null);
 		
 		if (otherUser == null) {
 			return new ResponseEntity<>("Not existing user with such email", HttpStatus.NOT_FOUND);
 		}
-		if (otherUser.getId() == currUser.getId()) { //this is optional, i.e. facebook permits this!
+		if (otherUser.getId().equals(currUser.getId())) { //this is optional, i.e. facebook permits this!
 			return new ResponseEntity<>("Can't message self", HttpStatus.BAD_REQUEST);
 		}
 		//check if the 2 users are connected (optional again)
@@ -85,6 +106,8 @@ public class MessageController {
 		//I dont check for connected or not users, but can be easily implemented if needed
 		List<ChatEntity> messages = chatRepo.findBySenderAndReceiverInversibleOrderByIdDesc(currUser, otherUser);
 		ChatOutputModel output = messageService.messagesToChatOutput(otherUser, messages);
+		currUser.setLastChatOpenedUserId(otherUser.getId());
+		userRepo.save(currUser);
 		return new ResponseEntity<>(output, HttpStatus.OK);
 		
 	}
@@ -94,7 +117,9 @@ public class MessageController {
 		
 		UserEntity currUser = secService.currentUser();
 		List<ConnectionEntity> connections = connRepo.findByUserInversibleAndIsPending(currUser, false);
-		List<ChatOutputModel> output = new ArrayList<>();
+		ChatListOutputModel output = new ChatListOutputModel();
+		List<ChatOutputModel> chatOutputModels = new ArrayList<>();
+		LastChatOpenedOutputModel lastChatOpenedOutputModel = new LastChatOpenedOutputModel();
 		for (ConnectionEntity conn : connections) {
 			List<ChatEntity> messages = chatRepo.findBySenderAndReceiverInversibleOrderByIdDesc(conn.getUser(), conn.getConnected());
 			ChatOutputModel chatOutput;
@@ -104,8 +129,11 @@ public class MessageController {
 			else {
 				chatOutput = messageService.messagesToChatOutput(conn.getUser(), messages);
 			}
-			output.add(chatOutput);
+			chatOutputModels.add(chatOutput);
 		}
+		output.setChats(chatOutputModels);
+		lastChatOpenedOutputModel.setId(currUser.getLastChatOpenedUserId());
+		output.setLastOpened(lastChatOpenedOutputModel);
 		return new ResponseEntity<>(output, HttpStatus.OK);
 		
 	}

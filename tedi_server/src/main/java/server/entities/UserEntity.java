@@ -109,6 +109,9 @@ public class UserEntity {
 	private List<NotificationEntity> refNotifications = new ArrayList<>();
 	
 	private Categories category;
+
+	@Column
+	private Long lastChatOpenedUserId;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "role")
@@ -392,7 +395,15 @@ public class UserEntity {
 	public void setCategories(Categories category) {
 		this.category = category;
 	}
-	
+
+	public Long getLastChatOpenedUserId() {
+		return lastChatOpenedUserId;
+	}
+
+	public void setLastChatOpenedUserId(Long lastChatOpenedUserId) {
+		this.lastChatOpenedUserId = lastChatOpenedUserId;
+	}
+
 	public void setRole(RoleEntity role) {
 		this.role = role;
 	}

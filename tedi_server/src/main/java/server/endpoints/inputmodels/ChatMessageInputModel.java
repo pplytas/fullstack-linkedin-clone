@@ -3,7 +3,7 @@ package server.endpoints.inputmodels;
 public class ChatMessageInputModel {
 	
 	private String message;
-	private String email; //this is the email of the user we chat with
+	private Long id; //this is the id of the user we chat with
 	
 	public ChatMessageInputModel() {}
 
@@ -11,16 +11,16 @@ public class ChatMessageInputModel {
 		return message;
 	}
 
-	public String getEmail() {
-		return email;
+	public Long getId() {
+		return id;
 	}
 
 	public void setMessage(String message) {
 		this.message = message;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }
