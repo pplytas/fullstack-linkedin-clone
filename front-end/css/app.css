@@ -35,9 +35,26 @@ body {
 .h-85vh {
     height: 85vh;
 }
+
+.h-76vh {
+    height: 76vh;
+}
+
+.h-9vh {
+    height: 9vh;
+}
+
 .hover-darken:hover {
     background-color: rgba(210,210,210,0.2);
     cursor: pointer;
+}
+
+.overflow-y-overlay {
+    overflow-y: overlay;
+}
+
+.bottom-0 {
+    bottom: 0;
 }
 
 /* ------------------- SCROLLBAR ------------------ */

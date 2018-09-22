@@ -13,7 +13,7 @@
 				}
 				document.getElementById(id).classList.add("active");
 			}
-		}
+		};
 
 		globalFunctionsFactory.login = function(inputEmail, inputPassword) {
             var endpoint = '/login';
@@ -30,7 +30,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 data: data
 			});
-		}
+		};
 
 		globalFunctionsFactory.getUserList = function() {
             var endpoint = '/admin/userlist';
@@ -41,7 +41,7 @@
 				url: url,
                 headers: { 'Content-Type': 'application/json' }
 			});
-        }
+        };
 
 		globalFunctionsFactory.registerUser = function(
 			email,
@@ -69,7 +69,7 @@
 				headers: { 'Content-Type': 'application/json' },
 				data: newUser
 			});
-		}
+		};
 
 		globalFunctionsFactory.updateUser = function(
 			email = null,
@@ -97,7 +97,7 @@
 				headers: { 'Content-Type': 'application/json' },
                 data: newUser
 			});
-		}
+		};
 
 		globalFunctionsFactory.getUserDetails = function(id = null) {
 			var endpoint = '/user/details';
@@ -114,7 +114,7 @@
 				headers: { 'Content-Type': 'application/json' },
 				params: {'id': id}
 			});
-		}
+		};
 
 		globalFunctionsFactory.logout = function() {
 			var endpoint = '/logout';
@@ -126,7 +126,7 @@
 			}).then(function onSuccess(response) {		// Handle success
 				delete localStorage.isjwt;
 			});
-        }
+        };
 
         globalFunctionsFactory.getUserSimple = function(id = null) {
             var endpoint = '/user/simple';
@@ -140,7 +140,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 params: {'id': id}
 			});
-        }
+        };
 
         globalFunctionsFactory.postEducation = function(
             educationList = null,
@@ -167,7 +167,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 data: educationWrapper
             });
-        }
+        };
 
         globalFunctionsFactory.postExperience = function(
             experienceList = null,
@@ -194,7 +194,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 data: experienceWrapper
             });
-        }
+        };
 
         globalFunctionsFactory.postSkills = function(
             skillList = null,
@@ -214,7 +214,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 data: skillsWrapper
             });
-        }
+        };
 
         globalFunctionsFactory.searchAccounts = function(
             queryString = null
@@ -228,7 +228,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 params: {'query': queryString}
 			});
-        }
+        };
 
         globalFunctionsFactory.postArticle = function(
             title,
@@ -249,7 +249,7 @@
                 headers: { 'Content-Type': 'application/json' },
 				data: newArticle
 			});
-        }
+        };
 
         globalFunctionsFactory.postComment = function(
             articleId,
@@ -268,7 +268,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 data: newComment
             });
-        }
+        };
 
         globalFunctionsFactory.upvote = function(
             articleId
@@ -282,7 +282,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 params: {'articleId': articleId}
             });
-        }
+        };
 
         globalFunctionsFactory.getArticles = function(
             id = null
@@ -300,7 +300,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 params: {'id': id}
             });
-        }
+        };
 
         globalFunctionsFactory.getUpvoted = function(
             id = null
@@ -318,7 +318,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 params: {'id': id}
             });
-        }
+        };
 
         globalFunctionsFactory.getFeed = function() {
             var endpoint = '/feed';
@@ -329,7 +329,7 @@
                 url: url,
                 headers: { 'Content-Type': 'application/json' }
             });
-        }
+        };
 
         globalFunctionsFactory.sendMessage = function(
             message,
@@ -348,7 +348,32 @@
                 headers: { 'Content-Type': 'application/json' },
                 data: message
             });
-        }
+        };
+
+		globalFunctionsFactory.getLastChatOpenedUserId = function() {
+            var endpoint = '/messages/lastuser';
+            var url = $rootScope.tediAPI + endpoint;
+
+            return $http({
+                method: "GET",
+                url: url,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        };
+
+		globalFunctionsFactory.setLastChatOpenedUserId = function(
+			id
+		) {
+			var endpoint = '/messages/lastusers';
+            var url = $rootScope.tediAPI + endpoint;
+
+            return $http({
+                method: "PUT",
+                url: url,
+                headers: { 'Content-Type': 'application/json' },
+                params: {'id': id}
+            });
+		};
 
         globalFunctionsFactory.getMessages = function(
             id
@@ -362,7 +387,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 params: {'id': id}
             });
-        }
+        };
 
 		globalFunctionsFactory.getAllMessages = function() {
             var endpoint = '/messages/all';
@@ -373,7 +398,7 @@
                 url: url,
                 headers: { 'Content-Type': 'application/json' }
             });
-        }
+        };
 
         globalFunctionsFactory.publishAd = function(
             title,
@@ -395,7 +420,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 data: newAd
             });
-        }
+        };
 
         globalFunctionsFactory.getAds = function(
             id
@@ -409,7 +434,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 params: {'id': id}
             });
-        }
+        };
 
         globalFunctionsFactory.getSuggestedAds = function() {
             var endpoint = '/ads/suggested';
@@ -420,7 +445,7 @@
                 url: url,
                 headers: { 'Content-Type': 'application/json' }
             });
-        }
+        };
 
         globalFunctionsFactory.connect = function(
             id
@@ -434,7 +459,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 params: {'id': id}
             });
-        }
+        };
 
         globalFunctionsFactory.deleteConnection = function(
             id
@@ -448,7 +473,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 params: {'id': id}
             });
-        }
+        };
 
         globalFunctionsFactory.getConnections = function(
             type
@@ -462,7 +487,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 params: {'type': type}
             });
-        }
+        };
 
         globalFunctionsFactory.getNotifications = function() {
             var endpoint = '/notifications';
@@ -473,7 +498,7 @@
                 url: url,
                 headers: { 'Content-Type': 'application/json' }
             });
-        }
+        };
 
 		return globalFunctionsFactory;
 	})

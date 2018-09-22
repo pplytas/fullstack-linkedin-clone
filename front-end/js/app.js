@@ -68,6 +68,11 @@
 					return globalFunctions.getUserDetails().then(function(response) {
 						return response.data;
 					});
+				},
+				allConversations: function(globalFunctions) {
+					return globalFunctions.getAllMessages().then(function(response) {
+						return response.data.chats;
+					});
 				}
 			}
 		})
