@@ -364,7 +364,7 @@
 		globalFunctionsFactory.setLastChatOpenedUserId = function(
 			id
 		) {
-			var endpoint = '/messages/lastusers';
+			var endpoint = '/messages/lastuser';
             var url = $rootScope.tediAPI + endpoint;
 
             return $http({

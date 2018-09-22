@@ -4,8 +4,8 @@
             <div class="col-2 px-0">
                 <div class="card h-85vh">
                     <div class="container-fluid overflow-y-overlay">
-                        <div class="row border-bottom hover-darken" ng-repeat="connectedUser in tempUser.connected" ng-click="getMessages(connectedUser.id)">
-                            <div class="col py-3">
+                        <div class="row border-bottom hover-darken" ng-repeat="connectedUser in tempUser.connected" ng-click="setDisplayedConversation(connectedUser.id)" ng-class="{'darken': connectedUser.id === displayedConversation.chattingUser.id}">
+                            <div class="col py-3" ng-class="{'border-right border-info': connectedUser.id === displayedConversation.chattingUser.id}">
                                 <img class="avatar-post-sm border rounded-circle border-secondary" data-ng-src="{{connectedUser.picture && 'data:image/png;base64,'}}{{connectedUser.picture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
                                 <div class="font-s-08 pl-2 d-inline"> {{ connectedUser.name + " " + connectedUser.surname }} </div>
                             </div>
@@ -28,7 +28,7 @@
                                                     alt="Profile Picture">
                                             </div>
                                             <div class="col-8 pt-1 text-left">
-                                                <div class="d-inline-block font-weight-light font-s-09 text-left px-2 py-1 border border-info rounded" style="word-break: break-word;">
+                                                <div class="d-inline-block font-weight-light font-s-09 text-left px-2 py-1 border border-info rounded" style="word-break: break-word; background-color: rgba(23,162,184,0.1);">
                                                     {{ message.message }}
                                                 </div>
                                             </div>
@@ -39,7 +39,7 @@
                                         <div class="row" ng-if="senderIsMe(message.sender)">
                                             <div class="col-2"></div>
                                             <div class="col-8 pt-1 text-right">
-                                                <div class="d-inline-block font-weight-light font-s-09 text-left px-2 py-1 border border-info rounded" style="word-break: break-word;">
+                                                <div class="d-inline-block font-weight-light font-s-09 text-left px-2 py-1 border border-info rounded" style="word-break: break-word; background-color: rgba(23,162,184,0.1);">
                                                     {{ message.message }}
                                                 </div>
                                             </div>

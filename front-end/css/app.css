@@ -49,6 +49,10 @@ body {
     cursor: pointer;
 }
 
+.darken {
+    background-color: rgba(210,210,210,0.2);
+}
+
 .overflow-y-overlay {
     overflow-y: overlay;
 }

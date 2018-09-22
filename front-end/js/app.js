@@ -60,7 +60,7 @@
                 }
 			}
 		})
-		.when("/conversations", {
+		.when("/conversations/:ID?", {
 			templateUrl: '../templates/conversations.html',
 			controller: 'conversationsCtrl',
 			resolve: {

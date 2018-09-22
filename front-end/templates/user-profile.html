@@ -28,7 +28,7 @@
                                 <button ng-if="isConnected" class="btn btn-outline-info" disabled>Connected</button>
                                 <button ng-if="isSent" class="btn btn-outline-success" disabled>Pending</button>
                                 <button ng-if="!isConnected && !isPending" class="btn btn-outline-info" disabled>Message</button>
-                                <button ng-if="isConnected" class="btn btn-info">Message</button>
+                                <a ng-if="isConnected" class="btn btn-info" href="#!/conversations/{{ tempUser.id }}">Message</a>
                             </div>
                         </div>
                     </div>
