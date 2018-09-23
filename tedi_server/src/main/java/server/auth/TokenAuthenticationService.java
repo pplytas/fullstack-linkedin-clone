@@ -32,10 +32,10 @@ public class TokenAuthenticationService {
 		this.userRepo = userRepo;
 	}
 	
-	static final long EXPIRATIONTIME = 864_000_000; // 10 days
-	static final String SECRET = "ThisIsASecret";
-	static final String TOKEN_PREFIX = "Bearer";
-	static final String HEADER_STRING = "Authorization";
+	private static final long EXPIRATIONTIME = 864_000_000; // 10 days
+	private static final String SECRET = "ThisIsASecret";
+	private static final String TOKEN_PREFIX = "Bearer";
+	private static final String HEADER_STRING = "Authorization";
 	
 	public void addAuthentication(HttpServletResponse res, String username) {
 		Claims claims = Jwts.claims();
