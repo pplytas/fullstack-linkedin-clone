@@ -16,23 +16,16 @@ import server.utilities.StorageManager;
 
 @Service
 public class MessageService {
-	
+
 	@Autowired
-	private StorageManager sm;
+	private UserEntityService userEntityService;
 	
 	public ChatOutputModel messagesToChatOutput(UserEntity chattingUser, List<ChatEntity> messages) {
 		ChatOutputModel output = new ChatOutputModel();
 		try {
-		output.setChattingUser(new UserOutputModel.UserOutputBuilder(chattingUser.getId())
-																	.name(chattingUser.getName())
-																	.surname(chattingUser.getSurname())
-																	.telNumber(chattingUser.getTelNumber())
-																	.picture(sm.getFile(chattingUser.getPicture())).build());
+		output.setChattingUser(userEntityService.getUserOutputModelFromUser(chattingUser));
 		} catch (IOException e) {
-			output.setChattingUser(new UserOutputModel.UserOutputBuilder(chattingUser.getId())
-					.name(chattingUser.getName())
-					.surname(chattingUser.getSurname())
-					.telNumber(chattingUser.getTelNumber()).build());
+			output.setChattingUser(userEntityService.getSafeUserOutputModelFromUser(chattingUser));
 		}
 		if (messages != null) {
 			for (ChatEntity c : messages) {

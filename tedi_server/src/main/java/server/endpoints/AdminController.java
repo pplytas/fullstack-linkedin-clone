@@ -1,38 +1,23 @@
 package server.endpoints;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import server.endpoints.inputmodels.IdListInputModel;
-import server.endpoints.outputmodels.AdOutputModel;
-import server.endpoints.outputmodels.EducationOutputModel;
-import server.endpoints.outputmodels.ExperienceOutputModel;
-import server.endpoints.outputmodels.SkillOutputModel;
-import server.endpoints.outputmodels.UserDetailedOutputModel;
-import server.endpoints.outputmodels.UserListOutputModel;
-import server.endpoints.outputmodels.UserOutputModel;
-import server.entities.AdEntity;
-import server.entities.ConnectionEntity;
-import server.entities.EducationEntity;
-import server.entities.ExperienceEntity;
-import server.entities.UserSkillEntity;
-import server.entities.UserEntity;
+import server.endpoints.outputmodels.*;
+import server.entities.*;
 import server.repositories.ConnectionRepository;
 import server.repositories.UserRepository;
 import server.services.AdService;
+import server.services.UserEntityService;
 import server.utilities.StorageManager;
 import server.utilities.Validator;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
@@ -49,6 +34,9 @@ public class AdminController {
 	
 	@Autowired
 	private AdService adService;
+
+	@Autowired
+	private UserEntityService userEntityService;
 	
 	//todo add search parameters(?)
 	@GetMapping("/userlist")
@@ -58,12 +46,7 @@ public class AdminController {
 		UserListOutputModel output = new UserListOutputModel();
 		for (UserEntity u : allUsers) {
 			try {
-				output.addUser(new UserOutputModel.
-									UserOutputBuilder(u.getId())
-													.name(u.getName())
-													.surname(u.getSurname())
-													.telNumber(u.getTelNumber())
-													.picture(sm.getFile(u.getPicture())).build());
+				output.addUser(userEntityService.getUserOutputModelFromUser(u));
 			} catch (IOException e) {
 				return new ResponseEntity<>("Could not load images", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
@@ -143,17 +126,9 @@ public class AdminController {
 				}
 				UserOutputModel uOut;
 				try {
-					uOut = new UserOutputModel.UserOutputBuilder(u.getId())
-							.name(u.getName())
-							.surname(u.getSurname())
-							.telNumber(u.getTelNumber())
-							.picture(sm.getFile(u.getPicture())).build();
+					uOut = userEntityService.getUserOutputModelFromUser(u);
 				} catch (IOException e) {
-					uOut = new UserOutputModel.UserOutputBuilder(u.getId())
-							.name(u.getName())
-							.surname(u.getSurname())
-							.telNumber(u.getTelNumber())
-							.picture(null).build();
+					uOut = userEntityService.getSafeUserOutputModelFromUser(u);
 				}
 				connOut.add(uOut);
 			}

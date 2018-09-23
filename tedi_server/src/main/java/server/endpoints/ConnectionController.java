@@ -1,27 +1,22 @@
 package server.endpoints;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import server.auth.SecurityService;
 import server.endpoints.outputmodels.UserListOutputModel;
-import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.ConnectionEntity;
 import server.entities.UserEntity;
 import server.repositories.ConnectionRepository;
 import server.repositories.UserRepository;
 import server.services.NotificationService;
+import server.services.UserEntityService;
 import server.utilities.StorageManager;
 import server.utilities.Validator;
+
+import java.io.IOException;
+import java.util.List;
 
 @RestController
 public class ConnectionController {
@@ -40,6 +35,9 @@ public class ConnectionController {
 
 	@Autowired
 	private NotificationService notificationService;
+
+	@Autowired
+	private UserEntityService userEntityService;
 
 	//add a new connection between active user and the one specified by the parameter
 	//returns 201 (created) if this creates a friend request
@@ -132,12 +130,7 @@ public class ConnectionController {
 				else {
 					u = c.getUser();
 				}
-				output.addUser(new UserOutputModel.UserOutputBuilder(u.getId())
-													.name(u.getName())
-													.surname(u.getSurname())
-													.telNumber(u.getTelNumber())
-													.picture(sm.getFile(u.getPicture())).build()
-						);
+				output.addUser(userEntityService.getUserOutputModelFromUser(u));
 			}
 		} catch (IOException e) {
 			return new ResponseEntity<>("Could not load profile pictures", HttpStatus.INTERNAL_SERVER_ERROR);

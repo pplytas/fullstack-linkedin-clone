@@ -1,5 +1,8 @@
 package server.endpoints.outputmodels;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserOutputModel {
 	
 	private Long id;
@@ -7,6 +10,7 @@ public class UserOutputModel {
 	private String surname;
 	private String telNumber;
 	private String picture;
+	private List<ExperienceOutputModel> currentExperience = new ArrayList<>();
 	
 	public UserOutputModel() {}
 	
@@ -16,6 +20,7 @@ public class UserOutputModel {
 		this.surname = builder.surname;
 		this.telNumber = builder.telNumber;
 		this.picture = builder.picture;
+		this.currentExperience = builder.currentExperience;
 	}
 
 	public Long getId() {
@@ -57,13 +62,22 @@ public class UserOutputModel {
 	public void setPicture(String picture) {
 		this.picture = picture;
 	}
-	
+
+	public List<ExperienceOutputModel> getCurrentExperience() {
+		return currentExperience;
+	}
+
+	public void setCurrentExperience(List<ExperienceOutputModel> currentExperience) {
+		this.currentExperience = currentExperience;
+	}
+
 	public static class UserOutputBuilder {
 		private final Long id;
 		private String name;
 		private String surname;
 		private String telNumber;
 		private String picture;
+		private List<ExperienceOutputModel> currentExperience;
 		
 		public UserOutputBuilder(Long id) {
 			this.id = id;
@@ -88,7 +102,12 @@ public class UserOutputModel {
 			this.picture = picture;
 			return this;
 		}
-		
+
+		public UserOutputBuilder currentExperience(List<ExperienceOutputModel> currentExperience) {
+			this.currentExperience = currentExperience;
+			return this;
+		}
+
 		public UserOutputModel build() {
 			return new UserOutputModel(this);
 		}

@@ -17,23 +17,19 @@ public class AdService {
 	
 	@Autowired
 	private StorageManager sm;
-	
+
+	@Autowired
+	private UserEntityService userEntityService;
+
 	public AdOutputModel adToOutputModel(AdEntity ad) {
 		AdOutputModel adOut = new AdOutputModel();
 		adOut.setId(ad.getId());
 		adOut.setTitle(ad.getTitle());
 		adOut.setDescription(ad.getDescription());
 		try {
-			adOut.setPublisher(new UserOutputModel.UserOutputBuilder(ad.getPublisher().getId())
-													.name(ad.getPublisher().getName())
-													.surname(ad.getPublisher().getSurname())
-													.telNumber(ad.getPublisher().getTelNumber())
-													.picture(sm.getFile(ad.getPublisher().getPicture())).build());
+			adOut.setPublisher(userEntityService.getUserOutputModelFromUser(ad.getPublisher()));
 		} catch (IOException e) {
-			adOut.setPublisher(new UserOutputModel.UserOutputBuilder(ad.getPublisher().getId())
-					.name(ad.getPublisher().getName())
-					.surname(ad.getPublisher().getSurname())
-					.telNumber(ad.getPublisher().getTelNumber()).build());
+			adOut.setPublisher(userEntityService.getSafeUserOutputModelFromUser(ad.getPublisher()));
 		}
 		adOut.setPublishDate(ad.getPublishDate());
 		for (AdSkillEntity adskill : ad.getSkills()) {
