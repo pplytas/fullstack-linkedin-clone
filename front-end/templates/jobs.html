@@ -2,7 +2,180 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col">
-                AAAAAAAAAAAAAAAAAAAA
+                <div class="row mb-4 justify-content-center">
+                    <div class="col-3">
+                        <div class="card p-2" style="border: 2px solid #17a2b8;">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col text-center font-s-11" style="color: #17a2b8;">
+                                        Pending Applications
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row px-5 mb-3 justify-content-center">
+                    <div class="col-2 px-2 py-1" ng-repeat="(connectionIndex, connection) in pendingConnections">
+                        <div class="card py-2 user-card">
+                            <div class="container-fluid">
+                                <div class="row mb-2">
+                                    <div class="col text-center px-2">
+                                        <a href="#!/profile/{{ connection.id }}" class="avatar-network-md mx-auto">
+                                            <img class="avatar-network-md border rounded-circle border-secondary" data-ng-src="{{connection.picture && 'data:image/png;base64,'}}{{connection.picture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row mb-1">
+                                    <div class="col text-center px-2">
+                                        <p class="font-s-09 font-weight-bold mb-0">{{ connection.name + " " + connection.surname }}</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col text-center px-2">
+                                        <p class="font-s-08 text-secondary font-weight-light mb-0">CEO Software Engineer at Alpha Bank</p>
+                                    </div>
+                                </div>
+                                <div class="row w-100 py-2 row-btn">
+                                    <div class="col text-center">
+                                        <button class="btn btn-success" ng-click="acceptPendingRequest(connectionIndex)">Accept</button>
+                                        <button class="btn btn-outline-danger" ng-click="deletePendingRequest(connectionIndex)">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="row mb-4 justify-content-center">
+                    <div class="col">
+                        <div class="card p-2" style="border: 2px solid #17a2b8;">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col text-center font-s-11" style="color: #17a2b8;">
+                                        Available Jobs for You
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="!suggestedJobsLoaded" class="row pt-4 justify-content-center">
+                    <div class="col text-center">
+                        <i class="fas fa-circle-notch fa-5x fa-spin text-info"></i>
+                    </div>
+                </div>
+                <div class="row mb-3" ng-repeat="job in suggestedJobs">
+                    <div class="col">
+                        <div class="card pt-3 shadow-sm">
+                            <div class="container-fluid">
+                                <div class="row mb-4">
+                                    <div class="col">
+                                        <a href="#!/profile/{{ job.publisher.id }}" class="avatar-post-sm mx-auto d-inline-block">
+                                            <img class="avatar-post-sm border rounded-circle border-secondary"
+                                                data-ng-src="{{job.publisher.picture && 'data:image/png;base64,'}}{{job.publisher.picture || '../img/avatar-placeholder.png'}}"
+                                                alt="Profile Picture">
+                                        </a>
+                                        <p class="post-fullname my-0 ml-2 d-inline">{{ job.publisher.name + " " + job.publisher.surname }}</p>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <div class="row justify-content-center mb-2">
+                                            <div class="col-11">
+                                                <p class="article-title mb-0">{{ job.title }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center mb-2">
+                                            <div class="col-11">
+                                                <p class="article-text mb-0">{{ job.description }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row border-top bg-light">
+                                    <div class="col py-2 text-right">
+                                        <button class="btn btn-sm btn-success" ng-click="apply(job.id)">Apply</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <div class="col">
+                        <div class="card py-3 shadow-sm">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col font-s-11 text-center">
+                                        Publish a new job
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col">
+                                        <form name="jobForm">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <img class="avatar-post-sm border rounded-circle border-secondary"
+                                                            data-ng-src="{{tempUser.picture && 'data:image/png;base64,'}}{{tempUser.picture || '../img/avatar-placeholder.png'}}"
+                                                            alt="Profile Picture">
+                                                        <p class="post-fullname my-0 ml-2 d-inline">{{ tempUser.name + " " + tempUser.surname }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <input ng-model="newJob.title" placeholder="Job title" class="form-control" required type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <textarea ng-model="newJob.description" class="form-control" placeholder="Job description" required rows="4"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div ng-if="newJob.skillTags.length > 0" class="form-group">
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <div class="input-group mb-2" ng-repeat="skillTag in newJob.skillTags">
+                                                            <input type="text" class="form-control" placeholder="Skill tag name" ng-model="skillTag.name" required>
+                                                            <div class="input-group-append">
+                                                                <button type="button" class="btn btn-secondary" ng-click="deleteSkillTag($index)"><i class="far fa-trash-alt"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-0">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <button type="button" class="btn btn-sm btn-outline-info px-3" ng-click="addSkillTag()"><i class="fas fa-plus"></i> Add Skill Tag</button>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div ng-if="newJobPublished" class="alert alert-success px-1 h-100 pt-1 pb-0 mb-0 text-center" role="alert">Created <i class="fas fa-check"></i></div>
+                                                    </div>
+                                                    <div class="col-4 text-right">
+                                                        <button type="submit" class="btn btn-sm px-3" ng-disabled="!jobForm.$valid" ng-click="publishNewJob()" style="background-color: #007ABA; color: #ffffff;">Publish Job</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

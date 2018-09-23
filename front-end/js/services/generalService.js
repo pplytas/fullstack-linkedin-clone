@@ -403,7 +403,7 @@
         globalFunctionsFactory.publishAd = function(
             title,
             description,
-            skillList = null
+            skillList
             //skillList contains elements with a string field 'name'
         ) {
             var endpoint = '/ads/add';
@@ -411,7 +411,7 @@
             var newAd = {
                 "title": title,
                 "description": description,
-                "skills": skillList
+                "skills": ((skillList.length > 0) ? (skillList):(null))
             }
 
             return $http({

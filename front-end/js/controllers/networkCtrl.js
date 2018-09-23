@@ -15,10 +15,10 @@
                     $scope.displayingConnections = response.data.users;
                 });
             }
-        }
+        };
 
         $scope.showMyConnections = function() {
             $scope.displayingConnections = $scope.tempUser.connected;
-        }
+        };
 	});
 })();
