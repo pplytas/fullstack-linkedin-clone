@@ -49,7 +49,7 @@ public class StorageManager {
 	private String exportPath;
 	
 	public ByteArrayResource exportUsers(List<UserDetailedOutputModel> users) 
-			throws IOException, ParserConfigurationException, TransformerConfigurationException, TransformerException {
+			throws IOException, ParserConfigurationException, TransformerException {
 		
 		//create document
 		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -94,7 +94,7 @@ public class StorageManager {
 				edStart.appendChild(doc.createTextNode(ed.getStart()));
 				education.appendChild(edStart);
 				Element edFinish = doc.createElement("finishDate");
-				edFinish.appendChild(doc.createTextNode(ed.getStart()));
+				edFinish.appendChild(doc.createTextNode(ed.getFinish()));
 				education.appendChild(edFinish);
 				
 				educations.appendChild(education);
@@ -119,7 +119,7 @@ public class StorageManager {
 				expStart.appendChild(doc.createTextNode(exp.getStart()));
 				experience.appendChild(expStart);
 				Element expFinish = doc.createElement("finishDate");
-				expFinish.appendChild(doc.createTextNode(exp.getStart()));
+				expFinish.appendChild(doc.createTextNode(exp.getFinish()));
 				experience.appendChild(expFinish);
 				
 				experience.appendChild(experience);

@@ -1,20 +1,9 @@
 package server.endpoints;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import server.auth.SecurityService;
 import server.classification.AdClassifier;
 import server.classification.Categories;
@@ -24,7 +13,6 @@ import server.endpoints.outputmodels.AdApplicationOutputModel;
 import server.endpoints.outputmodels.AdListOutputModel;
 import server.endpoints.outputmodels.AdOutputModel;
 import server.endpoints.outputmodels.SkillOutputModel;
-import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.AdApplicationEntity;
 import server.entities.AdEntity;
 import server.entities.AdSkillEntity;
@@ -34,8 +22,12 @@ import server.repositories.AdRepository;
 import server.repositories.ConnectionRepository;
 import server.repositories.UserRepository;
 import server.services.AdService;
-import server.utilities.StorageManager;
+import server.services.UserEntityService;
 import server.utilities.Validator;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/ads")
@@ -43,9 +35,6 @@ public class AdController {
 	
 	@Autowired
 	private SecurityService secService;
-	
-	@Autowired
-	private StorageManager sm;
 	
 	@Autowired
 	private UserRepository userRepo;
@@ -64,6 +53,9 @@ public class AdController {
 	
 	@Autowired
 	private AdService adService;
+
+	@Autowired
+	private UserEntityService userEntityService;
 	
 	@PostMapping("/add")
 	public ResponseEntity<Object> publishAd(@RequestBody AdInputModel input) {
@@ -120,11 +112,7 @@ public class AdController {
 				adOut.setId(ad.getId());
 				adOut.setTitle(ad.getTitle());
 				adOut.setDescription(ad.getDescription());
-				adOut.setPublisher(new UserOutputModel.UserOutputBuilder(user.getId())
-															.name(user.getName())
-															.surname(user.getSurname())
-															.telNumber(user.getTelNumber())
-															.picture(sm.getFile(user.getPicture())).build());
+				adOut.setPublisher(userEntityService.getUserOutputModelFromUser(user));
 				adOut.setPublishDate(ad.getPublishDate());
 				for (AdSkillEntity adskill : ad.getSkills()) {
 					SkillOutputModel sOut = new SkillOutputModel();
@@ -199,16 +187,9 @@ public class AdController {
 			AdOutputModel adOut = adService.adToOutputModel(adApp.getAd());
 			adAppOut.setAd(adOut);
 			try {
-				adAppOut.setUser(new UserOutputModel.UserOutputBuilder(adApp.getUser().getId())
-															.name(adApp.getUser().getName())
-															.surname(adApp.getUser().getSurname())
-															.telNumber(adApp.getUser().getTelNumber())
-															.picture(sm.getFile(adApp.getUser().getPicture())).build());
+				adAppOut.setUser(userEntityService.getUserOutputModelFromUser(adApp.getUser()));
 			} catch (IOException e) {
-				adAppOut.setUser(new UserOutputModel.UserOutputBuilder(adApp.getUser().getId())
-				.name(adApp.getUser().getName())
-				.surname(adApp.getUser().getSurname())
-				.telNumber(adApp.getUser().getTelNumber()).build());
+				adAppOut.setUser(userEntityService.getSafeUserOutputModelFromUser(adApp.getUser()));
 			}
 			adAppOut.setStatus(adApp.getStatus());
 			output.add(adAppOut);

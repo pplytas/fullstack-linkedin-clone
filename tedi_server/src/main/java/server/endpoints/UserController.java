@@ -1,58 +1,28 @@
 package server.endpoints;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import server.auth.SecurityService;
+import server.auth.UserService;
+import server.classification.Categories;
+import server.classification.UserClassifier;
+import server.endpoints.inputmodels.*;
+import server.endpoints.outputmodels.*;
+import server.entities.*;
+import server.repositories.*;
+import server.services.AdService;
+import server.services.UserEntityService;
+import server.utilities.StorageManager;
+import server.utilities.Validator;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import server.auth.SecurityService;
-import server.auth.UserService;
-import server.classification.Categories;
-import server.classification.UserClassifier;
-import server.endpoints.inputmodels.EducationInputModel;
-import server.endpoints.inputmodels.EducationWrappedInputModel;
-import server.endpoints.inputmodels.ExperienceInputModel;
-import server.endpoints.inputmodels.ExperienceWrappedInputModel;
-import server.endpoints.inputmodels.RegisterInputModel;
-import server.endpoints.inputmodels.SkillInputModel;
-import server.endpoints.inputmodels.SkillWrappedInputModel;
-import server.endpoints.outputmodels.AdOutputModel;
-import server.endpoints.outputmodels.EducationOutputModel;
-import server.endpoints.outputmodels.ExperienceOutputModel;
-import server.endpoints.outputmodels.SkillOutputModel;
-import server.endpoints.outputmodels.UserDetailedOutputModel;
-import server.endpoints.outputmodels.UserListOutputModel;
-import server.endpoints.outputmodels.UserOutputModel;
-import server.entities.AdEntity;
-import server.entities.ConnectionEntity;
-import server.entities.EducationEntity;
-import server.entities.ExperienceEntity;
-import server.entities.UserSkillEntity;
-import server.entities.UserEntity;
-import server.repositories.AdRepository;
-import server.repositories.ConnectionRepository;
-import server.repositories.EducationRepository;
-import server.repositories.ExperienceRepository;
-import server.repositories.UserSkillRepository;
-import server.services.AdService;
-import server.services.UserEntityService;
-import server.repositories.UserRepository;
-import server.utilities.DateUtils;
-import server.utilities.StorageManager;
-import server.utilities.Validator;
 
 @RestController
 @RequestMapping("/user")
@@ -248,13 +218,7 @@ public class UserController {
 			if (user == null)
 				return new ResponseEntity<>("Not existing user with such id", HttpStatus.NOT_FOUND);
 
-			return new ResponseEntity<>(
-					new UserOutputModel.UserOutputBuilder(user.getId())
-														.name(user.getName())
-														.surname(user.getSurname())
-														.telNumber(user.getTelNumber())
-														.picture(sm.getFile(user.getPicture())).build()
-					, HttpStatus.OK);
+			return new ResponseEntity<>(userEntityService.getUserOutputModelFromUser(user), HttpStatus.OK);
 		}
 		catch (IOException e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -307,11 +271,7 @@ public class UserController {
 				else {
 					u = c.getConnected();
 				}
-				UserOutputModel uOut = new UserOutputModel.UserOutputBuilder(u.getId())
-						.name(u.getName())
-						.surname(u.getSurname())
-						.telNumber(u.getTelNumber())
-						.picture(sm.getFile(u.getPicture())).build();
+				UserOutputModel uOut = userEntityService.getUserOutputModelFromUser(u);
 				connOut.add(uOut);
 			}
 			output.setConnected(connOut);
@@ -351,11 +311,7 @@ public class UserController {
 		try {
 			for (UserEntity user : results) {
 				if (Validator.validateUserAuth(user)) {
-					output.addUser(new UserOutputModel.UserOutputBuilder(user.getId())
-																	.name(user.getName())
-																	.surname(user.getSurname())
-																	.telNumber(user.getTelNumber())
-																	.picture(sm.getFile(user.getPicture())).build());
+					output.addUser(userEntityService.getUserOutputModelFromUser(user));
 				}
 			}
 			return new ResponseEntity<>(output, HttpStatus.OK);
