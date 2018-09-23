@@ -26,7 +26,9 @@
 		var scrollConversationToBottom = function() {
 			angular.element(document).ready(function() {
 				var conversationArea = document.getElementById("conversation-area");
-				conversationArea.scrollTop = conversationArea.scrollHeight;
+				if (conversationArea) {
+					conversationArea.scrollTop = conversationArea.scrollHeight;
+				}
 			});
 		};
 

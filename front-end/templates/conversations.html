@@ -15,13 +15,21 @@
             </div>
             <div class="col-6 px-0">
                 <div class="card h-76vh pt-2 pb-2">
-                    <div class="container-fluid mt-auto overflow-y-overlay" id="conversation-area">
+                    <div ng-if="displayedConversation.messages.length <= 0" class="container-fluid my-auto">
+                        <div class="row">
+                            <div class="col text-center font-s-09">
+                                No messages yet with {{ displayedConversation.chattingUser.name + " " + displayedConversation.chattingUser.surname }}<br>
+                                Send your first message!
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="displayedConversation.messages.length > 0" class="container-fluid mt-auto overflow-y-overlay" id="conversation-area">
                         <div class="row px-2">
                             <div class="col">
                                 <div class="row" ng-repeat="message in displayedConversation.messages" ng-if="message.message">
                                     <div class="col-6">
                                         <div class="row" ng-if="!senderIsMe(message.sender)">
-                                            <div class="col-2 pr-1">
+                                            <div class="col-2 pt-1 pr-1">
                                                 <img ng-if="displayedConversation.messages[$index].sender != displayedConversation.messages[$index + 1].sender"
                                                     class="avatar-post-sm border rounded-circle border-info float-right"
                                                     data-ng-src="{{displayedConversation.chattingUser.picture && 'data:image/png;base64,'}}{{displayedConversation.chattingUser.picture || '../img/avatar-placeholder.png'}}"
@@ -43,7 +51,7 @@
                                                     {{ message.message }}
                                                 </div>
                                             </div>
-                                            <div class="col-2 pl-1">
+                                            <div class="col-2 pt-1 pl-1">
                                                 <img ng-if="displayedConversation.messages[$index].sender != displayedConversation.messages[$index + 1].sender"
                                                     class="mt-auto avatar-post-sm border rounded-circle border-info float-left"
                                                     data-ng-src="{{tempUser.picture && 'data:image/png;base64,'}}{{tempUser.picture || '../img/avatar-placeholder.png'}}"

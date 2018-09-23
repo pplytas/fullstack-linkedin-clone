@@ -60,6 +60,17 @@
                 }
 			}
 		})
+		.when("/jobs", {
+			templateUrl: '../templates/jobs.html',
+			controller: 'jobsCtrl',
+			resolve: {
+				user: function(globalFunctions) {
+					return globalFunctions.getUserDetails().then(function(response) {
+						return response.data;
+					});
+				}
+			}
+		})
 		.when("/conversations/:ID?", {
 			templateUrl: '../templates/conversations.html',
 			controller: 'conversationsCtrl',
@@ -142,10 +153,6 @@
 			templateUrl: '../templates/edit-profile.html',
 			controller: 'editProfileCtrl'
         })
-        // .when("/posts", {
-        //     templateUrl: '../templates/posts.html',
-        //     controller: 'postsCtrl'
-        // })
 		.otherwise({
 	        redirectTo: '/home'
 	    });

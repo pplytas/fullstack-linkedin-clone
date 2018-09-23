@@ -447,6 +447,62 @@
             });
         };
 
+		globalFunctionsFactory.applyForAd = function(
+		    jobId
+		) {
+		    var endpoint = '/ads/apply';
+		    var url = $rootScope.tediAPI + endpoint;
+
+		    return $http({
+		        method: "POST",
+		        url: url,
+		        headers: { 'Content-Type': 'application/json' },
+		        params: {'id': jobId}
+		    });
+		};
+
+		globalFunctionsFactory.getAdApplications = function(
+		    jobId
+		) {
+		    var endpoint = '/ads/applications';
+		    var url = $rootScope.tediAPI + endpoint;
+
+		    return $http({
+		        method: "GET",
+		        url: url,
+		        headers: { 'Content-Type': 'application/json' },
+		        params: {'id': jobId}
+		    });
+		};
+
+		globalFunctionsFactory.acceptApplication = function(
+		    applicationId
+		) {
+		    var endpoint = '/ads/application/accept';
+		    var url = $rootScope.tediAPI + endpoint;
+
+		    return $http({
+		        method: "PUT",
+		        url: url,
+		        headers: { 'Content-Type': 'application/json' },
+		        params: {'applicationId': applicationId}
+		    });
+		};
+
+		globalFunctionsFactory.acceptApplication = function(
+		    applicationId
+		) {
+		    var endpoint = '/ads/application/reject';
+		    var url = $rootScope.tediAPI + endpoint;
+
+		    return $http({
+		        method: "PUT",
+		        url: url,
+		        headers: { 'Content-Type': 'application/json' },
+		        params: {'applicationId': applicationId}
+		    });
+		};
+
         globalFunctionsFactory.connect = function(
             id
         ) {
