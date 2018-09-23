@@ -33,7 +33,7 @@ import server.repositories.UserRepository;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
-	private UserDetailsService userDetailsService;
+	private UserDetailsServiceImpl userDetailsService;
 	
 	@Autowired
 	private UserRepository userRepo;
