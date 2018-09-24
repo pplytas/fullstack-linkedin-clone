@@ -1,24 +1,18 @@
 package server.endpoints;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import server.auth.UserService;
 import server.endpoints.inputmodels.RegisterInputModel;
-import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.UserEntity;
+import server.services.UserEntityService;
 import server.utilities.StorageManager;
 import server.utilities.Validator;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @RestController
 //class that handles register, login, logout and account display
@@ -29,6 +23,9 @@ public class AuthController {
 	
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private UserEntityService userEntityService;
 	
 	@PostMapping("/register")
 	public ResponseEntity<Object> register(@RequestBody RegisterInputModel input, HttpServletRequest request) {
@@ -55,14 +52,10 @@ public class AuthController {
 												.telNumber(input.getTelNumber())
 												.picture(sm.storeFile(input.getPicture())).build();
 			userService.save(user);
-			return new ResponseEntity<>(new UserOutputModel.UserOutputBuilder(user.getId())
-																			.name(user.getName())
-																			.surname(user.getSurname())
-																			.telNumber(user.getTelNumber())
-																			.picture(sm.getFile(user.getPicture())).build()
+			return new ResponseEntity<>(userEntityService.getUserOutputModelFromUser(user)
 					, HttpStatus.CREATED);
 		} catch (IOException e) {
-			return new ResponseEntity<Object>("Couldn't save picture", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("Couldn't save picture", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 	}

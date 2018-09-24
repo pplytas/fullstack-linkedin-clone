@@ -1,5 +1,6 @@
 package server.services;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,22 +11,46 @@ import server.auth.SecurityService;
 import server.endpoints.outputmodels.EducationOutputModel;
 import server.endpoints.outputmodels.ExperienceOutputModel;
 import server.endpoints.outputmodels.SkillOutputModel;
+import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.EducationEntity;
 import server.entities.ExperienceEntity;
 import server.entities.UserEntity;
 import server.entities.UserSkillEntity;
 import server.repositories.ConnectionRepository;
 import server.utilities.DateUtils;
+import server.utilities.StorageManager;
 
 @Service
 public class UserEntityService {
-	
+
+	@Autowired
+	private StorageManager sm;
+
 	@Autowired
 	private SecurityService secService;
 	
 	@Autowired
 	private ConnectionRepository connRepo;
-	
+
+	public UserOutputModel getUserOutputModelFromUser(UserEntity user) throws IOException {
+		return new UserOutputModel.UserOutputBuilder(user.getId())
+				.name(user.getName())
+				.surname(user.getSurname())
+				.telNumber(user.getTelNumber())
+				.picture(sm.getFile(user.getPicture()))
+				.currentExperience(getCurrentExperienceList(user))
+				.build();
+	}
+
+	public UserOutputModel getSafeUserOutputModelFromUser(UserEntity user) {
+		return new UserOutputModel.UserOutputBuilder(user.getId())
+				.name(user.getName())
+				.surname(user.getSurname())
+				.telNumber(user.getTelNumber())
+				.currentExperience(getCurrentExperienceList(user))
+				.build();
+	}
+
 	public boolean getPublicVisibilityStatus(UserEntity user) {
 		boolean viewPrivate = false;
 		if (user.equals(secService.currentUser()) ||

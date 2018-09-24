@@ -1,20 +1,9 @@
 package server.endpoints;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import server.auth.SecurityService;
 import server.classification.AdClassifier;
 import server.classification.Categories;
@@ -24,7 +13,6 @@ import server.endpoints.outputmodels.AdApplicationOutputModel;
 import server.endpoints.outputmodels.AdListOutputModel;
 import server.endpoints.outputmodels.AdOutputModel;
 import server.endpoints.outputmodels.SkillOutputModel;
-import server.endpoints.outputmodels.UserOutputModel;
 import server.entities.AdApplicationEntity;
 import server.entities.AdEntity;
 import server.entities.AdSkillEntity;
@@ -34,8 +22,12 @@ import server.repositories.AdRepository;
 import server.repositories.ConnectionRepository;
 import server.repositories.UserRepository;
 import server.services.AdService;
-import server.utilities.StorageManager;
+import server.services.UserEntityService;
 import server.utilities.Validator;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/ads")
@@ -43,9 +35,6 @@ public class AdController {
 	
 	@Autowired
 	private SecurityService secService;
-	
-	@Autowired
-	private StorageManager sm;
 	
 	@Autowired
 	private UserRepository userRepo;
@@ -64,6 +53,9 @@ public class AdController {
 	
 	@Autowired
 	private AdService adService;
+
+	@Autowired
+	private UserEntityService userEntityService;
 	
 	@PostMapping("/add")
 	public ResponseEntity<Object> publishAd(@RequestBody AdInputModel input) {
@@ -120,11 +112,7 @@ public class AdController {
 				adOut.setId(ad.getId());
 				adOut.setTitle(ad.getTitle());
 				adOut.setDescription(ad.getDescription());
-				adOut.setPublisher(new UserOutputModel.UserOutputBuilder(user.getId())
-															.name(user.getName())
-															.surname(user.getSurname())
-															.telNumber(user.getTelNumber())
-															.picture(sm.getFile(user.getPicture())).build());
+				adOut.setPublisher(userEntityService.getUserOutputModelFromUser(user));
 				adOut.setPublishDate(ad.getPublishDate());
 				for (AdSkillEntity adskill : ad.getSkills()) {
 					SkillOutputModel sOut = new SkillOutputModel();
@@ -182,40 +170,59 @@ public class AdController {
 		return new ResponseEntity<>(HttpStatus.OK);
 		
 	}
-	
-	@GetMapping("/applications")
-	public ResponseEntity<Object> getAdApplications(@RequestParam Long id) {
-		
+
+	@DeleteMapping("/application")
+	public ResponseEntity<Object> deleteApplication(@RequestParam Long id) {
+
+		UserEntity currUser = secService.currentUser();
 		AdEntity refAd = adRepo.findById(id).orElse(null);
-		//if the ad is not of the current user, quietly reject
-		if (refAd == null || !refAd.getPublisher().getEmail().equals(secService.currentUser().getEmail())) {
+		if (refAd == null) {
 			return new ResponseEntity<>("No ad with id " + id, HttpStatus.NOT_FOUND);
 		}
-		List<AdApplicationEntity> adApplications = adAppRepo.findByAd(refAd);
-		List<AdApplicationOutputModel> output = new ArrayList<>();
-		for (AdApplicationEntity adApp : adApplications) {
-			AdApplicationOutputModel adAppOut = new AdApplicationOutputModel();
-			adAppOut.setId(adApp.getId());
-			AdOutputModel adOut = adService.adToOutputModel(adApp.getAd());
-			adAppOut.setAd(adOut);
-			try {
-				adAppOut.setUser(new UserOutputModel.UserOutputBuilder(adApp.getUser().getId())
-															.name(adApp.getUser().getName())
-															.surname(adApp.getUser().getSurname())
-															.telNumber(adApp.getUser().getTelNumber())
-															.picture(sm.getFile(adApp.getUser().getPicture())).build());
-			} catch (IOException e) {
-				adAppOut.setUser(new UserOutputModel.UserOutputBuilder(adApp.getUser().getId())
-				.name(adApp.getUser().getName())
-				.surname(adApp.getUser().getSurname())
-				.telNumber(adApp.getUser().getTelNumber()).build());
-			}
-			adAppOut.setStatus(adApp.getStatus());
-			output.add(adAppOut);
+		AdApplicationEntity adApp = adAppRepo.findByAdAndUser(refAd, currUser);
+		if (adApp == null) {
+			return new ResponseEntity<>("No application for this ad", HttpStatus.NOT_FOUND);
 		}
+		adAppRepo.delete(adApp);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@GetMapping("/applications")
+	public ResponseEntity<Object> getAdApplications(@RequestParam(required = false) Long id) {
+
+		UserEntity currUser = secService.currentUser();
+		List<AdEntity> refAds = new ArrayList<>();
+		if (id == null) {
+			refAds.addAll(adRepo.findByPublisher(currUser));
+		} else {
+			AdEntity refAd = adRepo.findById(id).orElse(null);
+			//if the ad is not of the current user, quietly reject
+			if (refAd == null || !refAd.getPublisher().getEmail().equals(currUser.getEmail())) {
+				return new ResponseEntity<>("No ad with id " + id, HttpStatus.NOT_FOUND);
+			}
+			refAds.add(refAd);
+		}
+		List<AdApplicationEntity> adApps = new ArrayList<>();
+		List<AdApplicationOutputModel> output = new ArrayList<>();
+		for (AdEntity refAd : refAds) {
+			adApps.addAll(adAppRepo.findByAd(refAd));
+		}
+		output = adService.adAppToOutputModel(adApps);
 		return new ResponseEntity<>(output, HttpStatus.OK);
 		
 	}
+
+	@GetMapping("/applications/my")
+	public ResponseEntity<Object> getAdApplicationsOfSelf() {
+
+		UserEntity currUser = secService.currentUser();
+		List<AdApplicationEntity> adApplications = adAppRepo.findByUser(currUser);
+		List<AdApplicationOutputModel> output = adService.adAppToOutputModel(adApplications);
+		return new ResponseEntity<>(output, HttpStatus.OK);
+
+	}
+
+
 	
 	@PutMapping("/application/accept")
 	public ResponseEntity<Object> acceptApplication(@RequestParam Long applicationId) {
@@ -233,7 +240,7 @@ public class AdController {
 	}
 	
 	@PutMapping("/application/reject")
-	public ResponseEntity<Object> tejectApplication(@RequestParam Long applicationId) {
+	public ResponseEntity<Object> rejectApplication(@RequestParam Long applicationId) {
 		
 		AdApplicationEntity refAdApp = adAppRepo.findById(applicationId).orElse(null);
 		//if the application is not for an ad of the current user, quietly reject
