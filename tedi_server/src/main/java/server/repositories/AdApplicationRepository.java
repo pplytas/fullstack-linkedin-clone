@@ -15,5 +15,7 @@ public interface AdApplicationRepository extends JpaRepository<AdApplicationEnti
 	List<AdApplicationEntity> findByAd(AdEntity ad);
 
 	AdApplicationEntity findByAdAndUser(AdEntity ad, UserEntity user);
+
+	List<AdApplicationEntity> findByUser(UserEntity user);
 	
 }

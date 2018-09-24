@@ -170,33 +170,59 @@ public class AdController {
 		return new ResponseEntity<>(HttpStatus.OK);
 		
 	}
-	
-	@GetMapping("/applications")
-	public ResponseEntity<Object> getAdApplications(@RequestParam Long id) {
-		
+
+	@DeleteMapping("/application")
+	public ResponseEntity<Object> deleteApplication(@RequestParam Long id) {
+
+		UserEntity currUser = secService.currentUser();
 		AdEntity refAd = adRepo.findById(id).orElse(null);
-		//if the ad is not of the current user, quietly reject
-		if (refAd == null || !refAd.getPublisher().getEmail().equals(secService.currentUser().getEmail())) {
+		if (refAd == null) {
 			return new ResponseEntity<>("No ad with id " + id, HttpStatus.NOT_FOUND);
 		}
-		List<AdApplicationEntity> adApplications = adAppRepo.findByAd(refAd);
-		List<AdApplicationOutputModel> output = new ArrayList<>();
-		for (AdApplicationEntity adApp : adApplications) {
-			AdApplicationOutputModel adAppOut = new AdApplicationOutputModel();
-			adAppOut.setId(adApp.getId());
-			AdOutputModel adOut = adService.adToOutputModel(adApp.getAd());
-			adAppOut.setAd(adOut);
-			try {
-				adAppOut.setUser(userEntityService.getUserOutputModelFromUser(adApp.getUser()));
-			} catch (IOException e) {
-				adAppOut.setUser(userEntityService.getSafeUserOutputModelFromUser(adApp.getUser()));
-			}
-			adAppOut.setStatus(adApp.getStatus());
-			output.add(adAppOut);
+		AdApplicationEntity adApp = adAppRepo.findByAdAndUser(refAd, currUser);
+		if (adApp == null) {
+			return new ResponseEntity<>("No application for this ad", HttpStatus.NOT_FOUND);
 		}
+		adAppRepo.delete(adApp);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@GetMapping("/applications")
+	public ResponseEntity<Object> getAdApplications(@RequestParam(required = false) Long id) {
+
+		UserEntity currUser = secService.currentUser();
+		List<AdEntity> refAds = new ArrayList<>();
+		if (id == null) {
+			refAds.addAll(adRepo.findByPublisher(currUser));
+		} else {
+			AdEntity refAd = adRepo.findById(id).orElse(null);
+			//if the ad is not of the current user, quietly reject
+			if (refAd == null || !refAd.getPublisher().getEmail().equals(currUser.getEmail())) {
+				return new ResponseEntity<>("No ad with id " + id, HttpStatus.NOT_FOUND);
+			}
+			refAds.add(refAd);
+		}
+		List<AdApplicationEntity> adApps = new ArrayList<>();
+		List<AdApplicationOutputModel> output = new ArrayList<>();
+		for (AdEntity refAd : refAds) {
+			adApps.addAll(adAppRepo.findByAd(refAd));
+		}
+		output = adService.adAppToOutputModel(adApps);
 		return new ResponseEntity<>(output, HttpStatus.OK);
 		
 	}
+
+	@GetMapping("/applications/my")
+	public ResponseEntity<Object> getAdApplicationsOfSelf() {
+
+		UserEntity currUser = secService.currentUser();
+		List<AdApplicationEntity> adApplications = adAppRepo.findByUser(currUser);
+		List<AdApplicationOutputModel> output = adService.adAppToOutputModel(adApplications);
+		return new ResponseEntity<>(output, HttpStatus.OK);
+
+	}
+
+
 	
 	@PutMapping("/application/accept")
 	public ResponseEntity<Object> acceptApplication(@RequestParam Long applicationId) {
@@ -214,7 +240,7 @@ public class AdController {
 	}
 	
 	@PutMapping("/application/reject")
-	public ResponseEntity<Object> tejectApplication(@RequestParam Long applicationId) {
+	public ResponseEntity<Object> rejectApplication(@RequestParam Long applicationId) {
 		
 		AdApplicationEntity refAdApp = adAppRepo.findById(applicationId).orElse(null);
 		//if the application is not for an ad of the current user, quietly reject
