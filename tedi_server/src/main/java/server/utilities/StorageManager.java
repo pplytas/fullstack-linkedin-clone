@@ -122,7 +122,7 @@ public class StorageManager {
 				expFinish.appendChild(doc.createTextNode(exp.getFinish()));
 				experience.appendChild(expFinish);
 				
-				experience.appendChild(experience);
+				experiences.appendChild(experience);
 				
 			}
 			user.appendChild(experiences);

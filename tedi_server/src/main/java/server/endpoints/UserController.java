@@ -251,15 +251,15 @@ public class UserController {
 			output.setTelNumber(user.getTelNumber());
 			output.setPicture(sm.getFile(user.getPicture()));
 
-			List<EducationOutputModel> eduOut = userEntityService.getEducationList(user);
+			List<EducationOutputModel> eduOut = userEntityService.getEducationList(user, false);
 			output.setEducation(eduOut.stream().sorted(Comparator.comparing(EducationOutputModel::getStart).reversed()).collect(Collectors.toList()));
 			
-			List<ExperienceOutputModel> currentExpOut = userEntityService.getCurrentExperienceList(user);
-			List<ExperienceOutputModel> expOut = userEntityService.getExperienceList(user);
+			List<ExperienceOutputModel> currentExpOut = userEntityService.getCurrentExperienceList(user, false);
+			List<ExperienceOutputModel> expOut = userEntityService.getExperienceList(user, false);
 			output.setCurrentExperience(currentExpOut);
 			output.setExperience(expOut.stream().sorted(Comparator.comparing(ExperienceOutputModel::getStart).reversed()).collect(Collectors.toList()));
 			
-			List<SkillOutputModel> skillOut = userEntityService.getSkillList(user);
+			List<SkillOutputModel> skillOut = userEntityService.getSkillList(user, false);
 			output.setSkills(skillOut);
 			
 			List<UserOutputModel> connOut = new ArrayList<>();
