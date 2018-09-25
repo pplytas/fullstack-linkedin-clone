@@ -38,7 +38,7 @@ public class UserEntityService {
 				.surname(user.getSurname())
 				.telNumber(user.getTelNumber())
 				.picture(sm.getFile(user.getPicture()))
-				.currentExperience(getCurrentExperienceList(user))
+				.currentExperience(getCurrentExperienceList(user, false))
 				.build();
 	}
 
@@ -47,7 +47,7 @@ public class UserEntityService {
 				.name(user.getName())
 				.surname(user.getSurname())
 				.telNumber(user.getTelNumber())
-				.currentExperience(getCurrentExperienceList(user))
+				.currentExperience(getCurrentExperienceList(user, false))
 				.build();
 	}
 
@@ -61,9 +61,9 @@ public class UserEntityService {
 		return viewPrivate;
 	}
 	
-	public List<ExperienceOutputModel> getCurrentExperienceList(UserEntity user) {
+	public List<ExperienceOutputModel> getCurrentExperienceList(UserEntity user, boolean adminRequest) {
 		List<ExperienceOutputModel> currentExpOut = new ArrayList<>();
-		boolean viewPrivate = getPublicVisibilityStatus(user);
+		boolean viewPrivate = adminRequest || getPublicVisibilityStatus(user);
 		if (user.isExperiencePublic() || viewPrivate) {
 			List<ExperienceEntity> expList = user.getExperience();
 			for (ExperienceEntity e : expList) {
@@ -88,9 +88,9 @@ public class UserEntityService {
 		return currentExpOut;
 	}
 	
-	public List<ExperienceOutputModel> getExperienceList(UserEntity user) {
+	public List<ExperienceOutputModel> getExperienceList(UserEntity user, boolean adminRequest) {
 		List<ExperienceOutputModel> expOut = new ArrayList<>();
-		boolean viewPrivate = getPublicVisibilityStatus(user);
+		boolean viewPrivate = adminRequest || getPublicVisibilityStatus(user);
 		if (user.isExperiencePublic() || viewPrivate) {
 			List<ExperienceEntity> expList = user.getExperience();
 			for (ExperienceEntity e : expList) {
@@ -113,9 +113,9 @@ public class UserEntityService {
 		return expOut;
 	}
 
-	public List<EducationOutputModel> getEducationList(UserEntity user) {
+	public List<EducationOutputModel> getEducationList(UserEntity user, boolean adminRequest) {
 		List<EducationOutputModel> eduOut = new ArrayList<>();
-		boolean viewPrivate = getPublicVisibilityStatus(user);
+		boolean viewPrivate = adminRequest || getPublicVisibilityStatus(user);
 		if (user.isEducationPublic() || viewPrivate) {
 			List<EducationEntity> eduList = user.getEducation();
 			for (EducationEntity e : eduList) {
@@ -137,9 +137,9 @@ public class UserEntityService {
 		return eduOut;
 	}
 
-	public List<SkillOutputModel> getSkillList(UserEntity user) {
+	public List<SkillOutputModel> getSkillList(UserEntity user, boolean adminRequest) {
 		List<SkillOutputModel> skillOut = new ArrayList<>();
-		boolean viewPrivate = getPublicVisibilityStatus(user);
+		boolean viewPrivate = adminRequest || getPublicVisibilityStatus(user);
 		if (user.isSkillsPublic() || viewPrivate) {
 			List<UserSkillEntity> skillList = user.getSkills();
 			for (UserSkillEntity s : skillList) {
