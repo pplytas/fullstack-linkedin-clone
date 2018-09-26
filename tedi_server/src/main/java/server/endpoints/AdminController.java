@@ -1,8 +1,11 @@
 package server.endpoints;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.auth.SecurityService;
@@ -17,6 +20,7 @@ import server.services.UserEntityService;
 import server.utilities.StorageManager;
 import server.utilities.Validator;
 
+import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -47,6 +51,9 @@ public class AdminController {
 
 	@Autowired
 	private SecurityService secService;
+
+	@Autowired
+	private ServletContext servletContext;
 	
 	//todo add search parameters(?)
 	@GetMapping("/userlist")
@@ -248,7 +255,13 @@ public class AdminController {
 			details.add(output);
 		}
 		try {
-			return new ResponseEntity<>(sm.exportUsers(details), HttpStatus.OK);
+			String fileName = "export.xml";
+			ByteArrayResource export = sm.exportUsers(details);
+			return ResponseEntity.ok()
+					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName)
+					.contentType(MediaType.parseMediaType(servletContext.getMimeType(fileName)))
+					.contentLength(export.contentLength())
+					.body(export);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

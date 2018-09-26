@@ -49,7 +49,7 @@ public class ArticleService {
 		output.setAuthorName(user.getName());
 		output.setAuthorSurname(user.getSurname());
 		output.setAuthorPicture(sm.getFile(user.getPicture()));
-		output.setCurrentExperience(userEntityService.getCurrentExperienceList(user));
+		output.setCurrentExperience(userEntityService.getCurrentExperienceList(user, false));
 		output.setAuthorId(user.getId());
 		output.setTitle(article.getTitle());
 		output.setText(article.getText());
@@ -71,7 +71,7 @@ public class ArticleService {
 		uOut.setUpvoterName(upvote.getUser().getName());
 		uOut.setUpvoterSurname(upvote.getUser().getSurname());
 		uOut.setUpvoterPicture(sm.getFile(upvote.getUser().getPicture()));
-		uOut.setUpvoterCurrentExperience(userEntityService.getCurrentExperienceList(upvote.getUser()));
+		uOut.setUpvoterCurrentExperience(userEntityService.getCurrentExperienceList(upvote.getUser(), false));
 		uOut.setUpvoterId(upvote.getUser().getId());
 		return uOut;
 	}
@@ -82,7 +82,7 @@ public class ArticleService {
 		cOut.setCommentatorName(comment.getUser().getName());
 		cOut.setCommentatorSurname(comment.getUser().getSurname());
 		cOut.setCommentatorPicture(sm.getFile(comment.getUser().getPicture()));
-		cOut.setCommentatorCurrentExperience(userEntityService.getCurrentExperienceList(comment.getUser()));
+		cOut.setCommentatorCurrentExperience(userEntityService.getCurrentExperienceList(comment.getUser(), false));
 		cOut.setCommentatorId(comment.getUser().getId());
 		cOut.setDateTime(comment.getDateTime());
 		return cOut;
