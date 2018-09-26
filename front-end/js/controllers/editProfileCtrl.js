@@ -1,15 +1,20 @@
 (function() {
 	angular.module('tediApp')
-	.controller('editProfileCtrl', function($rootScope, $scope) {
-        $('#_submit').click(function(e) {
-               e.preventDefault();
-               var email = $('#email').val();
-               var password = $('#password').val();
+	.controller('editProfileCtrl', function($scope, globalFunctions) {
+		$scope.changeActiveLink("settings-link");
 
-               console.log(email);
-               console.log(password);
+		$scope.newEmail = null;
+		$scope.newPassword = null;
+		$scope.newLoginInfoSaved = false;
 
-               $rootScope.updateUser(email, password);
-         });
+		$scope.updateLoginInfo = function() {
+			$scope.newLoginInfoSaved = false;
+			if (($scope.newPassword && $scope.confirmPassword && ($scope.newPassword === $scope.confirmPassword)) ||
+				($scope.newEmail && !$scope.newPassword && !$scope.confirmPassword)) {
+				globalFunctions.updateUser($scope.newEmail, $scope.newPassword).then(function(response) {
+					$scope.newLoginInfoSaved = true;
+				});
+			}
+		}
 	});
 })();

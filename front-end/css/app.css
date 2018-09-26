@@ -12,6 +12,76 @@ body {
     background-color: #F7F7F7;
 }
 
+* {
+    box-shadow: none !important;
+}
+
+::placeholder {
+    font-weight: 300;
+}
+
+.display-none {
+    display: none;
+}
+
+.font-s-11 {
+    font-size: 1.1rem;
+}
+
+.font-s-09 {
+    font-size: 0.9rem;
+}
+
+.font-s-08 {
+    font-size: 0.8rem;
+}
+
+.h-85vh {
+    height: 85vh;
+}
+
+.h-76vh {
+    height: 76vh;
+}
+
+.h-9vh {
+    height: 9vh;
+}
+
+.hover-darken:hover {
+    background-color: rgba(210,210,210,0.2);
+    cursor: pointer;
+}
+
+.darken {
+    background-color: rgba(210,210,210,0.2);
+}
+
+.darken-blue {
+    background-color: rgba(100,210,210,0.1);
+}
+
+.overflow-y-overlay {
+    overflow-y: overlay;
+}
+
+.bottom-0 {
+    bottom: 0;
+}
+
+/* ------------------- SCROLLBAR ------------------ */
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(50, 50, 50, 0.8);
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
 /* ------------------- WELCOME PAGE ------------------ */
 .welcome-img {
     width: 100%;
@@ -100,7 +170,16 @@ body {
 .avatar-picture-big {
     width: 80px;
     height: 80px;
-    border-radius: 50%;
+}
+
+.avatar-post-sm {
+    width: 32px;
+    height: 32px;
+}
+
+.post-fullname {
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
 /* ------------------- APP BODY ------------------- */
@@ -117,7 +196,7 @@ body {
 
 /* ------------------- NAVBAR ------------------- */
 .navbar {
-    background-color: #283e4a;
+    background-color: #2B3852;
 }
 
 .navbar-brand {
@@ -136,8 +215,68 @@ body {
 
 /* ------------------- MAIN VIEW ------------------- */
 .main-view {
-    /* padding-top: 24px; */
     padding-bottom: 100px;
+}
+
+/* ------------------- HOME ------------------- */
+.avatar-backround {
+    position: absolute;
+    top: 0;
+    height: 65%;
+    background: #007ABA;
+}
+
+.info-card p {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.info-card li {
+    font-size: 0.8rem;
+}
+
+.image-upload,
+.video-upload {
+    vertical-align: middle;
+}
+
+.article-title {
+    font-size: 0.9rem;
+}
+
+.article-text {
+    font-size: 0.9rem;
+    font-weight: 300;
+}
+
+/* ------------------- NETWORK ------------------- */
+.avatar-network-md {
+    width: 70px;
+    height: 70px;
+}
+
+.row-btn {
+    position: absolute;
+    bottom: 0;
+}
+
+.network .user-card {
+    height: 14rem;
+}
+
+/* ------------------- NOTIFICATIONS ------------------- */
+.notifications .avatar-network-md {
+    width: 70px;
+    height: 70px;
+}
+
+.notifications .row-btn {
+    position: absolute;
+    bottom: 0;
+}
+
+.user-card {
+    height: 14rem;
 }
 
 /* ------------------- VIEW PROFILE ------------------- */
@@ -166,6 +305,17 @@ body {
     margin-bottom: -1px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+}
+
+.view-profile .form-control {
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: #17a2b8;
+}
+
+#profile-updated,
+#profile-update-error {
+    display: none;
 }
 
 /* ------------------- EDIT PROFILE ------------------- */

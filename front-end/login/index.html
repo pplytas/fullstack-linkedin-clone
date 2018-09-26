@@ -8,9 +8,9 @@
 		<link rel="icon" type="image/x-icon" href="../img/logo-blue-short.png"/>
 
 		<!-- Start Load CSS -->
-		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700&subset=latin,greek' rel='stylesheet' type='text/css'>
-		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-		<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+		<link rel="stylesheet" href="../css/open-sans.css">
+		<link rel="stylesheet" href="../bower_components/bootstrap-4.1.3/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="../bower_components/fontawesome-5.3.1/css/all.css">
 		<link rel="stylesheet" href="../css/app.css">
 		<!-- End Load CSS -->
 
@@ -18,7 +18,7 @@
 	<body>
 		<div ng-app="loginApp">
 		<nav class="navbar fixed-top navbar-expand-lg navbar-dark">
-			<a class="navbar-brand" href="#">
+			<a class="navbar-brand" href>
 				<img src="../img/logo-white-short.png" alt="header logo" class="header-logo"/>
 			</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@
 					</div>
 					<button class="btn btn-outline-info my-2 my-sm-0" id="sign-in" type="submit">
 						<div class="mx-2" id="loading-spinner" role="alert">
-							<i class="fa fa-circle-o-notch fa-1x fa-spin px-1"></i>
+							<i class="fas fa-circle-notch fa-1x fa-spin px-1"></i>
 						</div>
 						<span>Sign In</span>
 					</button>
@@ -58,48 +58,54 @@
 						<div class="pt-5">
 							<h5>Welcome to</h5>
 							<h1>TEDi BEAR</h1>
-							<p>an employment-oriented service to connect you with the world</br>created by D.Gounaris and P.Plytas.</p>
+							<p>an employment-oriented service for everyone</br>created by D.Gounaris and P.Plytas.</p>
 						</div>
 					</div>
 					<div class="col col-xs-10 col-sm-8 col-md-4 offset-1" id="register" style="display: none;">
-						<form id="register-form">
+						<form id="register-form" name="registerForm">
 							<legend>Register to TEDi BEAR</legend>
 							<div class="form-group">
-								<label for="reg-email">Email*</label>
-								<input type="email" id="reg-email" required class="form-control"/>
+								<label>Email*</label>
+								<input type="email" id="reg-email" class="form-control" required/>
 							</div>
 							<div class="form-group">
-								<label for="reg-password">Password*</label>
-								<input type="password" id="reg-password" required class="form-control"/>
+								<label>Password*</label>
+								<input type="password" id="reg-password" class="form-control" required/>
 							</div>
                             <div class="form-group container">
                                 <div class="row">
                                     <div class="col-6 pl-0">
-        								<label for="firstname">First Name*</label>
-        								<input type="text" id="firstname" required class="form-control"/>
+										<label>First Name*</label>
+										<input type="text" id="firstname" class="form-control" required/>
                                     </div>
                                     <div class="col-6 pr-0">
-                                        <label for="lastname">Last Name*</label>
+                                        <label>Last Name*</label>
         								<input type="text" id="lastname" required class="form-control"/>
                                     </div>
                                 </div>
 							</div>
                             <div class="form-group">
-								<label for="phone">Phone Number</label>
-								<input type="tel" id="phone" class="form-control"/>
+								<label>Phone Number</label>
+								<input type="tel" id="phone" class="form-control" required/>
 							</div>
 							<div class="form-group container">
                                 <div class="row">
                                     <div class="col-8 pl-0">
-										<label for="picture">Picture</label>
-										<input class="btn-info btn-block" type='file' value="Choose file" id="picture" ng-model='picture' base-sixty-four-input>
+										<label>Picture</label>
+										<input class="btn-info btn-block" type='file' value="Choose file" id="picture" required ng-model='picture' base-sixty-four-input/>
                                     </div>
                                     <div class="col-4 pr-0 text-center">
                                         <img class="avatar-picture" data-ng-src="data:{{picture.filetype}};base64,{{picture.base64}}" src="../img/avatar-placeholder.png" data-err-src="../img/avatar-placeholder.png" alt="avatar">
                                     </div>
                                 </div>
 							</div>
-							<input type="submit" id="register-btn" value="Register" class="btn btn-info btn-block"/>
+							<div class="form-group container">
+                                <div class="row">
+                                    <div class="col px-0">
+										<button type="submit" id="register-btn" ng-disabled="!registerForm.$valid" class="btn btn-info btn-block">Register</button>
+                                    </div>
+                                </div>
+							</div>
 						</form>
 
 						<!-- <div id="loginmsg" class="alert alert-danger" role="alert">
@@ -117,135 +123,10 @@
 		</div>
 		</div>
 
-		<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+		<script src="../bower_components/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+		<script src="../bower_components/bootstrap-4.1.3/dist/js/bootstrap.min.js"></script>
 		<script src="../bower_components/angular/angular.min.js"></script>
 		<script src="../bower_components/angular-base64-upload/dist/angular-base64-upload.min.js"></script>
-		<script>
-			var app = angular.module("loginApp", ['naif.base64']).run(function ($rootScope) {
-
-				$rootScope.picture;
-
-				if (localStorage.isjwt) {
-					window.location.href = "/#!/home";
-				}
-
-				function clear_messages() {
-					$('#loading-spinner').hide();
-					$('#invalid-msg').hide();
-				}
-
-				$('#sign-up-top').click(function(e) {
-					e.preventDefault();
-					$('#register').fadeIn(500);
-				});
-
-				$('#sign-in').click(function(e) {
-					if(document.getElementById("sign-in-form").checkValidity()) {
-						e.preventDefault();
-					 	clear_messages();
-						var url = 'https://localhost:8443/login'
-						var email = $('#email').val();
-						var password = $('#password').val();
-						var data = {
-							"email": email,
-							"password": password
-						};
-
-						$.ajax({
-							type: "POST",
-							url: url,
-							contentType: "application/json",
-							data: JSON.stringify(data),
-							beforeSend: function() {
-								$('#loading-spinner').show();
-								$('#sign-in span').text('');
-							},
-							success: function(data, status, $xhr) {
-								localStorage.isjwt = $xhr.getResponseHeader("Authorization").replace('Bearer ', '');
-								console.log("Login " + localStorage.isjwt);
-								window.location.href = "/#!/home";
-							},
-							error: function($xhr) {
-								clear_messages();
-								$('#sign-in span').text('Sign In');
-								delete localStorage.isjwt;
-								if ($xhr.status >= 400 && $xhr.status < 500) {	// Invalid credentials
-									$('#invalid-msg').show();
-								}
-							}
-						});
-					}
-				});
-
-				$('#register-btn').click(function(e) {
-					if(document.getElementById("register-form").checkValidity()) {
-						e.preventDefault();
-					   clear_messages();
-					   var url = 'https://localhost:8443/register'
-					   var email = ($('#reg-email').val() == "" ?  null : $('#reg-email').val())
-					   var password = ($('#reg-password').val() == "" ?  null : $('#reg-password').val())
-					   var firstname = ($('#firstname').val() == "" ?  null : $('#firstname').val())
-					   var lastname = ($('#lastname').val() == "" ?  null : $('#lastname').val())
-					   var phone = ($('#phone').val() == "" ?  null : $('#phone').val())
-					   var picture = (!$rootScope.picture ? null : $rootScope.picture.base64)
-
-					   var data = {
-						   "email": email,
-						   "password": password,
-						   "name": firstname,
-						   "surname": lastname,
-						   "telNumber": phone,
-						   "picture": picture
-					   };
-
-					   console.log(data);
-
-					   $.ajax({
-						   type: "POST",
-						   url: url,
-						   contentType: "application/json",
-						   data: JSON.stringify(data),
-						   beforeSend: function() {
-							   $('#wait').show()
-						   },
-						   success: function(data, status, $xhr) {
-							   console.log("Register Successful");
-							   var url = 'https://localhost:8443/login'
-							   var data = {
-								   "email": data.email,
-								   "password": password
-							   };
-							   $.ajax({
-								   type: "POST",
-								   url: url,
-								   contentType: "application/json",
-								   data: JSON.stringify(data),
-								   success: function(data, status, $xhr) {
-									   localStorage.isjwt = $xhr.getResponseHeader("Authorization").replace('Bearer ', '');
-									   console.log("Login " + localStorage.isjwt);
-									   window.location.href = "/#!/home";
-								   },
-								   error: function($xhr) {
-									   clear_messages();
-									   delete localStorage.isjwt;
-									   if ($xhr.status >= 400 && $xhr.status < 500) {	// Invalid credentials
-										   $('#loginmsg').show();
-									   }
-								   }
-							   });
-						   },
-						   error: function($xhr) {
-							   clear_messages();
-							   if ($xhr.status >= 400 && $xhr.status < 500) {	// Invalid credentials
-								   $('#loginmsg').show();
-							   }
-						   }
-					   });
-				   }
-				});
-			});
-		</script>
+		<script src="loginApp.js"></script>
 	</body>
 </html>
