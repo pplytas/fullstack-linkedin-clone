@@ -41,8 +41,14 @@
                     },
                     success: function(data, status, $xhr) {
                         localStorage.isjwt = $xhr.getResponseHeader("Authorization").replace('Bearer ', '');
-                        console.log("Login " + localStorage.isjwt);
-                        window.location.href = "/#!/home";
+                        if ($xhr.status === 200) {
+                            localStorage.isAdmin = false;
+                            window.location.href = "/#!/home";
+                        }
+                        else if ($xhr.status === 202) {
+                            localStorage.isAdmin = true;
+                            window.location.href = "/#!/admin";
+                        }
                     },
                     error: function($xhr) {
                         clear_messages();
@@ -77,8 +83,6 @@
                    "picture": picture
                };
 
-               console.log(data);
-
                $.ajax({
                    type: "POST",
                    url: url,
@@ -88,7 +92,6 @@
                        $('#wait').show()
                    },
                    success: function(data, status, $xhr) {
-                       console.log("Register Successful");
                        var url = 'https://localhost:8443/login'
                        var data = {
                            "email": email,
@@ -101,7 +104,6 @@
                            data: JSON.stringify(data),
                            success: function(data, status, $xhr) {
                                localStorage.isjwt = $xhr.getResponseHeader("Authorization").replace('Bearer ', '');
-                               console.log("Login " + localStorage.isjwt);
                                window.location.href = "/#!/home";
                            },
                            error: function($xhr) {

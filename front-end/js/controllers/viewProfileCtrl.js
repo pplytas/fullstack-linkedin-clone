@@ -75,7 +75,5 @@
 				$("#profile-update-error").show();
 			});
 		}
-
-        console.log($scope.tempUser);
 	});
 })();

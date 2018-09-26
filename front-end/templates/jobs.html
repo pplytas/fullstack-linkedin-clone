@@ -97,8 +97,11 @@
                                     </div>
                                 </div>
                                 <div class="row border-top bg-light">
-                                    <div class="col py-2 text-right">
-                                        <button class="btn btn-sm btn-success" ng-click="apply(job.id)">Apply</button>
+                                    <div class="col-6 py-2 text-left">
+                                        <button ng-if="hasApplied(job.id)" class="btn btn-sm btn-outline-danger" ng-click="deleteApplication(job.id)">Cancel application</button>
+                                    </div>
+                                    <div class="col-6 py-2 text-right">
+                                        <button class="btn btn-sm btn-success" ng-click="apply(job.id)" ng-disabled="hasApplied(job.id)">Apply</button>
                                     </div>
                                 </div>
                             </div>

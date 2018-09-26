@@ -38,6 +38,28 @@
 				window.location.href = "/login";
   			}
 		})
+		.when("/admin", {
+			templateUrl: '../templates/admin.html',
+			controller: 'adminCtrl',
+			resolve: {
+				allUsers: function(globalFunctions) {
+                    return globalFunctions.getUserList().then(function(response) {
+			            return response.data.users;
+			        });
+                }
+			}
+		})
+		.when("/admin/profile/:ID", {
+			templateUrl: '../templates/admin-user-profile.html',
+			controller: 'adminUserProfileCtrl',
+			resolve: {
+				user: function(globalFunctions, $route) {
+					return globalFunctions.getAccountDetails($route.current.params.ID).then(function(response) {
+						return response.data;
+					});
+				}
+			}
+		})
 		.when("/home", {
 			templateUrl: '../templates/home.html',
 			controller: 'homeCtrl',
@@ -66,6 +88,11 @@
 			resolve: {
 				user: function(globalFunctions) {
 					return globalFunctions.getUserDetails().then(function(response) {
+						return response.data;
+					});
+				},
+				allMyApplications: function(globalFunctions) {
+					return globalFunctions.getAllMyApplications().then(function(response) {
 						return response.data;
 					});
 				}
@@ -125,7 +152,6 @@
                 },
 				isConnected: function(globalFunctions, $route) {
 					return globalFunctions.getConnections().then(function(response) {
-						console.log(response.data);
 						return response.data.users.some(function(user) {
 							return user.id == $route.current.params.ID;
 						});
@@ -133,7 +159,6 @@
 				},
 				isSent: function(globalFunctions, $route) {
 					return globalFunctions.getConnections("sent").then(function(response) {
-						console.log(response.data);
 						return response.data.users.some(function(user) {
 							return user.id == $route.current.params.ID;
 						});
@@ -141,7 +166,6 @@
 				},
 				isPending: function(globalFunctions, $route) {
 					return globalFunctions.getConnections("pending").then(function(response) {
-						console.log(response.data);
 						return response.data.users.some(function(user) {
 							return user.id == $route.current.params.ID;
 						});

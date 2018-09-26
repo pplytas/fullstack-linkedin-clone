@@ -9,11 +9,6 @@
 		$scope.isSent = isSent;
 		$scope.isPending = isPending;
 
-		console.log($scope.tempUser);
-		console.log($scope.isConnected);
-		console.log($scope.isSent);
-		console.log($scope.isPending);
-
 		$scope.connect = function() {
 			globalFunctions.connect($scope.tempUser.id)
 			.then(function(response) {

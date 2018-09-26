@@ -3,7 +3,8 @@
 	.controller('homeCtrl', function($scope, user, globalFunctions) {
 		$scope.changeActiveLink("home-link");
         $scope.tempUser = angular.copy(user);
-        console.log($scope.tempUser);
+
+		$scope.isAdmin = false;
 
 		$scope.newArticle = {
 			"title": null,
@@ -14,7 +15,6 @@
 		globalFunctions.getFeed().then(function(response) {
 			$scope.feedLoaded = true;
 			$scope.feed = response.data;
-			console.log($scope.feed.articles);
 		});
 
 		$scope.removeNewArticleImage = function(imageIndex) {
@@ -35,7 +35,6 @@
 					$scope.newArticle.text = null;
 					$scope.newArticle.media = null;
 					$scope.newArticleImage = null;
-					console.log($scope.feed.articles);
 				});
 			});
 		}
@@ -43,7 +42,6 @@
 		$scope.upvote = function(articleId, articleIndex) {
 			globalFunctions.upvote(articleId).then(function(response) {
 				$scope.feed.articles[articleIndex].upvotes.unshift(response.data);
-				console.log($scope.feed);
 			});
 		}
 	});

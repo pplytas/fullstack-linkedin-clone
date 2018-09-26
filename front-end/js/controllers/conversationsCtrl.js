@@ -43,6 +43,7 @@
 
 		$scope.setDisplayedConversation = function(userId) {
 			$scope.newMessageText = null;
+			$routeParams.ID = userId;
 			$scope.displayedConversation = $scope.allConversations.find(function(conversation) {
 				return conversation.chattingUser.id === userId;
 			});

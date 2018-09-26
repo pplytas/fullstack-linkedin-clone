@@ -1,9 +1,10 @@
 (function() {
 	angular.module('tediApp')
-	.controller('jobsCtrl', function($scope, globalFunctions, user) {
+	.controller('jobsCtrl', function($scope, globalFunctions, user, allMyApplications) {
 		$scope.changeActiveLink("jobs-link");
 
 		$scope.tempUser = angular.copy(user);
+		$scope.allMyApplications = angular.copy(allMyApplications);
 		$scope.suggestedJobs = null;
 		$scope.newJobPublished = false;
 		$scope.suggestedJobsLoaded = false;
@@ -43,13 +44,31 @@
 
 		$scope.apply = function(jobId) {
 			globalFunctions.applyForAd(jobId).then(function(response) {
-				console.log(response.data);
+				$scope.allMyApplications.push(
+				{ad: {
+					id: jobId
+				}});
 			});
+		}
+
+		$scope.deleteApplication = function(jobId) {
+			globalFunctions.deleteApplication(jobId).then(function(response) {
+				var jobIds = $scope.allMyApplications.map(function(application) {
+					return application.ad.id;
+				});
+				$scope.allMyApplications.splice(jobIds.indexOf(jobId), 1);
+			});
+		}
+
+		$scope.hasApplied = function(jobId) {
+			var jobIds = $scope.allMyApplications.map(function(application) {
+				return application.ad.id;
+			});
+			return jobIds.indexOf(jobId) > -1;
 		}
 
 		/* ================= On start ================= */
 
 		initSuggestedJobs();
-
 	});
 })();

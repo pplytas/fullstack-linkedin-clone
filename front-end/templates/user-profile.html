@@ -16,7 +16,7 @@
                             </div>
                         </div>
                         <div class="row mb-4">
-                            <div class="col text-center">
+                            <div ng-if="tempUser.currentExperience.length > 0" class="col text-center">
                                 {{ tempUser.currentExperience[0].position + " at " + tempUser.currentExperience[0].company }}
                             </div>
                         </div>
@@ -41,7 +41,7 @@
     		        <div class="card-body">
     		            <div class="row">
     		                <div class="col-md-12 text-center">
-    		                    <h5>{{ tempUser.name + " " + tempUser.surname }} Details</h5>
+    		                    <h5>Details</h5>
     		                </div>
     		            </div>
                         <hr>

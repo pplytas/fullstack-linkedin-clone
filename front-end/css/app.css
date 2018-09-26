@@ -20,6 +20,10 @@ body {
     font-weight: 300;
 }
 
+.display-none {
+    display: none;
+}
+
 .font-s-11 {
     font-size: 1.1rem;
 }
@@ -51,6 +55,10 @@ body {
 
 .darken {
     background-color: rgba(210,210,210,0.2);
+}
+
+.darken-blue {
+    background-color: rgba(100,210,210,0.1);
 }
 
 .overflow-y-overlay {
@@ -188,7 +196,7 @@ body {
 
 /* ------------------- NAVBAR ------------------- */
 .navbar {
-    background-color: #283e4a;
+    background-color: #2B3852;
 }
 
 .navbar-brand {
@@ -207,7 +215,6 @@ body {
 
 /* ------------------- MAIN VIEW ------------------- */
 .main-view {
-    /* padding-top: 24px; */
     padding-bottom: 100px;
 }
 
@@ -268,7 +275,7 @@ body {
     bottom: 0;
 }
 
-.notifications .user-card {
+.user-card {
     height: 14rem;
 }
 
