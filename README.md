@@ -4,8 +4,7 @@ This assignment contains a full-stack application that simulates a LinkedIn envi
 The application contains 2 types of users, normal access users that can be created by registering during runtime and admin access users that are created programmatically at the initialization of the app.
 
 To build, you need to have MYSQL service running and maven installed. Project requires Java 8.
-Port, name and credentials for database can be found in application.properties. 
-Build server using 
+Port, name and credentials for database can be found in application.properties. Build server using:
 
   ```
   mvn clean install
