@@ -57,6 +57,10 @@ body {
     background-color: rgba(210,210,210,0.2);
 }
 
+.darken-more {
+    background-color: rgba(150,150,150,0.2);
+}
+
 .darken-blue {
     background-color: rgba(100,210,210,0.1);
 }
@@ -173,8 +177,13 @@ body {
 }
 
 .avatar-post-sm {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
+}
+
+.avatar-post-xs {
+    width: 20px;
+    height: 20px;
 }
 
 .post-fullname {

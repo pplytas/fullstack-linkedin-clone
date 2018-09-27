@@ -19,13 +19,13 @@
 	<body>
 		<div ng-app="tediApp" class="app-body">
 
-			<nav class="navbar fixed-top navbar-expand-lg navbar-dark">
+			<nav class="ng-cloak navbar fixed-top navbar-expand-lg navbar-dark">
 			  <a class="navbar-brand mr-5" ng-href="{{ isAdmin ? '#!/admin' : '#!/home' }}#"><img src="img/logo-white-short.png" alt="header logo" class="header-logo"/></a>
 			  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			    <span class="navbar-toggler-icon"></span>
 			  </button>
 
-			  <div ng-if="!isAdmin" class="collapse navbar-collapse" id="navbarSupportedContent">
+			  <div class="collapse navbar-collapse" id="navbarSupportedContent" ng-if="!isAdmin">
 			    <ul class="navbar-nav mx-auto">
 			      <li class="nav-item" id="home-link">
 			        <a class="nav-link" href="#!/home">Home</a>
@@ -59,7 +59,7 @@
 			      </li>
 			    </ul>
 			  </div>
-			  <div ng-if="isAdmin" class="collapse navbar-collapse" id="navbarSupportedContent">
+			  <div class="collapse navbar-collapse" id="navbarSupportedContent" ng-if="isAdmin">
 				<ul class="navbar-nav mx-auto">
   			      <li class="nav-item" id="admin-link">
   			        <a class="nav-link" href="#!/admin">Admin Page</a>
@@ -85,7 +85,7 @@
 					<div class="container">
 						<div class="row">
 							<div class="col">
-								&copy; 2018 TEDi BEAR. By D.Gounaris and P.Plytas.
+								&copy; 2018 TEDi BEAR by D.Gounaris and P.Plytas.
 							</div>
 						</div>
 					</div>

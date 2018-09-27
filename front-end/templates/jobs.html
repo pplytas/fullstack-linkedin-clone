@@ -115,7 +115,7 @@
                         <div class="card py-3 shadow-sm">
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col font-s-11 text-center">
+                                    <div class="col font-s-11">
                                         Publish a new job
                                     </div>
                                 </div>
@@ -150,7 +150,7 @@
                                             <div ng-if="newJob.skillTags.length > 0" class="form-group">
                                                 <div class="row">
                                                     <div class="col-8">
-                                                        <div class="input-group mb-2" ng-repeat="skillTag in newJob.skillTags">
+                                                        <div class="input-group input-group-sm mb-2" ng-repeat="skillTag in newJob.skillTags">
                                                             <input type="text" class="form-control" placeholder="Skill tag name" ng-model="skillTag.name" required>
                                                             <div class="input-group-append">
                                                                 <button type="button" class="btn btn-secondary" ng-click="deleteSkillTag($index)"><i class="far fa-trash-alt"></i></button>
