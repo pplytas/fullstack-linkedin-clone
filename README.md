@@ -8,7 +8,24 @@ Port, name and credentials for database can be found in application.properties. 
 
 Architecture-wise, the server has controller classes which contain the endpoints and state the i/o models for each of them. Most of the logic is propagated from the controllers to the service layer. Communication with the database happens through repository interfaces and entity classes. Utilities package contains helping static functions for our application.
 
-The front-end part of the platform has been tested on Chrome version 68.0.3440 and 69.0.3497.
-To run it you need to have Python v3.7.0 installed. First run "python -m http.server <port_number>" inside the front-end folder (where <port_number> is the port number our local python server will be sending the requests from, here the port number will be 8001) and leave the terminal opened. Then open your Chrome browser, navigate to "https://localhost:8443", choose advanced settings and allow the browser to access the page then navigate to "http://localhost:<port_number>" (in this case "http://localhost:8001") and you will see the platform's welcome/login page.
+For the front-end you need to have Python v3.7.0 installed and Chrome v68.0.3440 or later. Open a new terminal window and navigate to the front-end folder and run:
+
+  ```
+  python -m http.server <port_number> (here <port_number> will be 8001)
+  ```
+
+and leave the terminal opened. Then open your Chrome browser, navigate to
+
+  ```
+  https://localhost:8443
+  ```
+
+choose advanced settings and allow the browser to access the page then navigate to
+
+  ```
+  http://localhost:<port_number> (here http://localhost:8001)
+  ```
+
+and you will see the platform's welcome/login page.
 
 Front-end has been implemented using HTML, CSS, Bootstrap v4.1.3, AngularJS v1.7.2 and jQuery v3.3.1 and some other modules all included in the bower_components folder. Architecture-wise, the platfrom is running a main angular app which loads the different pages and tabs as routes. Each route has its own url, HTML file and angular controller which are being loaded on top of the existing html, so there is no need for the whole html to be reloaded. There is also an angular service which contains all the necessary functions for making requests to the server.
