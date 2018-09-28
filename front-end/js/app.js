@@ -177,8 +177,11 @@
 			templateUrl: '../templates/edit-profile.html',
 			controller: 'editProfileCtrl'
         })
+		.when("/", {
+			redirectTo: (localStorage.isAdmin == 'true') ? '/admin':'/home'
+		})
 		.otherwise({
-	        redirectTo: '/home'
+			redirectTo: (localStorage.isAdmin == 'true') ? '/admin':'/home'
 	    });
 		/* =========================================== */
 	})
