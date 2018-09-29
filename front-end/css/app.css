@@ -269,10 +269,6 @@ body {
     bottom: 0;
 }
 
-.network .user-card {
-    height: 14rem;
-}
-
 /* ------------------- NOTIFICATIONS ------------------- */
 .notifications .avatar-network-md {
     width: 70px;
@@ -286,6 +282,10 @@ body {
 
 .user-card {
     height: 14rem;
+}
+
+.user-card-taller {
+    height: 16rem;
 }
 
 /* ------------------- VIEW PROFILE ------------------- */

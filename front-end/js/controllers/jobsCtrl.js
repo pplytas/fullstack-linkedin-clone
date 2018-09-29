@@ -1,10 +1,11 @@
 (function() {
 	angular.module('tediApp')
-	.controller('jobsCtrl', function($scope, globalFunctions, user, allMyApplications) {
+	.controller('jobsCtrl', function($scope, globalFunctions, user, allMyApplications, allApplicationsToMyAds) {
 		$scope.changeActiveLink("jobs-link");
 
 		$scope.tempUser = angular.copy(user);
 		$scope.allMyApplications = angular.copy(allMyApplications);
+		$scope.allApplicationsToMyAds = angular.copy(allApplicationsToMyAds);
 		$scope.suggestedJobs = null;
 		$scope.newJobPublished = false;
 		$scope.suggestedJobsLoaded = false;
@@ -65,6 +66,18 @@
 				return application.ad.id;
 			});
 			return jobIds.indexOf(jobId) > -1;
+		}
+
+		$scope.acceptApplication = function(applicationId, applicationIndex) {
+			globalFunctions.acceptApplication(applicationId).then(function(response) {
+				$scope.allApplicationsToMyAds[applicationIndex].status = 1;
+			});
+		}
+
+		$scope.rejectApplication = function(applicationId, applicationIndex) {
+			globalFunctions.rejectApplication(applicationId).then(function(response) {
+				$scope.allApplicationsToMyAds[applicationIndex].status = -1;
+			});
 		}
 
 		/* ================= On start ================= */

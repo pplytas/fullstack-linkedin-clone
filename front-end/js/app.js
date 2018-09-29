@@ -95,6 +95,11 @@
 					return globalFunctions.getAllMyApplications().then(function(response) {
 						return response.data;
 					});
+				},
+				allApplicationsToMyAds: function(globalFunctions) {
+					return globalFunctions.getAllApplicationsToMyAds().then(function(response) {
+						return response.data;
+					});
 				}
 			}
 		})
