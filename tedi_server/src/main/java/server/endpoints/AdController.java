@@ -236,6 +236,7 @@ public class AdController {
 			return new ResponseEntity<>("Only pending applications can be accepted", HttpStatus.BAD_REQUEST);
 		}
 		refAdApp.setStatus(1);
+		adAppRepo.save(refAdApp);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
@@ -251,6 +252,7 @@ public class AdController {
 			return new ResponseEntity<>("Only pending applications can be rejected", HttpStatus.BAD_REQUEST);
 		}
 		refAdApp.setStatus(-1);
+		adAppRepo.save(refAdApp);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
