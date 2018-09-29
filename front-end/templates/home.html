@@ -1,19 +1,191 @@
 <div class="home pt-3">
     <div class="container-fluid">
-        <div class="row">
+        <div class="row justify-content-center">
             <div class="col-3">
-                <div class="card">
-                    <img class="avatar-picture-big mx-auto" data-ng-src="data:image/png;base64,{{tempUser.picture}}" data-err-src="../img/avatar-placeholder.png" alt="avatar">
-                    <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
-                    <div class="card-body text-center">
-                        <h5 class="card-title">{{tempUser.name + " " + tempUser.surname}}</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#!/profile" class="btn btn-primary">View Profile</a>
+                <div class="card shadow-sm">
+                    <div class="container-fluid">
+                        <div class="row position-relative mb-2">
+                            <div class="avatar-backround border border-secondary w-100"></div>
+                            <div class="col pt-4 text-center">
+                                <a href="#!/profile" class="avatar-picture-big mx-auto">
+                                    <img class="avatar-picture-big border rounded-circle border-secondary" data-ng-src="{{tempUser.picture && 'data:image/png;base64,'}}{{tempUser.picture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col text-center">
+                                <p class="font-weight-bold mb-0">{{ tempUser.name + " " + tempUser.surname }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3" ng-show="tempUser.education.length > 0">
+                                    <p class="font-weight-bold font-s-08">Education</p>
+                                    <ul class="list-group info-card px-2">
+                                        <li class="list-group-item border-left-0 border-right-0 py-2" ng-repeat="education in tempUser.education" >
+                                            {{ education.organization }}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="mb-3" ng-show="tempUser.experience.length > 0">
+                                    <p class="font-weight-bold font-s-08">Experience</p>
+                                    <ul class="list-group info-card px-2">
+                                        <li class="list-group-item border-left-0 border-right-0 py-2" ng-repeat="experience in tempUser.experience">
+                                            {{ experience.company }}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="mb-3" ng-show="tempUser.skills.length > 0">
+                                    <p class="font-weight-bold font-s-08">Skills</p>
+                                    <ul class="list-group info-card px-2">
+                                        <li class="list-group-item border-left-0 border-right-0 py-2" ng-repeat="skill in tempUser.skills" >
+                                            {{ skill.name }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-9">
-
+            <div class="col-5 mx-3">
+                <div class="row mb-4 justify-content-center">
+                    <div class="col">
+                        <div class="card p-2" style="border: 2px solid #17a2b8;">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col text-center font-s-11" style="color: #17a2b8;">
+                                        Feed
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="!feedLoaded" class="row pt-4 justify-content-center">
+                    <div class="col text-center">
+                        <i class="fas fa-circle-notch fa-5x fa-spin text-info"></i>
+                    </div>
+                </div>
+                <div class="row mb-3" ng-repeat="article in feed.articles">
+                    <div class="col">
+                        <div class="card pt-3 shadow-sm">
+                            <div class="container-fluid">
+                                <div class="row mb-4">
+                                    <div class="col">
+                                        <a href="#!/profile/{{ article.authorId }}" class="avatar-post-sm mx-auto d-inline-block">
+                                            <img class="avatar-post-sm border rounded-circle border-secondary" data-ng-src="{{article.authorPicture && 'data:image/png;base64,'}}{{article.authorPicture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
+                                        </a>
+                                        <p class="post-fullname my-0 ml-2 d-inline">{{ article.authorName + " " + article.authorSurname }}</p>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <div class="row justify-content-center mb-2">
+                                            <div class="col-11">
+                                                <p class="article-title mb-0">{{ article.title }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center mb-2">
+                                            <div class="col-11">
+                                                <p class="article-text mb-0">{{ article.text }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row py-3 justify-content-center" ng-if="article.media">
+                                            <div class="col-11">
+                                                <img class="mw-100 border border-primary" data-ng-src="data:image/png;base64,{{article.media}}" alt="Article Image">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row border-top bg-light">
+                                    <div class="col-6">
+                                        <button class="btn btn-sm btn-light rounded-0 font-s-08 text-secondary" ng-click="upvote(article.id, $index)">
+                                            <i class="far fa-thumbs-up"></i> Upvote
+                                        </button>
+                                        <button class="btn btn-sm btn-light rounded-0 font-s-08 text-secondary">
+                                            <i class="far fa-comment"></i> Comment
+                                        </button>
+                                    </div>
+                                    <div class="col-3 py-1 font-s-08 text-secondary text-right">
+                                        {{ article.upvotes.length }} - Upvotes
+                                    </div>
+                                    <div class="col-3 py-1 font-s-08 text-secondary text-right">
+                                        {{ article.comments.length }} - Comments
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="row">
+                    <div class="col">
+                        <div class="card py-3 shadow-sm">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col">
+                                        <form name="postForm">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <img class="avatar-post-sm border rounded-circle border-secondary" data-ng-src="{{tempUser.picture && 'data:image/png;base64,'}}{{tempUser.picture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
+                                                        <p class="post-fullname my-0 ml-2 d-inline">{{ tempUser.name + " " + tempUser.surname }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <input ng-model="newArticle.title" placeholder="Title" class="form-control" required type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <textarea ng-model="newArticle.text" class="form-control" placeholder="Write your thoughts..." required rows="4"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-0">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="image-upload d-inline text-center ml-2">
+                                                            <label class="m-0" for="image-input">
+                                                                <i class="fas fa-camera" style="cursor: pointer;"></i>
+                                                            </label>
+                                                            <input id="image-input" type="file" ng-model="newArticleImage" base-sixty-four-input style="display: none;">
+                                                        </div>
+                                                        <div class="video-upload d-inline text-center ml-3">
+                                                            <label class="m-0" for="video-input">
+                                                                <i class="fas fa-video" style="cursor: pointer;"></i>
+                                                            </label>
+                                                            <input id="video-input" type="file" ng-model="newArticle.media.videos" style="display: none;">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-8 text-right">
+                                                        <button type="submit" class="btn btn-sm px-3" ng-disabled="!postForm.$valid" ng-click="postNewArticle()" style="background-color: #007ABA; color: #ffffff;">Post</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="row mt-3" ng-if="newArticleImage">
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col-6" ng-click="removeNewArticleImage()">
+                                                <img class="mw-100 border border-primary" data-ng-src="data:{{newArticleImage.filetype}};base64,{{newArticleImage.base64}}" alt="New Article Image">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -1,0 +1,152 @@
+<div class="view-profile pt-2">
+    <div class="container-fluid">
+        <div class="row justify-content-center mb-4">
+            <div class="col-11">
+                <div class="card">
+                    <div class="container-fluid">
+                        <div class="row position-relative mb-2">
+                            <div class="avatar-backround border border-secondary w-100"></div>
+                            <div class="col pt-4 text-center">
+                                <img class="avatar-picture-big border rounded-circle border-secondary" data-ng-src="{{tempUser.picture && 'data:image/png;base64,'}}{{tempUser.picture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col text-center font-weight-bold">
+                                {{ tempUser.name + " " + tempUser.surname }}
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div ng-if="tempUser.currentExperience.length > 0" class="col text-center">
+                                {{ tempUser.currentExperience[0].position + " at " + tempUser.currentExperience[0].company }}
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col text-center">
+                                <button ng-if="!isConnected && !isSent && !isPending" class="btn btn-info" ng-click="connect()">Connect</button>
+                                <button ng-if="isPending" class="btn btn-success" ng-click="acceptConnection()">Accept</button>
+                                <button ng-if="isPending" class="btn btn-outline-danger" ng-click="deleteConnection()">Delete</button>
+                                <button ng-if="isConnected" class="btn btn-outline-info" disabled>Connected</button>
+                                <button ng-if="isSent" class="btn btn-outline-success" disabled>Pending</button>
+                                <button ng-if="!isConnected && !isPending" class="btn btn-outline-info" disabled>Message</button>
+                                <a ng-if="isConnected" class="btn btn-info" href="#!/conversations/{{ tempUser.id }}">Message</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+    		<div class="col-11">
+    		    <div class="card">
+    		        <div class="card-body">
+    		            <div class="row">
+    		                <div class="col-md-12 text-center">
+    		                    <h5>Details</h5>
+    		                </div>
+    		            </div>
+                        <hr>
+    		            <div class="row">
+                            <div class="col-12">
+                                <form name="proInfo" id="proInfo">
+                                    <div class="form-group mb-5">
+                                        <div class="row justify-content-center">
+                                            <div class="col font-s-11">
+                                                Education
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-6 offset-1 font-s-09 font-weight-bold">
+                                                Organisation
+                                            </div>
+                                            <div class="col-2 pl-0 font-s-09 font-weight-bold">
+                                                Start
+                                            </div>
+                                            <div class="col-2 pl-0 font-s-09 font-weight-bold">
+                                                Finish
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="form-group" ng-repeat="education in tempUser.education">
+                                            <div class="row">
+                                                <div class="col-6 offset-1">
+                                                    {{ education.organization }}
+                                                </div>
+                                                <div class="col-2 pl-0">
+                                                    {{ education.start }}
+                                                </div>
+                                                <div class="col-2 pl-0">
+                                                    {{ education.finish }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-5">
+                                        <div class="row justify-content-center">
+                                            <div class="col font-s-11">
+                                                Experience
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-3 offset-1 font-s-09 font-weight-bold">
+                                                Company
+                                            </div>
+                                            <div class="col-3 pl-0 font-s-09 font-weight-bold">
+                                                Position
+                                            </div>
+                                            <div class="col-2 pl-0 font-s-09 font-weight-bold">
+                                                Start
+                                            </div>
+                                            <div class="col-2 pl-0 font-s-09 font-weight-bold">
+                                                Finish
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="form-group" ng-repeat="experience in tempUser.experience">
+                                            <div class="row">
+                                                <div class="col-3 offset-1">
+                                                    {{ experience.company }}
+                                                </div>
+                                                <div class="col-3 pl-0">
+                                                    {{ experience.position }}
+                                                </div>
+                                                <div class="col-2 pl-0">
+                                                    {{ experience.start }}
+                                                </div>
+                                                <div class="col-2 pl-0">
+                                                    {{ experience.finish }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-5">
+                                        <div class="row">
+                                            <div class="col-8">
+                                                Skills
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-6 offset-1 font-s-09 font-weight-bold">
+                                                Skill
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="form-group" ng-repeat="skill in tempUser.skills">
+                                            <div class="row">
+                                                <div class="col-10 offset-1">
+                                                    {{ skill.name }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+    		                </div>
+    		            </div>
+    		        </div>
+    		    </div>
+    		</div>
+    	</div>
+    </div>
+</div>
