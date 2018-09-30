@@ -6,11 +6,22 @@
                     <div class="input-group-prepend">
                         <button class="btn btn-outline-info" type="button" ng-click="showMyConnections()">Show my connections</button>
                     </div>
-                    <input type="text" class="form-control" placeholder="Search all users" ng-model="query">
+                    <input type="text" class="form-control" placeholder="Search all users in TEDi BEAR" ng-model="query">
                     <div class="input-group-append">
                         <button class="btn btn-outline-info" type="submit" ng-click="searchUsers(query)">Search</button>
                     </div>
                 </form>
+            </div>
+        </div>
+        <div ng-if="displayingConnections.length <= 0" class="row px-5 mb-3">
+            <div class="col-3 px-2">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col text-secondary font-s-11">
+                            There are no connections.
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row px-5">
@@ -30,8 +41,8 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col text-center px-2">
-                                <p class="font-s-08 text-secondary font-weight-light mb-0">CEO Software Engineer at Alpha Bank</p>
+                            <div ng-if="connection.currentExperience.length > 0" class="col text-center">
+                                <p class="font-s-08 text-secondary font-weight-light mb-0">{{ connection.currentExperience[0].position + " at " + connection.currentExperience[0].company }}</p>
                             </div>
                         </div>
                         <div class="row w-100 py-2 row-btn">

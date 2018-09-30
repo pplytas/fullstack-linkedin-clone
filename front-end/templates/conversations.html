@@ -15,9 +15,16 @@
             </div>
             <div class="col-6 px-0">
                 <div class="card h-76vh pt-2 pb-2">
+                    <div ng-if="tempUser.connected.length <= 0" class="container-fluid my-auto">
+						<div class="row">
+							<div class="col text-center text-secondary font-s-09">
+								You have no connections. Add some connections and start a conversation!
+							</div>
+						</div>
+					</div>
                     <div ng-if="displayedConversation.messages.length <= 0" class="container-fluid my-auto">
                         <div class="row">
-                            <div class="col text-center font-s-09">
+                            <div class="col text-center text-secondary font-s-09">
                                 No messages yet with {{ displayedConversation.chattingUser.name + " " + displayedConversation.chattingUser.surname }}<br>
                                 Send your first message!
                             </div>

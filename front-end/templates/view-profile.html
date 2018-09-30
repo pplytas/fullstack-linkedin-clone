@@ -1,169 +1,184 @@
 <div class="view-profile pt-2">
     <div class="container-fluid">
-        <div class="row justify-content-center mb-4">
-            <div class="col-11">
-                <div class="card shadow-sm">
-                    <div class="container-fluid">
-                        <div class="row position-relative mb-2">
-                            <div class="avatar-backround border border-secondary w-100"></div>
-                            <div class="col pt-4 text-center">
-                                <img class="avatar-picture-big border rounded-circle border-secondary" data-ng-src="{{tempUser.picture && 'data:image/png;base64,'}}{{tempUser.picture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
+        <div class="row">
+            <div class="col-9">
+                <div class="row mb-4">
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="container-fluid">
+                                <div class="row position-relative mb-2">
+                                    <div class="avatar-backround border border-secondary w-100"></div>
+                                    <div class="col pt-4 text-center">
+                                        <img class="avatar-picture-big border rounded-circle border-secondary" data-ng-src="{{tempUser.picture && 'data:image/png;base64,'}}{{tempUser.picture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col text-center font-weight-bold">
+                                        {{ tempUser.name + " " + tempUser.surname }}
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div ng-if="tempUser.currentExperience.length > 0" class="col text-center">
+                                        {{ tempUser.currentExperience[0].position + " at " + tempUser.currentExperience[0].company }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col text-center font-weight-bold">
-                                {{ tempUser.name + " " + tempUser.surname }}
+                    </div>
+                </div>
+                <div class="row">
+            		<div class="col">
+            		    <div class="card shadow-sm">
+            		        <div class="card-body">
+            		            <div class="row">
+            		                <div class="col-md-12 text-center">
+            		                    <h5>Your Details</h5>
+            		                </div>
+            		            </div>
+                                <hr>
+            		            <div class="row">
+                                    <div class="col-12">
+                                        <form name="proInfo" id="proInfo">
+                                            <div class="form-group mb-5">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        Education
+                                                    </div>
+                                                    <div class="col-5 text-right">
+                                                        <div class="form-check pt-1">
+                                                            <input class="form-check-input" type="checkbox" ng-model="isEducationPublic" value="">
+                                                            <label class="form-check-label font-s-09">
+                                                                Public
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-1 text-right pl-0">
+                                                        <button type="button" class="btn btn-sm btn-info" ng-click="addEducation()"><i class="fas fa-plus"></i> Add</button>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="form-group" ng-repeat="education in tempUser.education">
+                                                    <div class="row">
+                                                        <div class="col-7">
+                                                            <input ng-model="education.organization" placeholder="Institute" class="form-control" type="text"/>
+                                                        </div>
+                                                        <div class="col-2 pl-0">
+                                                            <input ng-model="education.start" placeholder="Start(YYYY-MM-DD)" class="form-control" type="text"/>
+                                                        </div>
+                                                        <div class="col-2 pl-0">
+                                                            <input ng-model="education.finish" placeholder="End(YYYY-MM-DD)" class="form-control" type="text"/>
+                                                        </div>
+                                                        <div class="col-1 pl-0">
+                                                            <button type="button" class="btn btn-block btn-secondary" ng-click="deleteEducation($index)"><i class="far fa-trash-alt"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-5">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        Experience
+                                                    </div>
+                                                    <div class="col-5 text-right">
+                                                        <div class="form-check pt-1">
+                                                            <input class="form-check-input" type="checkbox" ng-model="isExperiencePublic" value="">
+                                                            <label class="form-check-label font-s-09">
+                                                                Public
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-1 text-right pl-0">
+                                                        <button type="button" class="btn btn-sm btn-info" ng-click="addExperience()"><i class="fas fa-plus"></i> Add</button>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="form-group" ng-repeat="experience in tempUser.experience">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <input ng-model="experience.company" placeholder="Company" class="form-control" type="text"/>
+                                                        </div>
+                                                        <div class="col-3 pl-0">
+                                                            <input ng-model="experience.position" placeholder="Position" class="form-control" type="text"/>
+                                                        </div>
+                                                        <div class="col-2 pl-0">
+                                                            <input ng-model="experience.start" placeholder="Start(YYYY-MM-DD)" class="form-control" type="text"/>
+                                                        </div>
+                                                        <div class="col-2 pl-0">
+                                                            <input ng-model="experience.finish" placeholder="Finish(YYYY-MM-DD)" class="form-control" type="text"/>
+                                                        </div>
+                                                        <div class="col-1 pl-0">
+                                                            <button type="button" class="btn btn-block btn-secondary" ng-click="deleteExperience($index)"><i class="far fa-trash-alt"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-5">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        Skills
+                                                    </div>
+                                                    <div class="col-5 text-right">
+                                                        <div class="form-check pt-1">
+                                                            <input class="form-check-input" type="checkbox" ng-model="isSkillsPublic" value="">
+                                                            <label class="form-check-label font-s-09">
+                                                                Public
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-1 text-right pl-0">
+                                                        <button type="button" class="btn btn-sm btn-info" ng-click="addSkill()"><i class="fas fa-plus"></i> Add</button>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="form-group" ng-repeat="skill in tempUser.skills">
+                                                    <div class="row">
+                                                        <div class="col-11">
+                                                            <input ng-model="skill.name" placeholder="Skill name" class="form-control" required type="text"/>
+                                                        </div>
+                                                        <div class="col-1 pl-0">
+                                                            <button type="button" class="btn btn-block btn-secondary" ng-click="deleteSkill($index)"><i class="far fa-trash-alt"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+            		                </div>
+            		            </div>
+                                <div class="row mt-4">
+                                  <div class="col-4 offset-4 text-center">
+                                    <button type="submit" class="btn btn-info" ng-disabled="!proInfo.$dirty" ng-click="updateProInfo()">Update My Profile</button>
+                                  </div>
+                                  <div class="alert alert-success alert-block px-2 py-1 mr-0 my-0" id="profile-updated" role="alert">
+                                      Saved<i class="fas fa-check ml-2"></i>
+                                  </div>
+                                  <div class="alert alert-danger alert-block px-2 py-1 mr-0 my-0" id="profile-update-error" role="alert">
+                                      Error<i class="fas fa-times ml-2"></i>
+                                  </div>
+                                </div>
+            		        </div>
+            		    </div>
+            		</div>
+            	</div>
+            </div>
+            <div class="col-3">
+                <div class="card shadow-sm h-85vh">
+                    <div ng-if="tempUser.connected.length <= 0" class="container-fluid my-auto">
+                        <div class="row">
+                            <div class="col text-center text-secondary py-3">
+                                You have no connections yet.
                             </div>
                         </div>
-                        <div class="row mb-4">
-                            <div class="col text-center">
-                                {{ tempUser.currentExperience[0].position + " at " + tempUser.currentExperience[0].company }}
+                    </div>
+                    <div class="container-fluid overflow-y-overlay">
+                        <div class="row border-bottom hover-darken" ng-repeat="connectedUser in tempUser.connected" ng-click="showConnectionProfile(connectedUser.id)">
+                            <div class="col py-3">
+                                <img class="avatar-post-sm border rounded-circle border-secondary" data-ng-src="{{connectedUser.picture && 'data:image/png;base64,'}}{{connectedUser.picture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
+                                <div class="font-s-08 pl-2 d-inline"> {{ connectedUser.name + " " + connectedUser.surname }} </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row justify-content-center">
-    		<div class="col-11">
-    		    <div class="card shadow-sm">
-    		        <div class="card-body">
-    		            <div class="row">
-    		                <div class="col-md-12 text-center">
-    		                    <h5>Your Details</h5>
-    		                </div>
-    		            </div>
-                        <hr>
-    		            <div class="row">
-    		                <!-- <div class="col-md-5">
-                                <form>
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                Picture
-                                                <hr>
-                                                <img class="avatar-picture-big rounded-circle mx-auto" data-ng-src="data:image/png;base64,{{tempUser.picture}}" data-err-src="../img/avatar-placeholder.png" alt="avatar">
-                                            </div>
-                                            <div class="col-6">
-                                                Phone
-                                                <hr>
-                                                <input ng-model="tempUser.telNumber" placeholder="Phone" class="form-control" type="text">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                First Name
-                                                <hr>
-                                                <input ng-model="tempUser.name" placeholder="First Name" class="form-control" type="text">
-                                            </div>
-                                            <div class="col-6">
-                                                Last Name
-                                                <hr>
-                                                <input ng-model="tempUser.surname" placeholder="Last Name" class="form-control" type="text">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div> -->
-                            <div class="col-12">
-                                <form name="proInfo" id="proInfo">
-                                    <div class="form-group mb-5">
-                                        <div class="row">
-                                            <div class="col-8">
-                                                Education
-                                            </div>
-                                            <div class="col-4 text-right">
-                                                <button type="button" class="btn btn-sm btn-info" ng-click="addEducation()"><i class="fas fa-plus"></i> Add</button>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        <div class="form-group" ng-repeat="education in tempUser.education">
-                                            <div class="row">
-                                                <div class="col-7">
-                                                    <input ng-model="education.organization" placeholder="Institute" class="form-control" type="text"/>
-                                                </div>
-                                                <div class="col-2 pl-0">
-                                                    <input ng-model="education.start" placeholder="Start(YYYY-MM-DD)" class="form-control" type="text"/>
-                                                </div>
-                                                <div class="col-2 pl-0">
-                                                    <input ng-model="education.finish" placeholder="End(YYYY-MM-DD)" class="form-control" type="text"/>
-                                                </div>
-                                                <div class="col-1 px-0">
-                                                    <button type="button" class="btn btn-secondary" ng-click="deleteEducation($index)"><i class="far fa-trash-alt"></i></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-5">
-                                        <div class="row">
-                                            <div class="col-8">
-                                                Experience
-                                            </div>
-                                            <div class="col-4 text-right">
-                                                <button type="button" class="btn btn-sm btn-info" ng-click="addExperience()"><i class="fas fa-plus"></i> Add</button>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        <div class="form-group" ng-repeat="experience in tempUser.experience">
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <input ng-model="experience.company" placeholder="Company" class="form-control" type="text"/>
-                                                </div>
-                                                <div class="col-3 pl-0">
-                                                    <input ng-model="experience.position" placeholder="Position" class="form-control" type="text"/>
-                                                </div>
-                                                <div class="col-2 pl-0">
-                                                    <input ng-model="experience.start" placeholder="Start(YYYY-MM-DD)" class="form-control" type="text"/>
-                                                </div>
-                                                <div class="col-2 pl-0">
-                                                    <input ng-model="experience.finish" placeholder="Finish(YYYY-MM-DD)" class="form-control" type="text"/>
-                                                </div>
-                                                <div class="col-1 px-0">
-                                                    <button type="button" class="btn btn-secondary" ng-click="deleteExperience($index)"><i class="far fa-trash-alt"></i></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-5">
-                                        <div class="row">
-                                            <div class="col-8">
-                                                Skills
-                                            </div>
-                                            <div class="col-4 text-right">
-                                                <button type="button" class="btn btn-sm btn-info" ng-click="addSkill()"><i class="fas fa-plus"></i> Add</button>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        <div class="form-group" ng-repeat="skill in tempUser.skills">
-                                            <div class="row">
-                                                <div class="col-11">
-                                                    <input ng-model="skill.name" placeholder="Skill name" class="form-control" required type="text"/>
-                                                </div>
-                                                <div class="col-1 px-0">
-                                                    <button type="button" class="btn btn-secondary" ng-click="deleteSkill($index)"><i class="far fa-trash-alt"></i></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-    		                </div>
-    		            </div>
-                        <div class="row mt-4">
-                          <div class="col-4 offset-4 text-center">
-                            <button type="submit" class="btn btn-info" ng-disabled="!proInfo.$dirty" ng-click="updateProInfo()">Update My Profile</button>
-                          </div>
-                          <div class="alert alert-success alert-block px-2 py-1 mr-0 my-0" id="profile-updated" role="alert">
-                              Saved<i class="fas fa-check ml-2"></i>
-                          </div>
-                          <div class="alert alert-danger alert-block px-2 py-1 mr-0 my-0" id="profile-update-error" role="alert">
-                              Error<i class="fas fa-times ml-2"></i>
-                          </div>
-                        </div>
-    		        </div>
-    		    </div>
-    		</div>
-    	</div>
     </div>
 </div>

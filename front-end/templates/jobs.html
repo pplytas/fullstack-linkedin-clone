@@ -4,10 +4,10 @@
             <div class="col">
                 <div class="row mb-4 justify-content-center">
                     <div class="col-3">
-                        <div class="card p-2" style="border: 2px solid #17a2b8;">
+                        <div class="card p-1" style="border: 2px solid #5873A8;">
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col text-center font-s-11" style="color: #17a2b8;">
+                                    <div class="col text-center font-s-11" style="color: #5873A8;">
                                         Pending Applications
                                     </div>
                                 </div>
@@ -15,31 +15,49 @@
                         </div>
                     </div>
                 </div>
+                <div ng-if="allApplicationsToMyAds.length <= 0" class="row mb-4 justify-content-center">
+                    <div class="col">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col text-center text-secondary font-s-11">
+                                    You have no pending applications.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row px-5 mb-3 justify-content-center">
-                    <div class="col-2 px-2 py-1" ng-repeat="(connectionIndex, connection) in pendingConnections">
-                        <div class="card py-2 user-card">
+                    <div class="col-2 px-2 py-1" ng-repeat="(applicationIndex, application) in allApplicationsToMyAds">
+                        <div class="card pb-2 user-card-taller">
                             <div class="container-fluid">
+                                <div class="row mb-3 darken-more border-bottom">
+                                    <div class="col text-center px-2 py-1">
+                                        <p class="font-s-09 font-weight-bold mb-0">{{ application.ad.title }}</p>
+                                    </div>
+                                </div>
                                 <div class="row mb-2">
                                     <div class="col text-center px-2">
-                                        <a href="#!/profile/{{ connection.id }}" class="avatar-network-md mx-auto">
-                                            <img class="avatar-network-md border rounded-circle border-secondary" data-ng-src="{{connection.picture && 'data:image/png;base64,'}}{{connection.picture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
+                                        <a href="#!/profile/{{ application.user.id }}" class="avatar-network-md mx-auto">
+                                            <img class="avatar-network-md border rounded-circle border-secondary" data-ng-src="{{application.user.picture && 'data:image/png;base64,'}}{{application.user.picture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
                                         </a>
                                     </div>
                                 </div>
                                 <div class="row mb-1">
                                     <div class="col text-center px-2">
-                                        <p class="font-s-09 font-weight-bold mb-0">{{ connection.name + " " + connection.surname }}</p>
+                                        <p class="font-s-09 font-weight-bold mb-0">{{ application.user.name + " " + application.user.surname }}</p>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col text-center px-2">
-                                        <p class="font-s-08 text-secondary font-weight-light mb-0">CEO Software Engineer at Alpha Bank</p>
+                                    <div ng-if="application.user.currentExperience.length > 0" class="col text-center">
+                                        <p class="font-s-08 text-secondary font-weight-light mb-0">{{ application.user.currentExperience[0].position + " at " + application.user.currentExperience[0].company }}</p>
                                     </div>
                                 </div>
                                 <div class="row w-100 py-2 row-btn">
                                     <div class="col text-center">
-                                        <button class="btn btn-success" ng-click="acceptPendingRequest(connectionIndex)">Accept</button>
-                                        <button class="btn btn-outline-danger" ng-click="deletePendingRequest(connectionIndex)">Delete</button>
+                                        <button ng-if="application.status === 1" class="btn btn-sm btn-outline-success" disabled>Accepted</button>
+                                        <button ng-if="application.status === 0" class="btn btn-sm btn-success" ng-click="acceptApplication(application.id, applicationIndex)">Accept</button>
+                                        <button ng-if="application.status === 0" class="btn btn-sm btn-danger" ng-click="rejectApplication(application.id, applicationIndex)">Reject</button>
+                                        <button ng-if="application.status === -1" class="btn btn-sm btn-outline-danger" disabled>Rejected</button>
                                     </div>
                                 </div>
                             </div>
@@ -52,12 +70,23 @@
             <div class="col-8">
                 <div class="row mb-4 justify-content-center">
                     <div class="col">
-                        <div class="card p-2" style="border: 2px solid #17a2b8;">
+                        <div class="card p-1" style="border: 2px solid #5873A8;">
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col text-center font-s-11" style="color: #17a2b8;">
+                                    <div class="col text-center font-s-11" style="color: #5873A8;">
                                         Available Jobs for You
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="suggestedJobs.length <= 0" class="row mb-4 justify-content-center">
+                    <div class="col">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col text-center text-secondary font-s-11">
+                                    Unfortunately, there are no available jobs for you right now.
                                 </div>
                             </div>
                         </div>
@@ -115,7 +144,7 @@
                         <div class="card py-3 shadow-sm">
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col font-s-11 text-center">
+                                    <div class="col font-s-11">
                                         Publish a new job
                                     </div>
                                 </div>
@@ -150,7 +179,7 @@
                                             <div ng-if="newJob.skillTags.length > 0" class="form-group">
                                                 <div class="row">
                                                     <div class="col-8">
-                                                        <div class="input-group mb-2" ng-repeat="skillTag in newJob.skillTags">
+                                                        <div class="input-group input-group-sm mb-2" ng-repeat="skillTag in newJob.skillTags">
                                                             <input type="text" class="form-control" placeholder="Skill tag name" ng-model="skillTag.name" required>
                                                             <div class="input-group-append">
                                                                 <button type="button" class="btn btn-secondary" ng-click="deleteSkillTag($index)"><i class="far fa-trash-alt"></i></button>

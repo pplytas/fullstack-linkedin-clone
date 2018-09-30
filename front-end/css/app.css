@@ -57,6 +57,10 @@ body {
     background-color: rgba(210,210,210,0.2);
 }
 
+.darken-more {
+    background-color: rgba(150,150,150,0.2);
+}
+
 .darken-blue {
     background-color: rgba(100,210,210,0.1);
 }
@@ -173,8 +177,13 @@ body {
 }
 
 .avatar-post-sm {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
+}
+
+.avatar-post-xs {
+    width: 20px;
+    height: 20px;
 }
 
 .post-fullname {
@@ -223,7 +232,7 @@ body {
     position: absolute;
     top: 0;
     height: 65%;
-    background: #007ABA;
+    background: #5873A8;
 }
 
 .info-card p {
@@ -260,10 +269,6 @@ body {
     bottom: 0;
 }
 
-.network .user-card {
-    height: 14rem;
-}
-
 /* ------------------- NOTIFICATIONS ------------------- */
 .notifications .avatar-network-md {
     width: 70px;
@@ -277,6 +282,10 @@ body {
 
 .user-card {
     height: 14rem;
+}
+
+.user-card-taller {
+    height: 16rem;
 }
 
 /* ------------------- VIEW PROFILE ------------------- */

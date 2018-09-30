@@ -473,7 +473,7 @@
 		};
 
 		globalFunctionsFactory.getAds = function(
-		    id
+		    id = null
 		) {
 		    var endpoint = '/ads/ofuser';
 		    var url = $rootScope.tediAPI + endpoint;

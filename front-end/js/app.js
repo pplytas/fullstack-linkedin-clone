@@ -95,6 +95,11 @@
 					return globalFunctions.getAllMyApplications().then(function(response) {
 						return response.data;
 					});
+				},
+				allApplicationsToMyAds: function(globalFunctions) {
+					return globalFunctions.getAllApplicationsToMyAds().then(function(response) {
+						return response.data;
+					});
 				}
 			}
 		})
@@ -177,8 +182,11 @@
 			templateUrl: '../templates/edit-profile.html',
 			controller: 'editProfileCtrl'
         })
+		.when("/", {
+			redirectTo: (localStorage.isAdmin == 'true') ? '/admin':'/home'
+		})
 		.otherwise({
-	        redirectTo: '/home'
+			redirectTo: (localStorage.isAdmin == 'true') ? '/admin':'/home'
 	    });
 		/* =========================================== */
 	})

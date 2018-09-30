@@ -43,6 +43,11 @@
                                         </li>
                                     </ul>
                                 </div>
+                                <div ng-if="tempUser.skills.length <= 0 && tempUser.experience.length <= 0 && tempUser.education.length <= 0" class="row mb-4 justify-content-center">
+									<div class="col text-center text-secondary">
+										You have not added any details yet.
+									</div>
+								</div>
                             </div>
                         </div>
                     </div>
@@ -51,15 +56,26 @@
             <div class="col-5 mx-3">
                 <div class="row mb-4 justify-content-center">
                     <div class="col">
-                        <div class="card p-2" style="border: 2px solid #17a2b8;">
+                        <div class="card p-1" style="border: 2px solid #5873A8;">
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col text-center font-s-11" style="color: #17a2b8;">
+                                    <div class="col text-center font-s-11" style="color: #5873A8;">
                                         Feed
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div ng-if="feed.articles.length <= 0" class="row mb-4 justify-content-center">
+                    <div class="col">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col text-center text-secondary font-s-11">
+									Your feed is empty.
+								</div>
+							</div>
+						</div>
                     </div>
                 </div>
                 <div ng-if="!feedLoaded" class="row pt-4 justify-content-center">
@@ -103,15 +119,66 @@
                                         <button class="btn btn-sm btn-light rounded-0 font-s-08 text-secondary" ng-click="upvote(article.id, $index)">
                                             <i class="far fa-thumbs-up"></i> Upvote
                                         </button>
-                                        <button class="btn btn-sm btn-light rounded-0 font-s-08 text-secondary">
+                                        <button class="btn btn-sm btn-light rounded-0 font-s-08 text-secondary" ng-click="commentClicked(article.id)">
                                             <i class="far fa-comment"></i> Comment
                                         </button>
                                     </div>
-                                    <div class="col-3 py-1 font-s-08 text-secondary text-right">
-                                        {{ article.upvotes.length }} - Upvotes
+                                    <div class="col-6 text-right">
+                                        <button class="btn btn-sm btn-light rounded-0 font-s-08 text-secondary" ng-click="showUpvotes(article.id)" ng-class="{'darken-more': isShowUpvotes(article.id)}">
+                                            {{ article.upvotes.length }} - Upvotes
+                                        </button>
+                                        <button class="btn btn-sm btn-light rounded-0 font-s-08 text-secondary" ng-click="showComments(article.id)" ng-class="{'darken-more': isShowComments(article.id)}">
+                                            {{ article.comments.length }} - Comments
+                                        </button>
                                     </div>
-                                    <div class="col-3 py-1 font-s-08 text-secondary text-right">
-                                        {{ article.comments.length }} - Comments
+                                </div>
+                                <div ng-if="isCommentClicked(article.id)" class="row border-top bg-light">
+                                    <div class="col px-0">
+                                        <form>
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control" placeholder="Write a comment..." ng-model="$parent.$parent.newCommentText" required>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary" type="submit" ng-click="comment(article.id, $index)">Comment</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div ng-if="isShowUpvotes(article.id) && (article.upvotes.length > 0)" class="row border-top bg-light">
+                                    <div class="col px-4 pt-2 pb-1">
+                                        <div class="row mb-2" ng-repeat="upvote in article.upvotes">
+                                            <div class="col-6 py-1 bg-white border rounded">
+                                                <div class="row">
+                                                    <div class="col font-s-08">
+                                                        <a href="#!/profile/{{ upvote.upvoterId }}" class="avatar-post-xs mx-auto d-inline-block">
+                                                            <img class="avatar-post-xs border rounded-circle border-secondary" data-ng-src="{{upvote.upvoterPicture && 'data:image/png;base64,'}}{{upvote.upvoterPicture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
+                                                        </a>
+                                                        <div class="my-0 ml-2 d-inline">{{ upvote.upvoterName + " " + upvote.upvoterSurname}}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-if="isShowComments(article.id) && (article.comments.length > 0)" class="row border-top bg-light">
+                                    <div class="col px-4 pt-2 pb-1">
+                                        <div class="row mb-2" ng-repeat="comment in article.comments" ng-if="comment.text">
+                                            <div class="col py-1 bg-white border rounded">
+                                                <div class="row">
+                                                    <div class="col font-s-08">
+                                                        <a href="#!/profile/{{ comment.commentatorId }}" class="avatar-post-xs mx-auto d-inline-block">
+                                                            <img class="avatar-post-xs border rounded-circle border-secondary" data-ng-src="{{comment.commentatorPicture && 'data:image/png;base64,'}}{{comment.commentatorPicture || '../img/avatar-placeholder.png'}}" alt="Profile Picture">
+                                                        </a>
+                                                        <div class="my-0 ml-2 d-inline">{{ comment.commentatorName + " " + comment.commentatorSurname }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col px-5 py-1 font-s-08">
+                                                        <div class="ml-4 px-2 d-inline-block border border-secondary rounded darken-blue">{{ comment.text }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

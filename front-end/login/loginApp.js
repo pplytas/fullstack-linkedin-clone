@@ -5,7 +5,7 @@
         $rootScope.picture = null;
 
         if (localStorage.isjwt) {
-            window.location.href = "/#!/home";
+            window.location.href = (localStorage.isAdmin == 'true') ? '/#!/admin':'/#!/home';
         }
 
         function clear_messages() {
@@ -104,6 +104,7 @@
                            data: JSON.stringify(data),
                            success: function(data, status, $xhr) {
                                localStorage.isjwt = $xhr.getResponseHeader("Authorization").replace('Bearer ', '');
+                               localStorage.isAdmin = false;
                                window.location.href = "/#!/home";
                            },
                            error: function($xhr) {
