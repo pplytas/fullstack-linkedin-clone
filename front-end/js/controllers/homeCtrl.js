@@ -95,7 +95,6 @@
 		globalFunctions.getFeed().then(function(response) {
 			$scope.feedLoaded = true;
 			$scope.feed = response.data;
-			console.log($scope.feed);
 		});
 	});
 })();
