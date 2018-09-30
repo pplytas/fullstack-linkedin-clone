@@ -2,12 +2,23 @@
     <div class="container-fluid">
         <div class="row px-5 mb-3 justify-content-center">
             <div class="col-3 px-2">
-                <div class="card p-2" style="border: 2px solid #17a2b8;">
+                <div class="card p-1" style="border: 2px solid #5873A8;">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col text-center font-s-11" style="color: #17a2b8;">
+                            <div class="col text-center font-s-11" style="color: #5873A8;">
                                 Pending Requests
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="pendingConnections.length <= 0" class="row px-5 mb-3 justify-content-center">
+            <div class="col-3 px-2">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col text-center text-secondary font-s-11">
+                            You have no pending requests.
                         </div>
                     </div>
                 </div>
@@ -30,8 +41,8 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col text-center px-2">
-                                <p class="font-s-08 text-secondary font-weight-light mb-0">CEO Software Engineer at Alpha Bank</p>
+                            <div ng-if="connection.currentExperience.length > 0" class="col text-center">
+                                <p class="font-s-08 text-secondary font-weight-light mb-0">{{ connection.currentExperience[0].position + " at " + connection.currentExperience[0].company }}</p>
                             </div>
                         </div>
                         <div class="row w-100 py-2 row-btn">
@@ -46,10 +57,10 @@
         </div>
         <div class="row px-5 mb-4 justify-content-center">
             <div class="col-3 px-2">
-                <div class="card p-2" style="border: 2px solid #17a2b8;">
+                <div class="card p-1" style="border: 2px solid #5873A8;">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col text-center font-s-11" style="color: #17a2b8;">
+                            <div class="col text-center font-s-11" style="color: #5873A8;">
                                 Notifications
                             </div>
                         </div>
@@ -57,9 +68,19 @@
                 </div>
             </div>
         </div>
+        <div ng-if="notifications.length <= 0" class="row px-5 mb-4 justify-content-center">
+            <div class="col-3 px-2">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col text-center text-secondary font-s-11">
+                            You have no notifications.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row px-5">
             <div class="col px-2">
-
                 <div class="row mb-3" ng-repeat="notification in notifications">
                     <div class="col-2 font-s-08 text-right pt-3">
                         {{ notification.dateTime }}
@@ -76,7 +97,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

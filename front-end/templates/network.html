@@ -13,6 +13,17 @@
                 </form>
             </div>
         </div>
+        <div ng-if="displayingConnections.length <= 0" class="row px-5 mb-3">
+            <div class="col-3 px-2">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col text-secondary font-s-11">
+                            There are no connections.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row px-5">
             <div class="col-2 px-2 py-1" ng-repeat="connection in displayingConnections">
                 <div class="card py-2 user-card">
@@ -30,8 +41,8 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col text-center px-2">
-                                <p class="font-s-08 text-secondary font-weight-light mb-0">CEO Software Engineer at Alpha Bank</p>
+                            <div ng-if="connection.currentExperience.length > 0" class="col text-center">
+                                <p class="font-s-08 text-secondary font-weight-light mb-0">{{ connection.currentExperience[0].position + " at " + connection.currentExperience[0].company }}</p>
                             </div>
                         </div>
                         <div class="row w-100 py-2 row-btn">

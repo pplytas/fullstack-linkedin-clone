@@ -43,6 +43,11 @@
                                         </li>
                                     </ul>
                                 </div>
+                                <div ng-if="tempUser.skills.length <= 0 && tempUser.experience.length <= 0 && tempUser.education.length <= 0" class="row mb-4 justify-content-center">
+									<div class="col text-center text-secondary">
+										You have not added any details yet.
+									</div>
+								</div>
                             </div>
                         </div>
                     </div>
@@ -51,15 +56,26 @@
             <div class="col-5 mx-3">
                 <div class="row mb-4 justify-content-center">
                     <div class="col">
-                        <div class="card p-2" style="border: 2px solid #17a2b8;">
+                        <div class="card p-1" style="border: 2px solid #5873A8;">
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col text-center font-s-11" style="color: #17a2b8;">
+                                    <div class="col text-center font-s-11" style="color: #5873A8;">
                                         Feed
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div ng-if="feed.articles.length <= 0" class="row mb-4 justify-content-center">
+                    <div class="col">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col text-center text-secondary font-s-11">
+									Your feed is empty.
+								</div>
+							</div>
+						</div>
                     </div>
                 </div>
                 <div ng-if="!feedLoaded" class="row pt-4 justify-content-center">
@@ -158,7 +174,7 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col px-5 py-1 font-s-08">
-                                                        <div class="ml-4 px-2 d-inline border border-secondary rounded darken-blue">{{ comment.text }}</div>
+                                                        <div class="ml-4 px-2 d-inline-block border border-secondary rounded darken-blue">{{ comment.text }}</div>
                                                     </div>
                                                 </div>
                                             </div>
