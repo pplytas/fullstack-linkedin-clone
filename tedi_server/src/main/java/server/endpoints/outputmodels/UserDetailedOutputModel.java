@@ -11,8 +11,11 @@ public class UserDetailedOutputModel {
 	private String telNumber;
 	private String picture;
 	private List<ExperienceOutputModel> currentExperience = new ArrayList<>();
+	private Boolean educationPublic;
 	private List<EducationOutputModel> education = new ArrayList<>();
+	private Boolean experiencePublic;
 	private List<ExperienceOutputModel> experience = new ArrayList<>();
+	private Boolean skillsPublic;
 	private List<SkillOutputModel> skills = new ArrayList<>();
 	private List<UserOutputModel> connected = new ArrayList<>();
 	private List<AdOutputModel> ads = new ArrayList<>();
@@ -107,4 +110,27 @@ public class UserDetailedOutputModel {
 		this.ads = ads;
 	}
 
+	public Boolean getEducationPublic() {
+		return educationPublic;
+	}
+
+	public void setEducationPublic(Boolean educationPublic) {
+		this.educationPublic = educationPublic;
+	}
+
+	public Boolean getExperiencePublic() {
+		return experiencePublic;
+	}
+
+	public void setExperiencePublic(Boolean experiencePublic) {
+		this.experiencePublic = experiencePublic;
+	}
+
+	public Boolean getSkillsPublic() {
+		return skillsPublic;
+	}
+
+	public void setSkillsPublic(Boolean skillsPublic) {
+		this.skillsPublic = skillsPublic;
+	}
 }
